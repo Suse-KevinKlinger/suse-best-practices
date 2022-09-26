@@ -1,0 +1,86 @@
+:docinfo:
+
+= SAP Gardener or SUSE Rancher? SAP Gardener + SUSE Rancher!  
+
+== Introduction
+
+This whitepaper will give an overview of what is SAP Gardener, what is SUSE Rancher, how they differ from each other and what they have in common.
+In the end it will show that using both solutions not necessarily compete with each other but can be used to complement each other to give the ultimate Kubernetes experience.
+
+
+== What is SAP Gardener
+
+"`Deliver fully-managed clusters at scale everywhere with your own Kubernetes-as-a-Service`" that's what can be found when calling 
+link:https://gardener.cloud/[the official Gardener homepage].
+
+When taking a look on that quote, one can see that Gardener is designed to provision and manage Kubernetes infrastructure.
+
+When working with Kubernetes, the clusters have to be managed, monitored, updated and operated.
+This may be easy when having a smaller set of clusters, but the more it gets, the bigger is the workload of handling those clusters.
+That's where Gardener comes into play. The modular design of Gardener allows to adjust the cluster configuration and to bring up as many homogeneous clusters as desired.
+
+Those will then have a built in management component that will, for instance, recreate Kubernetes nodes if they're misbehaving. 
+
+
+=== What is SUSE Rancher
+
+SUSE Rancher is a open-source management tool for Kubernetes landscapes, which simplifies the administration of Kubernetes clusters and allows to navigate through your Kubernetes landscape using a well designed user interface.
+It is compatible for single node clusters up to enterprise environments holding hundreds of nodes divided among a set of Kubernetes clusters.
+
+But what does that mean for the Kubernetes user?
+
+Administrators 
+// Authentication mechanisms
+// Easy setup
+
+
+
+Developers benefit from features that will give them a  
+
+
+// Continuous Delivery 
+// Terraform provider
+// Marketplace
+
+
+
+For those who want to test SUSE Rancher, the probably easiest method to get some first impressions is to deploy it locally using docker. 
+How to do that is described 
+link:https://rancher.com/docs/rancher/v2.6/en/installation/other-installation-methods/single-node-docker/[here].
+
+
+
+==== Feature overview
+
+
+
+
+SUSE Rancher is a 100% open-source Kubernetes management platform built for enterprise-grade environments. Supported by a strong community of users, SUSE Rancher provides a single pane of glass for managing and operating clusters. SUSE Rancher enables you to run Kubernetes everywhere - from cloud to on-prem or at the edge.
+
+SUSE Rancher combines cluster deployment, management, security, role-based access, logging, monitoring, CI/CD, and integration of shared tools into one solution, making it a complete container management platform for Kubernetes.
+
+== Comparison
+
+They have features they share like the provisioning of clusters or the authorization
+
+
+
+
+/*
+TODO:
+- Deploy K8s Cluster with Gardener and connect it with Rancher
+    -> + Better overview 
+    -> + Easy integration for Rancher marketplace apps
+    -> ~ Rancher could deploy Rancher
+
+
+- Strengths of SAP Gardener
+    -> Provision K8s infrastructure
+    -> Automatically manages the infrastructure
+
+- Strengths of SUSE Rancher
+    -> Everything upon k8s infrastructure
+        -> Provision insights of k8s workloads
+        -> User management
+        -> Assist deploying Helm charts (Rancher marketplace)
+ */
