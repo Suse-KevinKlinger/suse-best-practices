@@ -1,10 +1,10 @@
-MAIN="SAP-Gardener-with-Rancher.adoc"
+MAIN="Gardener-with-Rancher.adoc"
 
 ADOC_TYPE="article"
 
 ADOC_POST="yes"
 
-ADOC_ATTRIBUTES="--attribute docdate=2022-08-02"
+ADOC_ATTRIBUTES="--attribute docdate=2022-12-31"
 
 # stylesheets
 STYLEROOT=/usr/share/xml/docbook/stylesheet/suse2013-sbp-ns
@@ -12,7 +12,7 @@ FALLBACK_STYLEROOT=/usr/share/xml/docbook/stylesheet/suse2021-ns
 
 XSLTPARAM="--stringparam publishing.series=sbp"
 
-# DRAFT=yes
+#DRAFT=yes
 ROLE="sbp"
 PROFROLE="sbp"
 
