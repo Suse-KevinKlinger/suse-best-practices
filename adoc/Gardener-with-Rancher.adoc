@@ -3,6 +3,7 @@
 :gardener: Gardener
 :rancher: SUSE Rancher
 :harvester: Harvester
+:longhorn: Longhorn
 
 = {gardener} or {rancher}? {gardener} + {rancher}!  
 
@@ -65,14 +66,18 @@ The probably more efficient way to set up shoots in larger scale is to do it the
 Saying that it means, one does use kubectl to apply a YAML file holding the definition of a shoot cluster.
 By that a single file is needed to spin up all required components to create a Kubernetes environment and if desired, the deployment of the workloads can be put into the same file.
 
-
+++++
+<?pdfpagebreak?>
+++++
 The guiding principle of {gardener} is doing things the Kubernetes way. This can be recognized when having a look at the architecture overview.
 The Seed clusters are virtual Kubernetes clusters that share their control plane components with multiple shoot clusters.
 This means that the Seed is actually a Kubernetes server running in a Kubernetes cluster. The possibility to deploy further resources like additional clusters or networks, substantiate this principle.
 
 image::Gardener_Architecture.png[title="Gardener Architecture",scaledwidth=99%]
 
-
+++++
+<?pdfpagebreak?>
+++++
 === Feature overview
 
 [options="header"]
@@ -112,25 +117,40 @@ Administrators benefit from features like the built in user management or the ea
 Developers benefit from features that will give them a central entry point to the Kubernetes workloads.
 The cluster explorer provides a graphical management tool with clear overview of what's going on in the given cluster and many other helpful features that can help Kubernetes users to manage their resources.
 
+++++
+<?pdfpagebreak?>
+++++
+
 Fleet is {rancher}'s GitOps tool. It allows to connect Git repositories and to trigger automatic rollouts to pre configured clusters. Furthermore, it's configurable which branch of a repository should be tracked. By that it's simple to trigger rollouts for different type of clusters, like for development, testing or production.  
 
 
 image::rancher_fleet.png[title="Rancher Fleet",scaledwidth=99%]
 
+++++
+<?pdfpagebreak?>
+++++
 
-
-
-
-The marketplace 
+The marketplace offers a visually guided way to deploy and manage Helm deployments for the given clusters.
+By default, {rancher} delivers a catalog of widely used applications that can be extended by adding custom repositories.
 
 image::rancher_marketplace.png[title="Rancher Marketplace",scaledwidth=99%]
 
+++++
+<?pdfpagebreak?>
+++++
+
+All Apps in the catalog offer more Chart Information and a guided setup where configuration parameters can be changed using UI elements. The following picture shows an example of a {longhorn} configuration in {rancher}.
+
+image::rancher_longhorn_app.png[title="Longhorn App configuration", scaledwidth=99%]
+
+As seen, the configuration can easily changed using elements as checkboxes or dropdown selections.
+All information for selections and possible fields and their types are stored at 
+link:https://github.com/rancher/partner-charts[{rancher}'s partner-charts repository].
 
 
-// Continuous Delivery 
-// Terraform provider
-// Marketplace
-
+The most easy way to add custom Helm charts to the marketplace is to add a repository.
+Therefore the repository address of the Helm chart needs to be entered and if desired, those can be configured using a special branch.
+After that the custom application can be deployed and managed using the marketplace - even though without the pre configured selections.
 
 
 For those who want to test {rancher}, the probably easiest method to get some first impressions is to deploy it locally using docker. 
@@ -158,8 +178,7 @@ link:https://rancher.com/docs/rancher/v2.6/en/installation/other-installation-me
 === Strengths
 
 The main strength of {rancher} is clearly the Kubernetes dashboard (Cluster Manager) and by that the focus on managing workloads on top of a running Kubernetes cluster.
-
-Features like 
+Features like Fleet (GitOps) and the marketplace complete the overall impression of a user friendly and easy way to interact with Kubernetes clusters.
 
 ++++
 <?pdfpagebreak?>
