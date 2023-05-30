@@ -1,11 +1,12 @@
 :docinfo:
 
 :gardener: Gardener
-:rancher: SUSE Rancher
+:rancher: Rancher
 :harvester: Harvester
 :longhorn: Longhorn
 
-= {gardener} or {rancher}? {gardener} + {rancher}!  
+// TODO Gardener pictures license?
+= Benefits of using {rancher} with {gardener}
 
 == Introduction
 
@@ -20,14 +21,13 @@ In the end it will show that using both solutions not necessarily compete with e
 "`Deliver fully-managed clusters at scale everywhere with your own Kubernetes-as-a-Service`" that's what can be found when calling 
 link:https://gardener.cloud/[the official {gardener} homepage].
 
-When taking a look on that quote, one can see that {gardener} is designed to provision and manage Kubernetes infrastructure.
+When taking a look on that quote, you can see that {gardener} is designed to provision and manage Kubernetes infrastructure.
 
 When working with Kubernetes, the clusters have to be managed, monitored, updated and operated.
 This may be easy when having a smaller set of clusters, but the more it gets, the bigger is the workload of handling those clusters.
 That's where {gardener} comes into play. The modular design of {gardener} allows to adjust the cluster configuration and to bring up as many homogeneous clusters as desired.
 
-Those will then have a built in management component that will, for instance, recreate Kubernetes nodes if they're misbehaving. 
-
+Those will then have a built in management components that will, for instance, recreate Kubernetes nodes if they're misbehaving.
 
 === Concepts
 
@@ -49,21 +49,25 @@ The shoot clusters are the ones to be consumed by the end user and only consists
 A shoot cluster is a Kubernetes cluster which consists of all the components required to run applications. It contains the necessary nodes to host and run applications, as well as other resources such as storage and networking, that are necessary in order to deploy and manage applications.
 
 
-image::Gardener_Cluster_Types.png[title="Gardener Cluster Types",scaledwidth=99%]
+.Gardener Cluster Types
+[#img-ID, link=https://github.com/gardener/gardener/blob/master/docs/concepts/images/gardener-architecture-overview.png]
+image::Gardener_Cluster_Types.png[title="Gardener Cluster Types (origin: https://google.com)", scaledwidth=99%]
+
+// image::Gardener_Cluster_Types.png[title="Gardener Cluster Types",scaledwidth=99%, link=https://github.com/gardener/gardener/blob/master/docs/concepts/images/gardener-architecture-overview.png]
 
 The main usage of the dashboard {gardener} offers is to overview and deploy Kubernetes clusters.
 
 image::Gardener_Cluster_Overview.png[title="Gardener Dashboard",scaledwidth=99%]
 
 
-Depending on the installed extensions and seed clusters, one can set up shoot clusters at the given Hyperscalers 
-and with different configurations. An example of how this may look like can be seen here:
+Depending on the installed extensions and seed clusters, you can set up shoot clusters at the given Hyperscalers 
+and with different configurations. An example of how this may look like can be seen in <<gardener_cluster_creation>>:
 
-image::Gardener_Cluster_Creation.png[title="Gardener Cluster Creation",scaledwidth=99%]
+image::Gardener_Cluster_Creation.png[title="Gardener Cluster Creation",scaledwidth=99%, id=gardener_cluster_creation]
 
 
 The probably more efficient way to set up shoots in larger scale is to do it the Kubernetes way.
-Saying that it means, one does use kubectl to apply a YAML file holding the definition of a shoot cluster.
+Saying that it means, you'll use kubectl to apply a YAML file holding the definition of a shoot cluster.
 By that a single file is needed to spin up all required components to create a Kubernetes environment and if desired, the deployment of the workloads can be put into the same file.
 
 ++++
@@ -74,31 +78,6 @@ The Seed clusters are virtual Kubernetes clusters that share their control plane
 This means that the Seed is actually a Kubernetes server running in a Kubernetes cluster. The possibility to deploy further resources like additional clusters or networks, substantiate this principle.
 
 image::Gardener_Architecture.png[title="Gardener Architecture",scaledwidth=99%]
-
-++++
-<?pdfpagebreak?>
-++++
-=== Feature overview
-
-[options="header"]
-|===
-|Feature | Feature Availability
-|Maintenance windows| yes
-|Automated hibernation| yes
-|Self healing| yes
-|Horizontal scaling| yes
-|User management| yes
-|Marketplace apps| no
-|GitOps | no
-|===
-
-
-=== Strengths
-
-Looking at the features and the idea of "Kubernetes-as-a-Service", one can see, that the main focus of {gardener} is to provision and manage the infrastructure of Kubernetes clusters.
-
-Features as the configurable maintenance windows or the automated hibernation can help administrators to save costs to run Kubernetes clusters and keeping them up to date.
-With the feature of self healing clusters, {gardener} can reduce the load of administrators.
 
 
 ++++
@@ -159,99 +138,47 @@ link:https://rancher.com/docs/rancher/v2.6/en/installation/other-installation-me
 
 
 
-=== Feature overview
-
-[options="header"]
-|===
-|Feature | Feature Availability
-|Maintenance windows| no
-|Automated hibernation| no
-|Self healing| no
-|Horizontal scaling| no
-|User management| yes
-|Marketplace apps| yes
-|GitOps | yes
-|===
-
-
-
-=== Strengths
-
-The main strength of {rancher} is clearly the Kubernetes dashboard (Cluster Manager) and by that the focus on managing workloads on top of a running Kubernetes cluster.
-Features like Fleet (GitOps) and the marketplace complete the overall impression of a user friendly and easy way to interact with Kubernetes clusters.
-
 ++++
 <?pdfpagebreak?>
 ++++
 
+== Comparison
+To get a first impression of how both solutions differ, let's take a look at the feature offering.
+
+=== Feature overview
+[options="header", width=99%]
+|===
+|Feature | {rancher} | {gardener}
+|Maintenance windows| no | yes
+|Automated hibernation| no | yes
+|Self healing| no | yes
+|Horizontal scaling| no | yes
+|User management| yes | yes
+|Marketplace apps| yes | no
+|GitOps | yes | no
+|===
+
+=== Strengths {rancher}
+
+The main strength of {rancher} is clearly the Kubernetes dashboard (Cluster Manager) and by that the focus on managing workloads on top of a running Kubernetes cluster.
+Features like Fleet (GitOps) and the marketplace complete the overall impression of a user friendly and easy way to interact with Kubernetes clusters.
+
+=== Strengths {gardener}
+
+Looking at the features and the idea of "Kubernetes-as-a-Service", you can see, that the main focus of {gardener} is to provision and manage the infrastructure of Kubernetes clusters.
+
+Features as the configurable maintenance windows or the automated hibernation can help administrators to save costs to run Kubernetes clusters and keeping them up to date.
+With the feature of self healing clusters, {gardener} can reduce the load of administrators.
+
+
 
 == Better together
 
-Looking at both solutions, one could see that {gardener} has its main focus on serving infrastructure and take care that, while {rancher} focuses on the workload running on top of a Kubernetes cluster.
+Looking at both solutions, you could see that {gardener} has its main focus on serving infrastructure and take care that, while {rancher} focuses on the workload running on top of a Kubernetes cluster.
 
 Bringing {rancher} and {gardener} together can bundle synergies and provide the strengths of two solutions to the end users.
-For that one could deploy Kubernetes clusters using {gardener} to benefit from features like scheduled hibernation, maintenance windows and the self healing clusters.
+For that you could deploy Kubernetes clusters using {gardener} to benefit from features like scheduled hibernation, maintenance windows and the self healing clusters.
 
 After the cluster is deployed, it will be connected to {rancher}, which will bring benefits in terms of a user friendly interface to deploy and manage the Kubernetes applications.
 {rancher} fleet offers a GitOps tooling which can then also be used in order to make deployment to the Kubernetes clusters easier for end users.
 For even more automation, {rancher}'s Terraform provider could be used. 
-
-
-== Possible outlook
-
-=== {rancher} app to deploy {gardener}
-
-At the current point, {gardener} is deployed either using the
-link:https://github.com/gardener/garden-setup[garden-setup]
-project or Helm natively.
-In both cases, the user must get to know the configuration parameters by reading the docs and search through code on GitHub.
-
-
-An idea could be to develop a {rancher} app in the marketplace, which allows an easier deployment of {gardener} clusters.
-By that, anyone that's interested in setting up their own {gardener} instance would have a easy and guided way to get started.
-
-=== {rancher} connects {gardener}
-
-Yet another idea would be to allow {rancher} to interact with {gardener} so all actions could be performed using the
-{rancher} UI.
-This would be quite similar to what {rancher} already does with {harvester}. One could then create new shoots, seeds, etc. using the guided UI of {rancher}.
-
-The picture below shows the current options when creating a new cluster in {rancher}.
-
-image::rancher_create.png[title="Rancher Create",scaledwidth=99%]
-
-Here's where another tile could be added to choose create a {gardener} component.
-The benefit of this would be that less knowledge about Kubernetes or {gardener} would be required to setup clusters as {rancher} would guide the creation steps.
-
-
-
-
-// TODO:
-// - Deploy K8s Cluster with {gardener} and connect it with Rancher
-//     -> + Better overview 
-//     -> + Easy integration for Rancher marketplace apps
-//     -> ~ Rancher could deploy {gardener}
-
-
-// - Strengths of SAP {gardener}
-//     -> Provision K8s infrastructure
-//     -> Automatically manages the infrastructure
-
-// - Strengths of {rancher}
-//     -> Everything upon k8s infrastructure
-//         -> Provision insights of k8s workloads
-//         -> User management
-//         -> Assist deploying Helm charts (Rancher marketplace)
-
-
-
-// ???????????????????
-// Automated deployments using API VS Rancher terraform
-
-// Gardener:
-// Apply a Kubernetes object (shoot) to create clusters
-
-// Option:
-// Link Rancher with Gardener (like with Harvester) and let users create shoots from Rancher
-
-// ???????????????????
