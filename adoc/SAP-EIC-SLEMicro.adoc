@@ -3,7 +3,7 @@
 === Installation
 
 On each server in your environment for {eic} and {rancher}, install {slem} {slem_version} as the operating system.
-The manual installation is described in the {slem} {slem_version} Deployment Guide in our Documentation https://documentation.suse.com/sle-micro/{slem_version}/single-html/SLE-Micro-deployment/#cha-install[SLE Micro Deployment Guide]. 
+There are several methods to install {slem} {slem_version} on your hardware or virtual machine. A list of all possible solutions are available in our Documentation  https://documentation.suse.com/sle-micro/{slem_version}/[SLE Micro 6.0]. 
 
 At the end of the installation process in the summary windows you need to check if these Security Settings are configured:
 
@@ -41,7 +41,7 @@ Do not forget to replace
 
 Reboot your system to switch to the latest snapshot. {slem} is now registered.
 
-Find more information about registering your system in the {slem} {slem_version} link:https://documentation.suse.com/sle-micro/{slem_version}/single-html/SLE-Micro-deployment/[Deployment Guide]. 
+Find more information about registering your system in the {slem} {slem_version} link:https://documentation.suse.com/sle-micro/{slem_version}/html/Micro-deployment-selfinstall-images/index.html#deployment-registering-system[Deploying SLE Micro Using an ISO Image]. 
 
 === Updating your system
 
