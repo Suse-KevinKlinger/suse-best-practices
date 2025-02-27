@@ -46,20 +46,35 @@
       dominant-baseline: central;
     }
 
+    .tphys {
+      font-size: 20px;
+    }
     .teic {
       fill: white;
       font-size: 20px;
     }
     .tvirt {
+      font-size: 20px;
+    }
+    .trancher-management {
+      font-size: 20px;
+      fill: white;
+    }
+    .trancher{
       font-size: 16px;
     }
+    .twroker,
+    .tcontrol {
+      font-size: 14px;
+    }
+
   </style>
 
     <g>
       <!--Physical Server 1-->
       <g transform="translate(50, 50)">
         <rect class="physical-server" width="500" height="900" rx="10" />
-        <text x="250" y="25" font-size="20">Physical Server 1</text>
+        <text x="250" y="25" class="tphys">Physical Server 1</text>
 
         <g transform="translate(10, 60)">
           <rect class="suse-virt" width="480" height="810" rx="10" />
@@ -70,7 +85,7 @@
       <!--Physical Server 2-->
       <g transform="translate(640, 50)">
         <rect class="physical-server" width="500" height="900" rx="10" />
-        <text x="250" y="25" font-size="20">Physical Server 2</text>
+        <text x="250" y="25" class="tphys">Physical Server 2</text>
 
         <g transform="translate(10, 60)">
           <rect class="suse-virt" width="480" height="810" rx="10" />
@@ -81,7 +96,7 @@
       <!--Physical Server 3-->
       <g transform="translate(1230, 50)">
         <rect class="physical-server" width="500" height="900" rx="10" />
-        <text x="250" y="25" font-size="20">Physical Server 3</text>
+        <text x="250" y="25" class="tphys">Physical Server 3</text>
 
         <g transform="translate(10, 60)">
           <rect class="suse-virt" width="480" height="810" rx="10"/>
@@ -92,21 +107,21 @@
       <!--Rancher Cluster-->
       <g transform="translate(25,150)">
         <rect class="rancher-manager-cluster" width="1755" height="150" />
-        <text x="890" y="20" font-size="16" style="fill: white">Rancher Management Cluster</text>
+        <text x="890" y="20" class="trancher-management">Rancher Management Cluster</text>
 
         <g transform="translate(50, 50)">
           <rect class="rancher" width="450" height="75" />
-          <text x="225" y="37.5" font-size="16">Rancher Manager</text>
+          <text x="225" y="37.5" class="trancher">Rancher Manager</text>
         </g>
 
         <g transform="translate(640, 50)">
           <rect class="rancher" width="450" height="75" />
-          <text x="225" y="37.5" font-size="16">Rancher Manager</text>
+          <text x="225" y="37.5" class="trancher">Rancher Manager</text>
         </g>
 
         <g transform="translate(1230, 50)">
           <rect class="rancher" width="450" height="75" />
-          <text x="225" y="37.5" font-size="16">Rancher Manager</text>
+          <text x="225" y="37.5" class="trancher">Rancher Manager</text>
         </g>
       </g>
 
@@ -117,21 +132,21 @@
 
         <g transform="translate(100, 80)"> 
           <rect class="control-plane" width="180" height="50" x="0" />
-          <text x="90" y="25" font-size="14">Control Plane</text>
+          <text x="90" y="25" class="tcontrol">Control Plane</text>
           <rect class="worker" width="180" height="50" x="220" />
-          <text x="310" y="25" font-size="14">Worker</text>
+          <text x="310" y="25" class="tworker">Worker</text>
         </g>
         <g transform="translate(665, 80)"> 
           <rect class="control-plane" width="180" height="50" x="0" />
-          <text x="90" y="25" font-size="14">Control Plane</text>
+          <text x="90" y="25" class="tcontrol">Control Plane</text>
           <rect class="worker" width="180" height="50" x="220" />
-          <text x="310" y="25" font-size="14">Worker</text>
+          <text x="310" y="25" class="tworker">Worker</text>
         </g>
         <g transform="translate(1235, 80)"> 
           <rect class="control-plane" width="180" height="50" x="0" />
-          <text x="90" y="25" font-size="14">Control Plane</text>
+          <text x="90" y="25" class="tcontrol">Control Plane</text>
           <rect class="worker" width="180" height="50" x="220" />
-          <text x="310" y="25" font-size="14">Worker</text>
+          <text x="310" y="25" class="tworker">Worker</text>
         </g>
       </g>
 
@@ -142,21 +157,21 @@
 
         <g transform="translate(100, 80)"> 
           <rect class="control-plane" width="180" height="50" x="0" />
-          <text x="90" y="25" font-size="14">Control Plane</text>
+          <text x="90" y="25" class="tcontrol">Control Plane</text>
           <rect class="worker" width="180" height="50" x="220" />
-          <text x="310" y="25" font-size="14">Worker</text>
+          <text x="310" y="25" class="tworker">Worker</text>
         </g>
         <g transform="translate(665, 80)"> 
           <rect class="control-plane" width="180" height="50" x="0" />
-          <text x="90" y="25" font-size="14">Control Plane</text>
+          <text x="90" y="25" class="tcontrol">Control Plane</text>
           <rect class="worker" width="180" height="50" x="220" />
-          <text x="310" y="25" font-size="14">Worker</text>
+          <text x="310" y="25" class="tworker">Worker</text>
         </g>
         <g transform="translate(1235, 80)"> 
           <rect class="control-plane" width="180" height="50" x="0" />
-          <text x="90" y="25" font-size="14">Control Plane</text>
+          <text x="90" y="25" class="tcontrol">Control Plane</text>
           <rect class="worker" width="180" height="50" x="220" />
-          <text x="310" y="25" font-size="14">Worker</text>
+          <text x="310" y="25" class="tworker">Worker</text>
         </g>
       </g>
 
@@ -167,21 +182,21 @@
 
         <g transform="translate(100, 80)"> 
           <rect class="control-plane" width="180" height="50" x="0" />
-          <text x="90" y="25" font-size="14">Control Plane</text>
+          <text x="90" y="25" class="tcontrol">Control Plane</text>
           <rect class="worker" width="180" height="50" x="220" />
-          <text x="310" y="25" font-size="14">Worker</text>
+          <text x="310" y="25" class="tworker">Worker</text>
         </g>
         <g transform="translate(665, 80)"> 
           <rect class="control-plane" width="180" height="50" x="0" />
-          <text x="90" y="25" font-size="14">Control Plane</text>
+          <text x="90" y="25" class="tcontrol">Control Plane</text>
           <rect class="worker" width="180" height="50" x="220" />
-          <text x="310" y="25" font-size="14">Worker</text>
+          <text x="310" y="25" class="tworker">Worker</text>
         </g>
         <g transform="translate(1235, 80)"> 
           <rect class="control-plane" width="180" height="50" x="0" />
-          <text x="90" y="25" font-size="14">Control Plane</text>
+          <text x="90" y="25" class="tcontrol">Control Plane</text>
           <rect class="worker" width="180" height="50" x="220" />
-          <text x="310" y="25" font-size="14">Worker</text>
+          <text x="310" y="25" class="tworker">Worker</text>
         </g>
       </g>
 
