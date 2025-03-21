@@ -73,9 +73,17 @@ tls:
   # -- CA certificate filename in the secret (will be ignored if empty)
   caCertFilename: "root.pem"
 statefulset:
+  # -- Enable the StatefulSet template for PostgreSQL standalone mode
+  enabled: true
   # -- Lifecycle of the persistent volume claims created from PostgreSQL volumeClaimTemplates
   persistentVolumeClaimRetentionPolicy:
+    ## -- Volume behaviour when the StatefulSet is deleted
     whenDeleted: Delete
+podSecurityContext:
+  # -- Enable pod security context
+  enabled: true
+  # -- Group ID for the pod
+  fsGroup: 1000
 ----
 
 To install the application, run:
