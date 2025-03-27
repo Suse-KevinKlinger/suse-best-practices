@@ -1,0 +1,250 @@
+:docinfo:
+:doctype: book
+
+// defining article ID
+[#art-sap-eic-slemicro54]
+
+// Load document variables
+include::SAP-EIC-Variables.adoc[]
+
+
+:harvester: SUSE Virtualization
+:harvester_version: 1.4.1
+
+// overwrite variables
+:rancher_version: 2.10.1
+:slem_version: 6.0
+:lh_version: 1.7.2
+:rke2_version: 1.31
+
+
+
+= SAP {eic} on SUSE with {harvester}
+
+== Introduction
+
+This guide describes how to prepare your infrastructure for the installation of {eic} on {rke} using {harvester} and {rancher}.
+It will guide you through the steps of:
+
+* Installing {harvester}
+* Installing {rancher}
+* Setting up {rke} clusters
+* Deploying mandatory components for {eic}
+// * Deploying {eic} into your {rke}
+
+include::SAP-EIC-General.adoc[tags=disclaimer-EIC-sizing;disclaimer-annotation]
+
+++++
+<?pdfpagebreak?>
+++++
+
+
+== Supported and used versions
+
+The support matrix below shows which versions of the given software we'll use in this guide.
+
+[cols="1,1"]
+|===
+|Product | Version
+
+|{slem} | {slem_version}
+|{rke} | {rke2_version}     
+|{rancher} | {rancher_version}
+|{lh} | {lh_version}
+|{cm} | {cm_version}
+|{metallb} | {metallb_version} 
+|{pg} | {pg_version}
+|{redis} | {redis_version}
+|===
+
+include::SAP-EIC-General.adoc[tags=disclaimer-production-versions]
+
+++++
+<?pdfpagebreak?>
+++++
+
+== Prerequisites
+
+// TODO maybe just replace with Rancher4SAP?
+
+* Get subscriptions for:
+** {slem}
+** {rancher}
+** {lh}
+** {sle_ha} *
+
++++*+++ Only needed if you want to set up {rancher} in a high availability setup.
+
+Additionally,
+
+* check the storage requirements.
+
+* create a or get access to a private container registry.
+
+* get an SAP S-user ID to access software and documentation from SAP.
+
+* read the relevant SAP documentation:
+
+** https://me.sap.com/notes/3247839[Release Note for SAP Edge Integration Cell]
+
+** https://me.sap.com/notes/2946788[Release Note for SAP ELM Bridge]  
+
+** https://help.sap.com/docs/integration-suite/sap-integration-suite/setting-up-and-managing-edge-integration-cell[Installation Guide at help.sap.com]  
+
+++++
+<?pdfpagebreak?>
+++++
+
+
+== Landscape Overview
+
+To run {eic} in a production-ready and supported way, you need to set up multiple Kubernetes clusters and their nodes.
+Those comprise a Kubernetes cluster where you will install {rancher} to set up and manage the production and non-production clusters.
+For this {rancher} cluster, we recommend using three Kubernetes nodes and a load balancer.
+
+When using {harvester} you can provision all virtual machines 
+
+The {eic} will need to run in a dedicated Kubernetes cluster.
+For an HA setup of this cluster, we recommend using three Kubernetes control planes and three Kubernetes worker nodes.
+
+For a graphical overview of what is needed, take a look at the landscape overview:
+
+image::SAP-EIC-Harvester-Architecture.svg[scaledwidth=99%,opts=inline,Embedded]
+
+* The grey rectangles represent phyiscal servers (hardware).
+* The orange rectangles represent {harvester} instances.
+* The blue rectangles represent Kubernetes clusters.
+* The green rectangles represent virtual machines.
+
+We will use this graphic overview in the guide to illustrate what the next step is and what it is for.
+
+
+Starting with installing {harvester}, we will walk you through all the steps you need to take to get a fully set-up Kubernetes landscape for deploying {eic}.
+
+++++
+<?pdfpagebreak?>
+++++
+
+== {harvester}
+
+The first step is to set up {harvester}.
+With regards to our overview, that means we'll now cover the orange rectangles shown in our overview.
+
+image::SAP-EIC-Harvester-Architecture-Virtualization.svg[scaledwidth=99%,opts=inline,Embedded]
+
+include::SAP-EIC-Harvester.adoc[tag=harvester-intro]
+
+The benefit of using {harvester} for {eic} is that you can easily spin up Kubernetes clusters and the virtual machines will be automatically deployed. Furthermore there's no need to install {lh}, as {harvester} does provide a storage class and by that a convinient way to provide storrage to {eic}.
+
+++++
+<?pdfpagebreak?>
+++++
+
+include::SAP-EIC-Harvester.adoc[tags=harvester-setup;harvester-image-upload]
+
+Once you have uploaded the OS image that you want to use, you can now set up virtual machines.
+//TODO
+
+include::SAP-EIC-Harvester.adoc[tag=harvester-VM-create]
+
+++++
+<?pdfpagebreak?>
+++++
+
+== Install {rancher}
+
+At this point in time you should have installed {harvester} and should be able to deploy virtual machines there.
+We'll now take a closer look on how to set up {rancher}.
+With regards to our overview, that means we'll now cover the first blue rectangles shown in our overview.
+
+image::SAP-EIC-Harvester-Architecture-Rancher.svg[scaledwidth=99%,opts=inline,Embedded]
+
+include::SAPDI3-Rancher.adoc[Rancher]
+
+//TODO replace haproxy with Harvester LB?
+
+++++
+<?pdfpagebreak?>
+++++
+
+== Integrate {harvester} with {rancher}
+
+include::SAP-EIC-Harvester.adoc[tag=harvester-rancher-integration]
+
+
+++++
+<?pdfpagebreak?>
+++++
+
+
+== Installing RKE2 using {rancher}
+
+At this point, you should have {harvester} and {rancher} running and integrated.
+With regards to our overview, that means we'll now cover the EIC related cluster, that are represented by the three blue boxes.
+
+image::SAP-EIC-Harvester-Architecture.svg[scaledwidth=99%,opts=inline,Embedded]
+
+++++
+<?pdfpagebreak?>
+++++
+
+include::SAP-Rancher-RKE2-Installation.adoc[tags=!install-rke2-custom]
+
+++++
+<?pdfpagebreak?>
+++++
+
+
+== Installing the mandatory databases
+
+In the following chapter we present an example for setting up {metallb}, {redis} and {pg}.
+
+NOTE: Keep in mind that the descriptions and instructions below might differ from the deployment you need for your specific infrastructure and use cases.
+
+
+=== Installing {redis}
+
+// https://help.sap.com/docs/integration-suite/sap-integration-suite/prepare-your-kubernetes-cluster#redis-data-store-requirements
+
+Before deploying {redis}, ensure that the requirements described at
+https://me.sap.com/notes/3247839 are met.
+
+Also, make sure you understand what grade of persistence you want to achieve for your {redis} cluster.
+For more information about persistence in {redis}, see
+https://redis.io/docs/management/persistence/.
+
+
+include::SAP-EIC-Redis.adoc[leveloffset=2]
+
+++++
+<?pdfpagebreak?>
+++++
+
+=== Installing {pg}
+
+// https://help.sap.com/docs/integration-suite/sap-integration-suite/prepare-your-kubernetes-cluster#postgresql-database-requirements
+
+Before deploying {pg}, ensure that the requirements described at
+https://me.sap.com/notes/3247839 are met.
+
+include::SAP-EIC-PostgreSQL.adoc[leveloffset=2]
+
+
+// TODO
+// Storage
+
+
+== Prepare cluster for {eic}
+
+include::SAP-EIC-Harvester.adoc[tags=harvester-kubernetes-storage;harvester-ippool, leveloffset=+1]
+
+++++
+<?pdfpagebreak?>
+++++
+
+== Installing {eic}
+
+// include::SAP-EIC.adoc[]
+At this point, you should be able to deploy {eic}.
+Follow the instructions at https://help.sap.com/docs/integration-suite/sap-integration-suite/setting-up-and-managing-edge-integration-cell
+to install {eic} in your prepared environments.

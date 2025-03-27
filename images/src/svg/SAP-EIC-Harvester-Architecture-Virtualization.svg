@@ -12,28 +12,35 @@
       fill: #0b41b7;
       stroke: #0b41b7;
       stroke-width: 2;
-      fill-opacity: 0.8;
+      stroke-opacity: 0.1;
+      fill-opacity: 0.1;
     }
 
     .eic-cluster {
       fill: #0b41b7;
       stroke: #0b41b7c;
       stroke-width: 2;
-      fill-opacity: 0.8;
+      stroke-opacity: 0.1;
+      fill-opacity: 0.1;
     }
+
 
     .rancher {
       fill: #30ba78;
       stroke: #30ba78;
       stroke-width: 2;
+      stroke-opacity: 0.1;
+      fill-opacity: 0.1;
     }
 
     /* Control Plane and Worker Nodes */
     .control-plane,
-    .worker{
+    .worker {
       fill: #30ba78;
       stroke: #30ba78;
       stroke-width: 2;
+      stroke-opacity: 0.1;
+      fill-opacity: 0.1;
     }
 
     /* SUSE Virtualization */
@@ -57,6 +64,7 @@
     .teic {
       fill: white;
       font-size: 20px;
+      fill-opacity: 0.1;
     }
     .tvirt {
       font-size: 20px;
@@ -64,13 +72,16 @@
     .trancher-management {
       font-size: 20px;
       fill: white;
+      fill-opacity: 0.1;
     }
     .trancher{
       font-size: 16px;
+      fill-opacity: 0.1;
     }
-    .twroker,
+    .tworker,
     .tcontrol {
       font-size: 14px;
+      fill-opacity: 0.1;
     }
 
   </style>
