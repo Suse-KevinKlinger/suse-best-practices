@@ -65,6 +65,8 @@ include::SAPDI3-Harvester-Installation.adoc[Harvester]
 
 == Installing {rancher}
 
+include::SAP-K8s-HA.adoc[tags=**]
+
 include::SAPDI3-Rancher.adoc[tags=**]
 
 include::SAPDI3-Harvester-Rancher.adoc[Harvester-Rancher]

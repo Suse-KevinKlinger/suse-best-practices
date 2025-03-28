@@ -144,6 +144,8 @@ Taking a look again on the landscape overview, this means, we will now cover how
 
 image::SAP-EIC-Architecture-Rancher.svg[scaledwidth=99%,opts=inline,Embedded]
 
+include::SAP-K8s-HA.adoc[tags=**]
+
 include::SAPDI3-Rancher.adoc[tags=**]
 
 ++++

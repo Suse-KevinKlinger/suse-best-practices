@@ -43,6 +43,8 @@ include::SAPDI3-Requirements.adoc[Requirements]
 
 == Installing {rancher}
 
+include::SAP-K8s-HA.adoc[tags=**]
+
 include::SAPDI3-Rancher.adoc[tags=**]
 
 include::SAPDI3-Longhorn.adoc[Longhorn]

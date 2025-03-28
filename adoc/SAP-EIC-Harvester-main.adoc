@@ -159,6 +159,15 @@ With regards to our overview, that means we'll now cover the first blue rectangl
 
 image::SAP-EIC-Harvester-Architecture-Rancher.svg[scaledwidth=99%,opts=inline,Embedded]
 
+++++
+<?pdfpagebreak?>
+++++
+
+include::SAP-K8s-HA.adoc[tags=rancher-haproxy-preps]
+
+
+include::SAP-K8s-HA.adoc[tags=rancher-haproxy-install]
+
 include::SAPDI3-Rancher.adoc[tags=**]
 
 ++++
