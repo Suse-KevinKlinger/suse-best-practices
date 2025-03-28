@@ -159,9 +159,7 @@ With regards to our overview, that means we'll now cover the first blue rectangl
 
 image::SAP-EIC-Harvester-Architecture-Rancher.svg[scaledwidth=99%,opts=inline,Embedded]
 
-include::SAPDI3-Rancher.adoc[Rancher]
-
-//TODO replace haproxy with Harvester LB?
+include::SAPDI3-Rancher.adoc[tags=**]
 
 ++++
 <?pdfpagebreak?>
