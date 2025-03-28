@@ -255,3 +255,23 @@ include::SAP-EIC-Harvester.adoc[tags=harvester-kubernetes-storage;harvester-ippo
 At this point, you should be able to deploy {eic}.
 Follow the instructions at https://help.sap.com/docs/integration-suite/sap-integration-suite/setting-up-and-managing-edge-integration-cell
 to install {eic} in your prepared environments.
+
+
+++++
+<?pdfpagebreak?>
+++++
+
+:leveloffset: 0
+
+
+// Standard SUSE Best Practices includes
+== Legal notice
+include::common_sbp_legal_notice.adoc[]
+
+++++
+<?pdfpagebreak?>
+++++
+
+// Standard SUSE Best Practices includes
+:leveloffset: 0
+include::common_gfdl1.2_i.adoc[]
