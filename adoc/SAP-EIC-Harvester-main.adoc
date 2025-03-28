@@ -73,7 +73,7 @@ include::SAP-EIC-General.adoc[tags=disclaimer-production-versions]
 ** {lh}
 ** {sle_ha} *
 
-+++*+++ Only needed if you want to set up {rancher} in a high availability setup.
++++*+++ Only needed if you want to set up {rancher} in a high availability setup without the  {harvester} Load Balancer feature.
 
 Additionally,
 
@@ -100,9 +100,10 @@ Additionally,
 
 To run {eic} in a production-ready and supported way, you need to set up multiple Kubernetes clusters and their nodes.
 Those comprise a Kubernetes cluster where you will install {rancher} to set up and manage the production and non-production clusters.
-For this {rancher} cluster, we recommend using three Kubernetes nodes and a load balancer.
+For this {rancher} cluster, we recommend using three Kubernetes nodes and a Load Balancer.
 
 When using {harvester} you can provision all virtual machines 
+//TODO
 
 The {eic} will need to run in a dedicated Kubernetes cluster.
 For an HA setup of this cluster, we recommend using three Kubernetes control planes and three Kubernetes worker nodes.
@@ -145,6 +146,18 @@ include::SAP-EIC-Harvester.adoc[tags=harvester-setup;harvester-image-upload]
 Once you have uploaded the OS image that you want to use, you can now set up virtual machines.
 //TODO
 
+In this guide we'll describe the example of setting up three virtual machines to host the {rancher} cluster you can later use to create and manage your {eic} clusters.
+
+[#instanceLabels]
+Make sure to add *Instance Labels* to your machines if you plan to use the {harvester} Load Balancer feature, which will described in this guide at xref:SAP-EIC-Harvester-main.adoc#lbconfig[].
+In this example we'll use:
+
+[options="header"]
+|===
+|Key |Value
+|application|rancher-mgt
+|===
+
 include::SAP-EIC-Harvester.adoc[tag=harvester-VM-create]
 
 ++++
@@ -167,6 +180,22 @@ include::SAP-K8s-HA.adoc[tags=rancher-haproxy-preps]
 
 
 include::SAP-K8s-HA.adoc[tags=rancher-haproxy-install]
+
+==== Using a {harvester} Load Balancer
+
+include::SAP-EIC-Harvester.adoc[tag=rancher-harvester-lb-intro]
+
+[#ippool]
+include::SAP-EIC-Harvester.adoc[tags=harvester-ippool, leveloffset=+3]
+
+[#lbconfig]
+===== Configuring the {harvester} Load Balancer
+
+include::SAP-EIC-Harvester.adoc[tag=rancher-harvester-lb-config]
+
+++++
+<?pdfpagebreak?>
+++++
 
 include::SAPDI3-Rancher.adoc[tags=**]
 
@@ -201,6 +230,9 @@ include::SAP-Rancher-RKE2-Installation.adoc[tags=!install-rke2-custom]
 <?pdfpagebreak?>
 ++++
 
+
+// TODO
+// Storage
 
 == Installing the mandatory databases
 
@@ -237,13 +269,19 @@ https://me.sap.com/notes/3247839 are met.
 include::SAP-EIC-PostgreSQL.adoc[leveloffset=2]
 
 
-// TODO
-// Storage
-
+++++
+<?pdfpagebreak?>
+++++
 
 == Prepare cluster for {eic}
 
-include::SAP-EIC-Harvester.adoc[tags=harvester-kubernetes-storage;harvester-ippool, leveloffset=+1]
+include::SAP-EIC-Harvester.adoc[tags=harvester-kubernetes-storage;harvester-lb, leveloffset=+1]
+
+If you're using a network without a DHCP, you'll need to create an IP Pool.
+To do so, please refer to the  xref:SAP-EIC-Harvester-main.adoc#ippool[previous chapter].
+
+
+Once this is done, a Kubernetes cluster created as described in xref:SAP-Rancher-RKE2-Installation.adoc#installRKE2Harvester[the previous chapter], will automatically get an IP address from that pool assigned for Services of type LoadBalancer.
 
 ++++
 <?pdfpagebreak?>

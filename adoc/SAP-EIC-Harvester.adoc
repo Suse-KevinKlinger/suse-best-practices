@@ -62,21 +62,25 @@ You can get an overview of the currently supported images at https://docs.harves
 
 # tag::harvester-kubernetes-storage[]
 
-A benefit of using {harvester} is the provisioing of storage to your Kubernetes clusters.
+A benefit of using {harvester} is the provisioning of storage to your Kubernetes clusters.
 If you create a cluster as described in xref:SAP-Rancher-RKE2-Installation.adoc#installRKE2Harvester[the previous chapter], a storageClass will automatically be created within your Kubernetes cluster.
 
 # end::harvester-kubernetes-storage[]
 
 
-# tag::harvester-ippool[]
-
-== Creating an IP Pools in {harvester}
+# tag::harvester-lb[]
 
 You can use {harvester} to create a guest Kubernetes cluster load balancer as also described at 
 https://docs.harvesterhci.io/v1.4/networking/loadbalancer#guest-kubernetes-cluster-load-balancer
 and
 https://docs.harvesterhci.io/v1.4/rancher/cloud-provider/#load-balancer-support .
 
+
+# end::harvester-lb[]
+
+# tag::harvester-ippool[]
+
+== Creating an IP Pool in {harvester}
 
 To create an IP Pool, login to your {harvester} instance and go to *Networks -> IP Pools*.
 Click on *Create* in the upper right corner to create a new IP Pool:
@@ -128,7 +132,66 @@ At this point your IP Pool should have been created and show up in list of IP Po
 
 image::SAP-EIC-Harvester-IPPool.png[scaledwidth=99%,opts=inline,Embedded]
 
-Once this is done, a Kubernetes cluster created as described in xref:SAP-Rancher-RKE2-Installation.adoc#installRKE2Harvester[the previous chapter], will automatically get an IP address assigned for Services of type LoadBalancer.
-
-
 # end::harvester-ippool[]
+
+
+# tag::rancher-harvester-lb-intro[]
+
+This section describes how to set up a load balancer using {harvester} to distribute traffic to virtual machines.
+
+IMPORTANT: This approach only works with {harvester} 1.4.2 or higher and requires that the target virtual machines are connected to the management network of {harvester}. 
+
+If your management network is not managed by a DHCP, your first step would be to create an IP Pool.
+
+# end::rancher-harvester-lb-intro[]
+
+
+# tag::rancher-harvester-lb-config[]
+
+To create a Load Balancer, login to your {harvester} instance and go to *Networks -> Load Balancers*.
+Click on *Create* in the upper right corner to create a new Load Balancer:
+
+image::SAP-EIC-Harvester-LB-Empty.png[scaledwidth=99%,opts=inline,Embedded]
+
+++++
+<?pdfpagebreak?>
+++++
+
+On the next screen, you should see a menu like this:
+
+image::SAP-EIC-Harvester-LB-Create.png[scaledwidth=99%,opts=inline,Embedded]
+
+Select the IPAM method you want to use - either DHCP or Pool.
+
+// TODO image
+
+++++
+<?pdfpagebreak?>
+++++
+
+Next configure the *Listeners*. The *Port* is the port on which the Load Balancer will listen for requests. The *Backend Port* will be the port of the target virtual machine the traffic is forwarded to.
+If you want to use this Load Balancer to forward traffic to a {rancher} management cluster, you'd need to configure two listeners:
+
+[options="header"]
+|===
+|Name |Protocol|Port|Backend Port
+|http|TCP|80|80
+|https|TCP|443|443
+|===
+
+image::SAP-EIC-Harvester-LB-Listeners.png[scaledwidth=99%,opts=inline,Embedded]
+
+
+++++
+<?pdfpagebreak?>
+++++
+
+The next step is to configure the *Backend Server Selector*.
+Here you'll configure which virtual machines are getting addressed by the Load Balancer.
+Therefore the *Key* and *Value* must match the *Instance Labels* of the target virtual machines.
+
+image::SAP-EIC-Harvester-LB-Selector.png[scaledwidth=99%,opts=inline,Embedded]
+
+
+
+# end::rancher-harvester-lb-config[]
