@@ -299,6 +299,39 @@ to install {eic} in your prepared environments.
 <?pdfpagebreak?>
 ++++
 
+[#Appendix]
+== Appendix
+
+include::SAP-EIC-ImagePullSecrets.adoc[leveloffset=+2]
+++++
+<?pdfpagebreak?>
+++++
+include::SAP-EIC-LoginRegistryApplicationCollection.adoc[tags=general-login;eic-reference,leveloffset=+2]
+
+[#selfSignedCertificates]
+=== Using self-signed certificates
+
+In this chapter we will explain how to create self-signed certificates and how to make them available within Kubernetes. We will describe two possible solutions to do this. You can create everything on the operation system layer or you also can use cert-manager in your downstream cluster.
+
+include::SAP-EIC-General.adoc[tags=self-signed-certificates]
+
+You should then have the files _server.pem_, _server.key_ and _chained.pem_ that can be used for your applications such as Redis or PostgresSQL.
+
+
+==== Uploading certificates to Kubernetes
+
+include::SAP-EIC-General.adoc[tags=k8s-upload-certificates]
+
+==== Using cert-manager
+
+include::SAP-EIC-General.adoc[tags=use-cert-manager]
+
+
+
+++++
+<?pdfpagebreak?>
+++++
+
 :leveloffset: 0
 
 
