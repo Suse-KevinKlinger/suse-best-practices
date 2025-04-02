@@ -14,7 +14,6 @@ include::SAP-EIC-Variables.adoc[]
 // overwrite variables
 :rancher_version: 2.10.1
 :slem_version: 6.0
-:lh_version: 1.7.2
 :rke2_version: 1.31
 
 
@@ -50,9 +49,8 @@ The support matrix below shows which versions of the given software we'll use in
 |{slem} | {slem_version}
 |{rke} | {rke2_version}     
 |{rancher} | {rancher_version}
-|{lh} | {lh_version}
+{harvester} | {harvester_version}
 |{cm} | {cm_version}
-|{metallb} | {metallb_version} 
 |{pg} | {pg_version}
 |{redis} | {redis_version}
 |===
@@ -70,7 +68,7 @@ include::SAP-EIC-General.adoc[tags=disclaimer-production-versions]
 * Get subscriptions for:
 ** {slem}
 ** {rancher}
-** {lh}
+** {harvester}
 ** {sle_ha} *
 
 +++*+++ Only needed if you want to set up {rancher} in a high availability setup without the  {harvester} Load Balancer feature.

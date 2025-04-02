@@ -67,6 +67,7 @@ image::SAP-Rancher-Create-Harvester-Landing.png[title=Rancher create harvester l
 
 Configure the cluster to your needs.
 For a high available setup, we recommend to use at least:
+
 * 3 x etcd / controll plane nodes
 * 3 x worker nodes
 
@@ -80,5 +81,7 @@ For this 2nd pool also set the *Machine Count* to 3 and only select *Worker* for
 At the bottom of the page, you'll find the Kubernetes related options:
 
 image::SAP-Rancher-Create-Harvester-Cluster-Configuration.png[title=Rancher create harvester k8s config,scaledwidth=99%]
+
+//TODO Add application collection to Creation step
 
 # end::install-rke2-harvester[]

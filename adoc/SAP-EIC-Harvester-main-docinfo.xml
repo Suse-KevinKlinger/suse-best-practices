@@ -25,16 +25,14 @@
 <meta name="productname">
     <productname version="6.0">SUSE Linux Enterprise Micro</productname>
     <productname version="2">Rancher Kubernetes Engine</productname>
-    <productname version="2.10.1">Rancher Prime</productname>
-    <productname version="1.7.2">Longhorn</productname>
-    <productname version="1.4.1">Harvester</productname>    
+    <productname version="2.10.1">SUSE Rancher Prime</productname>
+    <productname version="1.4.1">SUSE Virtualization</productname>    
     </meta>
 
 <meta name="platform">SUSE Linux Enterprise Micro 6.0</meta>
 <meta name="platform">Rancher Kubernetes Engine 2</meta>
-<meta name="platform">Longhorn</meta>
-<meta name="platform">Rancher Prime</meta>
-<meta name="platform">Harvester</meta>
+<meta name="platform">SUSE Rancher Prime</meta>
+<meta name="platform">SUSE Virtualization</meta>
 
 <authorgroup>
     <author>
