@@ -98,15 +98,21 @@ $ kubectl create namespace cert-manager
 
 # end::cert-manager-install[]
 
+
+# tag::application-collection[]
+If you want to install `cert-manager` from the _application-collection_ , you must create e imagePullSecret.
+
 [#rancherIPS]
-How to create the *imagePullSecret* is described in the xref:SAP-EIC-ImagePullSecrets.adoc#imagePullSecret[].
+How to create the *imagePullSecret* is described in the <<imagePullSecret>>.
+
+# end::application-collection[]
 
 # tag::rancher-manager-install[]
 ==== Installing the application
 
 ifdef::eic[]
 [#rancherLIR]
-Before you can install the application, you need to login into the registry. You can find the instruction in xref:SAP-EIC-LoginRegistryApplicationCollection.adoc#LoginApplicationCollection[]
+Before you can install the application, you need to login into the registry. You can find the instruction in <<LoginApplicationCollection>>
 endif::[]
 
 ifndef::eic[]

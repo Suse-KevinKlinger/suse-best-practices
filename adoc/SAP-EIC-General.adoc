@@ -26,6 +26,8 @@ Other versions of {metallb} or {cm} can be used but may have not been tested.
 
 
 # tag::self-signed-certificates[]
+
+[#selfSignedCertificates]
 ==== Creating self-signed certificates
 
 WARNING: We strongly advise against using self-signed certificates in production environments.

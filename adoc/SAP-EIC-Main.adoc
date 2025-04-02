@@ -265,9 +265,8 @@ include::SAP-EIC-ImagePullSecrets.adoc[leveloffset=+2]
 ++++
 <?pdfpagebreak?>
 ++++
-include::SAP-EIC-LoginRegistryApplicationCollection.adoc[leveloffset=+2]
+include::SAP-EIC-LoginRegistryApplicationCollection.adoc[tags=general-login;eic-reference,leveloffset=+2]
 
-[#selfSignedCertificates]
 === Using self-signed certificates
 
 In this chapter we will explain how to create self-signed certificates and how to make them available within Kubernetes. We will describe two possible solutions to do this. You can create everything on the operation system layer or you also can use cert-manager in your downstream cluster.

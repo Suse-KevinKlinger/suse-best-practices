@@ -90,7 +90,7 @@ include::SAPDI3-Install.adoc[DI-Install]
 
 == Appendix
 
-include::SAP-EIC-ImagePullSecrets.adoc[leveloffset=+2]
+include::SAP-EIC-ImagePullSecrets.adoc[tags=application-collection;create-kubectl;create-rancher, leveloffset=+2]
 
 ++++
 <?pdfpagebreak?>
