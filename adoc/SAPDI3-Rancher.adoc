@@ -7,7 +7,7 @@
 To install RKE2, the script provided at https://get.rke2.io can be used as follows:
 [source, bash]
 ----
-$ curl -sfL https://get.rke2.io | INSTALL_RKE2_VERSION=v1.28.13-rke2r1 sh
+$ curl -sfL https://get.rke2.io | INSTALL_RKE2_VERSION=v1.31.7-rke2r1 sh
 ----
 
 For HA setups, it is necessary to create RKE2 cluster configuration files in advance.
@@ -100,7 +100,7 @@ $ kubectl create namespace cert-manager
 
 
 # tag::application-collection[]
-If you want to install `cert-manager` from the _application-collection_ , you must create e imagePullSecret.
+If you want to install `cert-manager` from the _application-collection_ , you must create an imagePullSecret.
 
 [#rancherIPS]
 How to create the *imagePullSecret* is described in the <<imagePullSecret>>.
