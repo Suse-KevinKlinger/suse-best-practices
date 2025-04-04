@@ -100,8 +100,8 @@ To run {eic} in a production-ready and supported way, you need to set up multipl
 Those comprise a Kubernetes cluster where you will install {rancher} to set up and manage the production and non-production clusters.
 For this {rancher} cluster, we recommend using three Kubernetes nodes and a Load Balancer.
 
-When using {harvester} you can provision all virtual machines 
-//TODO
+When using {harvester} you can provision all virtual machines needed within our example landscape.
+While the VMs for the {rancher} cluster have to be created in {harvester} itself, the Kubernetes clusters and the related virtual machines can be created through {rancher}.
 
 The {eic} will need to run in a dedicated Kubernetes cluster.
 For an HA setup of this cluster, we recommend using three Kubernetes control planes and three Kubernetes worker nodes.
