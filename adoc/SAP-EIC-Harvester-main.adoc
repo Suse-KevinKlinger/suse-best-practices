@@ -142,7 +142,6 @@ The benefit of using {harvester} for {eic} is that you can easily spin up Kubern
 include::SAP-EIC-Harvester.adoc[tags=harvester-setup;harvester-image-upload]
 
 Once you have uploaded the OS image that you want to use, you can now set up virtual machines.
-//TODO
 
 In this guide we'll describe the example of setting up three virtual machines to host the {rancher} cluster you can later use to create and manage your {eic} clusters.
 
@@ -156,6 +155,7 @@ In this example we'll use:
 |application|rancher-mgt
 |===
 
+A detailed overview of how to setup the virtual machines can be found at:
 include::SAP-EIC-Harvester.adoc[tag=harvester-VM-create]
 
 ++++
@@ -234,15 +234,11 @@ If you don't have an instance of {pg} or {redis} that you can use for {eic}, we'
 ++++
 
 
-// TODO
-// Storage
-
 == Installing the mandatory databases
 
 In the following chapter we present an example for setting up {metallb}, {redis} and {pg}.
 
 NOTE: Keep in mind that the descriptions and instructions below might differ from the deployment you need for your specific infrastructure and use cases.
-
 
 === Installing {redis}
 
