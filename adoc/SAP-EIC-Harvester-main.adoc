@@ -224,6 +224,11 @@ image::SAP-EIC-Harvester-Architecture.svg[scaledwidth=99%,opts=inline,Embedded]
 
 include::SAP-Rancher-RKE2-Installation.adoc[tags=!install-rke2-custom]
 
+As soon as the Kubernetes cluster is ready, your next step is to install {pg} and {redis}.
+
+If you already do have {pg} and {redis} deployed, you can skip the next chapter and follow the instructions at <<eicPreperation>>.
+If you don't have an instance of {pg} or {redis} that you can use for {eic}, we'll show you how in the next chapter how to deploy those in a Kubernetes cluster.
+
 ++++
 <?pdfpagebreak?>
 ++++
@@ -271,6 +276,7 @@ include::SAP-EIC-PostgreSQL.adoc[leveloffset=2]
 <?pdfpagebreak?>
 ++++
 
+[#eicPreperation]
 == Prepare cluster for {eic}
 
 include::SAP-EIC-Harvester.adoc[tags=harvester-kubernetes-storage;harvester-lb, leveloffset=+1]
