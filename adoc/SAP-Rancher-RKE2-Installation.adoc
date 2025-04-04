@@ -57,7 +57,7 @@ If you want to create Kubernetes clusters using {harvester} to spin up the virtu
 
 image::SAP-Rancher-Create-Harvester.png[title=Rancher create harvester cluster,scaledwidth=99%]
 
-If you haven't created a cloud credentail so far, you'll see a screen as followed:
+If you haven't created a cloud credential so far, you'll see a screen as followed:
 
 image::SAP-Rancher-Create-Harvester-CloudCredential.png[title=Rancher create harvester cloud credential,scaledwidth=99%]
 
@@ -81,6 +81,18 @@ For this 2nd pool also set the *Machine Count* to 3 and only select *Worker* for
 At the bottom of the page, you'll find the Kubernetes related options:
 
 image::SAP-Rancher-Create-Harvester-Cluster-Configuration.png[title=Rancher create harvester k8s config,scaledwidth=99%]
+
+For a very basic configuration it is sufficient to adjust the *Kubernetes Version* to your needs and to make sure *harvester* is selected as the *Cloud Provider* .
+Once you're done with your Kubernetes related configuration, hit the *Create* button and you're Kubernetes cluster will be created on automatically provisioned virtual machines in {harvester}.
+
+After you clicked *Create* you should be redirected to the cluster management view, where your defined cluster will show up. This may look like:
+
+image::SAP-EIC-Harvester-Cluster-Created.png[scaledwidth=99%,opts=inline,Embedded]
+
+If you want to have more insights about the deployment, you can click on the name of the specified cluster, which will redirect you to an overview like this:
+
+image::SAP-EIC-Harvester-Cluster-Provisioning-State.png[scaledwidth=99%,opts=inline,Embedded]
+
 
 //TODO Add application collection to Creation step
 
