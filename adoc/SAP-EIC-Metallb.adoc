@@ -20,7 +20,7 @@ $ kubectl create namespace metallb
 ----
 
 [#metalIPS]
-Instructions how to create the *imagePullSecret* can be found in xref:SAP-EIC-ImagePullSecrets.adoc#imagePullSecret[].
+Instructions how to create the *imagePullSecret* can be found in <<imagePullSecret>>.
 
 ++++
 <?pdfpagebreak?>
@@ -29,7 +29,7 @@ Instructions how to create the *imagePullSecret* can be found in xref:SAP-EIC-Im
 === Installation of {metallb}
 
 [#metalLIR]
-Before you can install the application, you need to login into the registry. You can find the instruction in xref:SAP-EIC-LoginRegistryApplicationCollection.adoc#LoginApplicationCollection[].
+Before you can install the application, you need to login into the registry. You can find the instruction in <<LoginApplicationCollection>>.
 
 Create a values.yaml file with the following configuration:
 
