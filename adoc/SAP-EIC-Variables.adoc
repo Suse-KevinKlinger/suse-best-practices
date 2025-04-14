@@ -10,6 +10,10 @@
 :lh_version: 1.5.5
 :rancher: SUSE Rancher Prime
 :rancher_version: 2.8.3
+<<<<<<< HEAD
+=======
+:rancher4SAP: Rancher for SAP applications
+>>>>>>> main
 :rke: Rancher Kubernetes Engine 2
 :rac: Rancher Application Collection
 
