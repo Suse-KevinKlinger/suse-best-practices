@@ -16,21 +16,22 @@ Thus you need to install the following packages:
 
 [source, bash, subs="attributes"]
 ----
-$ zypper in -y lsscsi multipath-tools
+# zypper in -y lsscsi multipath-tools
 ----
 
 As multipathd is known to have problems on OS using the kernel-default-base packages, replace them with kernel-default:
 
 [source, bash, subs="attributes"]
 ----
-$ zypper remove -y kernel-default-base && zypper in -y kernel-default
+# zypper remove -y kernel-default-base 
+# zypper in -y kernel-default
 ----
 
 Afterwards you can enable iscsi and multipath
 [source, bash, subs="attributes"]
 ----
-$ sytemctl enablle --now iscsi
-$ sytemctl enablle --now multipathd
+# sytemctl enablle --now iscsi
+# sytemctl enablle --now multipathd
 ----
 
 === Deploying the {trid} operator
@@ -49,7 +50,7 @@ $ helm install my-trident-operator netapp-trident/trident-operator --version 100
 Before creating the link to the backend, it's recommended to store the user and password information in a Secret.
 To create such a secret you can use:
 
-[source, yaml, subs="attributes"]
+[source, yaml]
 ----
 apiVersion: v1
 kind: Secret
@@ -66,9 +67,7 @@ To establish the connection between the target Kubernetes cluster and the {netap
 To get more information how to set up the backend configuration, refer to https://docs.netapp.com/us-en/trident/trident-use/backend-kubectl.html#tridentbackendconfig
 
 
-
-
-[source, yaml, subs="attributes"]
+[source, yaml]
 ----
 apiVersion: trident.netapp.io/v1
 kind: TridentBackendConfig
@@ -86,8 +85,7 @@ spec:
     name: backend-tbc-ontap-san-secret
 ----
 
-
-[source, yaml, subs="attributes"]
+[source, yaml]
 ----
 apiVersion: trident.netapp.io/v1
 kind: TridentBackendConfig
@@ -119,7 +117,7 @@ If the connection was established, the *State* should be active and you should s
 Once the backend is configured, you can create a *StorageClass* to provision Volumes to be consumed by a Perstistent Volume Claim.
 Here's an example that will create a storageClass that will use an SAN/iscsi backend:
 
-[source, yaml, subs="attributes"]
+[source, yaml]
 ----
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
