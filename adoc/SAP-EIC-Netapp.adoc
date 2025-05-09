@@ -79,9 +79,9 @@ spec:
   version: 1
   backendName: ontap-san-backend
   storageDriverName: ontap-san
-  managementLIF: 10.17.70.80
-  dataLIF: 10.17.70.81
-  svm: lu0601v13
+  managementLIF: <Cluster IP>
+  dataLIF: <Storage-VM-IP>
+  svm: <Storage-VM-FQDN>
   credentials:
     name: backend-tbc-ontap-san-secret
 ----
@@ -98,9 +98,9 @@ spec:
   version: 1
   backendName: ontap-nas-backend
   storageDriverName: ontap-nas
-  managementLIF: 10.17.70.80
-  dataLIF: 10.17.70.82
-  svm: lu0601v14
+  managementLIF: <Cluster-IP>
+  dataLIF: <Storage-VM-IP>
+  svm: <Storage-VM-FQDN>
   credentials:
     name: backend-tbc-ontap-san-secret
 ----
