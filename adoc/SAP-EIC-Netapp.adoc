@@ -1,7 +1,4 @@
-
-:netapp: NetApp
-:trid: Trident
-
+[#NetApp]
 
 == Installing {trid}
 
