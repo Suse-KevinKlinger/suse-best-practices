@@ -13,22 +13,22 @@ Thus you need to install the following packages:
 
 [source, bash, subs="attributes"]
 ----
-# zypper in -y lsscsi multipath-tools
+sudo zypper in -y lsscsi multipath-tools
 ----
 
 As multipathd is known to have problems on OS using the kernel-default-base packages, replace them with kernel-default:
 
 [source, bash, subs="attributes"]
 ----
-# zypper remove -y kernel-default-base 
-# zypper in -y kernel-default
+sudo zypper remove -y kernel-default-base 
+sudo zypper in -y kernel-default
 ----
 
 Afterwards you can enable iscsi and multipath
 [source, bash, subs="attributes"]
 ----
-# sytemctl enablle --now iscsi
-# sytemctl enablle --now multipathd
+sudo sytemctl enablle --now iscsi
+sudo sytemctl enablle --now multipathd
 ----
 
 === Deploying the {trid} operator
@@ -38,8 +38,8 @@ An example of how to deploy it looks like follows:
 
 [source, bash, subs="attributes"]
 ----
-$ helm repo add netapp-trident https://netapp.github.io/trident-helm-chart
-$ helm install my-trident-operator netapp-trident/trident-operator --version 100.2502.1 --create-namespace --namespace trident
+helm repo add netapp-trident https://netapp.github.io/trident-helm-chart
+helm install my-trident-operator netapp-trident/trident-operator --version 100.2502.1 --create-namespace --namespace trident
 ----
 
 === Establish the connection between Kubernetes and the {netapp} storage
@@ -104,7 +104,7 @@ To verify the backend was configured successfuly, check the output of:
 
 [source, bash, subs="attributes"]
 ----
-$ kubectl -n trident get tbc backend-tbc-ontap-san
+kubectl -n trident get tbc backend-tbc-ontap-san
 ----
 
 If the connection was established, the *State* should be active and you should see a *Backend UUID*
