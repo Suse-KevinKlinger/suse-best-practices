@@ -42,6 +42,7 @@ The support matrix below shows which versions of the given software we will use 
 |{metallb} | {metallb_version} 
 |{pg} | {pg_version}
 |{redis} | {redis_version}
+|{istio} | {istio_version}
 |===
 
 include::SAP-EIC-General.adoc[tags=disclaimer-production-versions]
@@ -208,6 +209,23 @@ Before deploying {pg}, ensure that the requirements described at
 https://me.sap.com/notes/3247839 are met.
 
 include::SAP-EIC-PostgreSQL.adoc[leveloffset=2]
+
+++++
+<?pdfpagebreak?>
+++++
+
+include::SAP-EIC-Istio-main.adoc[tags=istio-installation]
+
+++++
+<?pdfpagebreak?>
+++++
+
+[#eicPreperation]
+== Preparing the cluster for {eic}
+
+This section outlines the essential steps for configuring your Kubernetes cluster to properly host and run the {eic}. It includes creating necessary namespaces and permissions, and generating a Kubeconfig file for the {eic} installation.
+
+include::SAP-EIC-Istio-main.adoc[tags=shared-cluster-permissions, leveloffset=+1]
 
 ++++
 <?pdfpagebreak?>
