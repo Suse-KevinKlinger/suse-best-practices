@@ -13,22 +13,22 @@ Thus you need to install the following packages:
 
 [source, bash, subs="attributes"]
 ----
-sudo zypper in -y lsscsi multipath-tools
+sudo zypper in -y lsscsi multipath-tools open-iscsi
 ----
 
 As multipathd is known to have problems on OS using the kernel-default-base packages, replace them with kernel-default:
 
 [source, bash, subs="attributes"]
 ----
-sudo zypper remove -y kernel-default-base 
+sudo zypper remove -y kernel-default-base
 sudo zypper in -y kernel-default
 ----
 
-Afterwards you can enable iscsi and multipath
+Afterwards you can enable iscsi and multipath:
 [source, bash, subs="attributes"]
 ----
-sudo sytemctl enablle --now iscsi
-sudo sytemctl enablle --now multipathd
+sudo systemctl enable --now iscsi
+sudo systemctl enable --now multipathd
 ----
 
 === Deploying the {trid} operator
@@ -52,7 +52,7 @@ To create such a secret you can use:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: backend-tbc-ontap-san-secret
+  name: backend-tbc-ontap-secret
   namespace: trident
 type: Opaque
 stringData:
@@ -63,6 +63,7 @@ stringData:
 To establish the connection between the target Kubernetes cluster and the {netapp} storage system, a so called *TridentBackendConfig* is required.
 To get more information how to set up the backend configuration, refer to https://docs.netapp.com/us-en/trident/trident-use/backend-kubectl.html#tridentbackendconfig
 
+The following two examples are showing what the configuration for a SAN/iscsi backend and a NAS backend looks like:
 
 [source, yaml]
 ----
@@ -79,7 +80,7 @@ spec:
   dataLIF: <Storage-VM-IP>
   svm: <Storage-VM-FQDN>
   credentials:
-    name: backend-tbc-ontap-san-secret
+    name: backend-tbc-ontap-secret
 ----
 
 [source, yaml]
@@ -97,10 +98,10 @@ spec:
   dataLIF: <Storage-VM-IP>
   svm: <Storage-VM-FQDN>
   credentials:
-    name: backend-tbc-ontap-san-secret
+    name: backend-tbc-ontap-secret
 ----
 
-To verify the backend was configured successfuly, check the output of:
+To verify the backend was configured successfully, check the output of:
 
 [source, bash, subs="attributes"]
 ----
@@ -111,7 +112,7 @@ If the connection was established, the *State* should be active and you should s
 
 //TODO example picture
 
-Once the backend is configured, you can create a *StorageClass* to provision Volumes to be consumed by a Perstistent Volume Claim.
+Once the backend is configured, you can create a *StorageClass* to provision Volumes to be consumed by a Persistent Volume Claim.
 Here's an example that will create a storageClass that will use an SAN/iscsi backend:
 
 [source, yaml]
