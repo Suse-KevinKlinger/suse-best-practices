@@ -1,6 +1,6 @@
 # tag::intro[]
 
-=== Installing {trid}
+== Installing {trid}
 
 This chapter describes how to install {trid} in a RKE2 cluster using Helm.
 For more details how to install {trid} with Helm, visit https://docs.netapp.com/us-en/trident/trident-get-started/kubernetes-deploy-helm.html#critical-information-about-trident-25-02
@@ -9,7 +9,7 @@ For more details how to install {trid} with Helm, visit https://docs.netapp.com/
 
 
 # tag::os[]
-==== Preparing the OS 
+=== Preparing the OS 
 
 The Kubernetes worker nodes must be prepared so PVCs can later be provisioned properly.
 Thus you need to install the following packages:
@@ -39,7 +39,7 @@ sudo systemctl enable --now multipathd
 
 # tag::deploy[]
 
-==== Deploying the {trid} operator
+=== Deploying the {trid} operator
 
 The {trid} operator is responsible to establish the connection between your {netapp} storage system and the Kubernetes cluster.
 An example of how to deploy it looks like follows:
@@ -54,7 +54,7 @@ helm install my-trident-operator netapp-trident/trident-operator --version 100.2
 
 # tag::backend-config[]
 
-== Establish the connection between Kubernetes and the {netapp} storage
+=== Establish the connection between Kubernetes and the {netapp} storage
 
 Before creating the link to the backend, it's recommended to store the user and password information in a Secret.
 To create such a secret you can use:

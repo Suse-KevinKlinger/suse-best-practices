@@ -170,7 +170,7 @@ include::SAPDI3-Longhorn.adoc[leveloffset=1]
 ++++
 
 [#NetApp]
-include::SAP-EIC-Netapp.adoc[leveloffset=0, tags=**]
+include::SAP-EIC-Netapp.adoc[leveloffset=1, tags=**]
 
 ++++
 <?pdfpagebreak?>
