@@ -165,6 +165,9 @@ The tested storage solutions by SAP and SUSE are shown below with a link to the 
 
 include::SAPDI3-Longhorn.adoc[leveloffset=1]
 
+[#NetApp]
+include::SAP-EIC-Netapp.adoc[leveloffset=1]
+
 ++++
 <?pdfpagebreak?>
 ++++

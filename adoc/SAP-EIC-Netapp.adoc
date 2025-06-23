@@ -1,4 +1,3 @@
-[#NetApp]
 
 == Installing {trid}
 
