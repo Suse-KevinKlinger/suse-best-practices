@@ -33,5 +33,17 @@
 :cm_version: 1.15.2
 
 :istio: Istio
-:istio_version: 0.7.4
+:istio_version: 0.8.2
 :istio_namespace: istio-system
+
+:kiali: Kiali
+:kiali_version: 2.11.0
+:kiali_namespace: istio-system
+
+:prometheus: Prometheus
+:prometheus_version: 27.22.0
+:prometheus_namespace: istio-system
+
+:grafana: Grafana
+:grafana_version: 9.2.7
+:grafana_namespace: istio-system

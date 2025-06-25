@@ -1,0 +1,413 @@
+
+
+
+
+// tag::istio-installation[]
+
+[#istioInstall]
+== Installing {istio}
+
+The {istio} chart can be found at https://apps.rancher.io/applications/istio.
+
+// IMPORTANT::
+// SUSE does not offer application support for {istio}.
+// For support requests, contact link:https://istio.io/[Istio].
+
+// TODO: when available, add information from SAP regarding to shared cluster.
+
+=== Deploying the chart
+
+// TODO: when available, double-check that link includes istio as a requirement and
+//       add additional links if necessary
+Before deploying {istio}, ensure that the requirements described at https://me.sap.com/notes/3247839 are met.
+
+To deploy the chart, create the related namespace and *imagePullSecret* first.
+
+To create the namespace, run:
+
+[source, bash, subs="attributes"]
+----
+kubectl create namespace {istio_namespace}
+----
+
+[#istioIPS]
+Instructions how to create the *imagePullSecret* can be found in <<imagePullSecret>>.
+
+[#istioLIR]
+Before you can install the application, you need to log in to the registry.
+You can find the instructions in <<LoginApplicationCollection>>.
+
+NOTE: The *{istio_namespace}* namespace, *imagePullSecret*, and registry login established for {istio} will be reused by:
+{kiali} at <<kialiInstall>>, {prometheus} at <<prometheusInstall>>, and {grafana} at <<grafanaInstall>>.
+
+Create a file _values.yaml_ to store some configurations for the {istio} Helm chart.
+The configuration might look like the following:
+
+[source, yaml]
+----
+base:
+  enabled: true
+cni:
+  enabled: false
+gateway:
+  enabled: true
+  env:
+    # Optional: Enable support for HTTP/1.0 protocol
+    ISTIO_META_HTTP10: 1
+global:
+  imagePullSecrets:
+    - name: application-collection
+istiod:
+  enabled: true
+  env:
+    # Optional: Enable support for HTTP/1.0 protocol
+    PILOT_HTTP10: 1
+  # Optional: Preserve original client IP by specifying the number of trusted proxies
+  meshConfig:
+    defaultConfig:
+      gatewayTopology:
+        numTrustedProxies: 1
+ztunnel:
+  enabled: false
+----
+
+NOTE: Adjust `numTrustedProxies` based on your infrastructure.
+For more details, refer to the official {istio} documentation at 
+https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/#Topology-num_trusted_proxies.
+
+To install the application, run:
+[source, bash, subs="attributes"]
+----
+helm install istio oci://dp.apps.rancher.io/charts/istio \
+-f values.yaml \
+--namespace={istio_namespace} \
+--version {istio_version}
+----
+
+// end::istio-installation[]
+
+// tag::monitoring-kiali-installation[]
+
+[#kialiInstall]
+== Installing {kiali}
+
+The {kiali} chart can be found at https://apps.rancher.io/applications/kiali.
+
+// IMPORTANT::
+// SUSE does not offer application support for {kiali}.
+// // For support requests, contact link:https://kiali.io/[Istio].
+
+// TODO: when available, add information from SAP regarding to shared cluster.
+
+=== Deploying the chart
+
+// TODO: when available, double-check that link includes kiali as a requirement and
+//       add additional links if necessary
+Before deploying {kiali}, ensure the following prerequisites are met:
+
+* All requirements specified in https://me.sap.com/notes/3247839 are fulfilled.
+* The {istio} application is already deployed. If not, refer to <<istioInstall>> for deployment instructions.
+* The {prometheus} application is already deployed. If not, refer to <<prometheusInstall>> for deployment instructions.
+
+Deploy {kiali} into the *{istio_namespace}* namespace, which should already be configured with an *imagePullSecret*,
+as these are prerequisites for {istio} at <<istioInstall>>.
+Therefore, you do not need to configure them separately for {kiali}.
+
+[#kialiIPS]
+For instructions on how to create the *imagePullSecret*, refer to <<imagePullSecret>>.
+
+[#kialiLIR]
+Before you can install the application, you need to log in to the registry. You can find the instructions in <<LoginApplicationCollection>>.
+
+Create a file _values.yaml_ to store some configurations for the {kiali} Helm chart.
+The configuration might look like the following:
+
+[source, yaml]
+----
+external_services:
+  grafana:
+    auth:
+      password: test_pass
+      type: basic
+      username: test_user
+    dashboards:
+      - name: Istio Performance Dashboard
+    enabled: true
+    external_url: http://grafana.istio-system
+    internal_url: http://grafana.istio-system
+  prometheus:
+    custom_metrics_url: http://prometheus-server.istio-system
+    url: http://prometheus-server.istio-system
+global:
+  imagePullSecrets:
+    - application-collection 
+----
+
+To install the application, run:
+[source, bash, subs="attributes"]
+----
+helm install kiali oci://dp.apps.rancher.io/charts/kiali \
+-f values.yaml \
+--namespace={kiali_namespace} \
+--version {kiali_version}
+----
+
+// end::monitoring-kiali-installation[]
+
+// tag::monitoring-prometheus-installation[]
+
+[#prometheusInstall]
+== Installing {prometheus}
+
+The {prometheus} chart can be found at https://apps.rancher.io/applications/prometheus.
+
+// IMPORTANT::
+// SUSE does not offer application support for {prometheus}.
+// For support requests, contact link:https://prometheus.io/[Prometheus].
+
+// TODO: when available, add information from SAP regarding to shared cluster.
+
+=== Deploying the chart
+
+// TODO: when available, double-check that link includes prometheus as a requirement and
+//       add additional links if necessary
+Before deploying {prometheus}, ensure that the requirements described at https://me.sap.com/notes/3247839 are met. 
+
+Deploy {prometheus} into the *{istio_namespace}* namespace, which should already be configured with an *imagePullSecret*,
+as these are prerequisites for {istio} at <<istioInstall>>.
+Therefore, you do not need to configure them separately for {prometheus}.
+
+[#prometheusIPS]
+For instructions on how to create the *imagePullSecret*, refer to <<imagePullSecret>>.
+
+[#prometheusLIR]
+Before you can install the application, you need to log in to the registry. You can find the instructions in <<LoginApplicationCollection>>.
+
+Create a file _values.yaml_ to store some configurations for the {prometheus} Helm chart.
+The configuration might look like the following:
+
+[source, yaml]
+----
+alertmanager:
+  persistentVolume:
+    storageClassName: longhorn
+global:
+  imagePullSecrets:
+    - application-collection
+server:
+  persistentVolume:
+    storageClassName: longhorn
+----
+
+To install the application, run:
+[source, bash, subs="attributes"]
+----
+helm install prometheus oci://dp.apps.rancher.io/charts/prometheus \
+-f values.yaml \
+--namespace={prometheus_namespace} \
+--version {prometheus_version}
+----
+
+// end::monitoring-prometheus-installation[]
+
+// tag::monitoring-grafana-installation[]
+
+[#grafanaInstall]
+== Installing {grafana}
+
+The {grafana} chart can be found at https://apps.rancher.io/applications/grafana.
+
+// IMPORTANT::
+// SUSE does not offer application support for {grafana}.
+// For support requests, contact link:https://grafana.com/[Grafana].
+
+// TODO: when available, add information from SAP regarding to shared cluster.
+
+=== Deploying the chart
+
+// TODO: when available, double-check that link includes grafana as a requirement and
+//       add additional links if necessary
+Before deploying {grafana}, ensure that the requirements described at https://me.sap.com/notes/3247839 are met.
+
+Deploy {grafana} into the *{istio_namespace}* namespace, which should already be configured with an *imagePullSecret*,
+as these are prerequisites for {istio} at <<istioInstall>>.
+Therefore, you do not need to configure them separately for {grafana}.
+
+[#grafanaIPS]
+For instructions on how to create the imagePullSecret, refer to <<imagePullSecret>>.
+
+[#grafanaLIR]
+Also, before you install the application, ensure you are logged into the registry; you will find those instructions in <<LoginApplicationCollection>>.
+
+Create a file _values.yaml_ to store some configurations for the {grafana} Helm chart.
+The configuration might look like the following:
+
+[source, yaml]
+----
+adminUser: test_user
+adminPassword: test_pass
+global:
+  imagePullSecrets:
+    - application-collection 
+----
+
+To install the application, run:
+[source, bash, subs="attributes"]
+----
+helm install grafana oci://dp.apps.rancher.io/charts/grafana \
+-f values.yaml \
+--namespace={grafana_namespace} \
+--version {grafana_version}
+----
+
+// end::monitoring-grafana-installation[]
+
+// tag::shared-cluster-namespaces[]
+
+== (//TODO) Adding Namespaces to Service Mesh
+
+The following namespaces are required by {eic}. They must be created and injected to the Service Mesh:
+
+* edgelm
+* edgelm
+* edge-icell
+* edge-icell-secrets
+* edge-icell-ela
+* edge-icell-services
+
+To establish these namespaces, create a file named _edge-namespaces.yaml_ with the definitions below:
+
+[source, bash]
+----
+cat <<EOF > edge-namespaces.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: edgelm
+  labels:
+    istio-injection: enabled
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: edge-icell
+  labels:
+    istio-injection: enabled
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: edge-icell-services
+  labels:
+    istio-injection: enabled
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: edge-icell-secrets
+  labels:
+    istio-injection: enabled
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: edge-icell-ela
+  labels:
+    istio-injection: enabled
+EOF
+----
+
+After creating the file, apply it to your cluster:
+[source, bash, subs="attributes"]
+----
+kubectl apply -f edge-namespaces.yaml
+----
+
+// end::shared-cluster-namespaces[]
+
+// tag::shared-cluster-permissions[]
+
+== (//TODO) Configuring the Permissions
+
+To ensure {elm} and {eic} operate properly, the following Role, ClusterRole, RoleBinding and ClusterRoleBinding are needed.
+
+// https://ranchermanager.docs.rancher.com/reference-guides/rancher-manager-architecture/communicating-with-downstream-user-clusters#impersonation
+
+// TODO: when available, apply the provided RBAC in YAML files.
+// TODO: define a source to store the YAML files and/or script available for the users
+
+// Repetitive apply for list of namespaces
+// NAMESPACES=("ns1" "ns2" "ns3" "ns4" "ns5")
+
+// # Apply ClusterRole y ClusterRoleBinding
+// kubectl apply -f cr-edgelm-cluster-admin.yaml
+// kubectl apply -f crb-edgelm-cluster-admin.yaml
+// kubectl apply -f rbac-ssb-operator.yaml
+// kubectl apply -f rbac-kube-mgmt.yaml
+
+// # Apply Role and RoleBinding for each namespace
+// for ns in "${NAMESPACES[@]}"; do
+//   kubectl apply -n "$ns" -f role.yaml
+//   kubectl apply -n "$ns" -f rolebinding.yaml
+// done
+
+
+[source, bash]
+----
+# Cluster-wide permissions
+kubectl apply -f cr-edgelm-cluster-admin.yaml
+kubectl apply -f crb-edgelm-cluster-admin.yaml
+kubectl apply -f rbac-ssb-operator.yaml
+kubectl apply -f rbac-kube-mgmt.yaml
+
+# edgelm namespace permissions
+kubectl apply -f role-edgelm-manage.yaml -n edgelm # same for every namespace
+kubectl apply -f rb-edgelm-manage.yaml -n edgelm # same for every namespace
+kubectl apply -f role-edgelm-admin.yaml -n edgelm
+kubectl apply -f rb-edgelm-admin.yaml -n edgelm
+
+# edge-icell namespace permissions
+kubectl apply -f role-edgelm-manage.yaml -n edge-icell # same for every namespace
+kubectl apply -f rb-edgelm-manage.yaml -n edge-icell # same for every namespace
+kubectl apply -f rbac-edgelm-admin.yaml -n edge-icell # same for every EIC namespace
+kubectl apply -f rbac-edgelm-edge-icell.yaml -n edge-icell
+
+# edge-icell-ela namespace permissions
+kubectl apply -f role-edgelm-manage.yaml -n edge-icell-ela # same for every namespace
+kubectl apply -f rb-edgelm-manage.yaml -n edge-icell-ela # same for every namespace
+kubectl apply -f rbac-edgelm-admin.yaml -n edge-icell-ela # same for every EIC namespace
+kubectl apply -f rbac-edgelm-edge-icell-ela.yaml -n edge-icell-ela
+
+# edge-icell-secrets namespace permissions
+kubectl apply -f role-edgelm-manage.yaml -n edge-icell-secrets # same for every namespace
+kubectl apply -f rb-edgelm-manage.yaml -n edge-icell-secrets # same for every namespace
+kubectl apply -f rbac-edgelm-admin.yaml -n edge-icell-secrets # same for every EIC namespace
+
+# edge-icell-services namespace permissions
+kubectl apply -f role-edgelm-manage.yaml -n edge-icell-services # same for every namespace
+kubectl apply -f rb-edgelm-manage.yaml -n edge-icell-services # same for every namespace
+kubectl apply -f rbac-edgelm-admin.yaml -n edge-icell-services # same for every EIC namespace
+kubectl apply -f rbac-edgelm-edge-icell-services.yaml -n edge-icell-services
+
+# istio-system namespace permissions
+kubectl apply -f rbac-edgelm-admin-istio-system.yaml -n istio-system
+kubectl apply -f rbac-edgelm-istio-system.yaml -n istio-system
+----
+
+// end::shared-cluster-permissions[]
+
+// tag::shared-cluster-kubeconfig[]
+
+== (//TODO) Generating the Kubeconfig file for EdgeLM
+// TODO: when available, explain how to generate the KUBECONFIG.
+(//TODO...)
+
+// end::shared-cluster-kubeconfig[]
+
+// tag::shared-cluster-registration[]
+== (//TODO) Registrating Cluster in {elm}
+
+// // TODO: when available, link to SAP cluster registration
+(//TODO...)
+
+// end::shared-cluster-registration[]

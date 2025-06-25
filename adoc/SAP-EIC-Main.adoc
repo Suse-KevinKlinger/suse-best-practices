@@ -43,6 +43,9 @@ The support matrix below shows which versions of the given software we will use 
 |{pg} | {pg_version}
 |{redis} | {redis_version}
 |{istio} | {istio_version}
+|{kiali} | {kiali_version}
+|{prometheus} | {prometheus_version}
+|{grafana} | {grafana_version}
 |===
 
 include::SAP-EIC-General.adoc[tags=disclaimer-production-versions]
@@ -214,18 +217,57 @@ include::SAP-EIC-PostgreSQL.adoc[leveloffset=2]
 <?pdfpagebreak?>
 ++++
 
-include::SAP-EIC-Istio-main.adoc[tags=istio-installation]
+== Shared Cluster for {eic}
+
+This is an optional setup to onboard a shared Kubernetes cluster in Edge Lifecycle Management.
+// TODO: include what reasons customers would go for this configuration
+
+NOTE: Keep in mind that the descriptions and instructions provided may differ from the 
+deployment requirements for your specific infrastructure and use cases.
+
+=== Configuring the Service Mesh
+
+(//TODO)
+
+include::SAP-EIC-SharedCluster-main.adoc[tags=istio-installation, leveloffset=+2]
 
 ++++
 <?pdfpagebreak?>
 ++++
 
-[#eicPreperation]
-== Preparing the cluster for {eic}
+=== Configuring the Monitoring
 
-This section outlines the essential steps for configuring your Kubernetes cluster to properly host and run the {eic}. It includes creating necessary namespaces and permissions, and generating a Kubeconfig file for the {eic} installation.
+(//TODO)
 
-include::SAP-EIC-Istio-main.adoc[tags=shared-cluster-permissions, leveloffset=+1]
+include::SAP-EIC-SharedCluster-main.adoc[tags=monitoring-prometheus-installation, leveloffset=+2]
+
+include::SAP-EIC-SharedCluster-main.adoc[tags=monitoring-grafana-installation, leveloffset=+2]
+
+include::SAP-EIC-SharedCluster-main.adoc[tags=monitoring-kiali-installation, leveloffset=+2]
+
+++++
+<?pdfpagebreak?>
+++++
+
+include::SAP-EIC-SharedCluster-main.adoc[tags=shared-cluster-namespaces, leveloffset=+1]
+
+++++
+<?pdfpagebreak?>
+++++
+
+include::SAP-EIC-SharedCluster-main.adoc[tags=shared-cluster-permissions, leveloffset=+1]
+
+++++
+<?pdfpagebreak?>
+++++
+
+include::SAP-EIC-SharedCluster-main.adoc[tags=shared-cluster-kubeconfig, leveloffset=+1]
+
+++++
+<?pdfpagebreak?>
+++++
+
+include::SAP-EIC-SharedCluster-main.adoc[tags=shared-cluster-registration, leveloffset=+1]
 
 ++++
 <?pdfpagebreak?>

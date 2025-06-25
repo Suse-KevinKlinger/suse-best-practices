@@ -24,6 +24,9 @@ The login process is needed for the following application installations:
 * Redis (<<redisLIR>>)
 * PostgreSQL (<<pgLIR>>)
 * Istio (<<istioLIR>>)
+* Kiali (<<kialiLIR>>)
+* Prometheus (<<prometheusLIR>>)
+* Grafana (<<grafanaLIR>>)
 
 # end::eic-reference[]
 
