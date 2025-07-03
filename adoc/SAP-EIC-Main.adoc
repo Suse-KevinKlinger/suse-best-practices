@@ -219,15 +219,18 @@ include::SAP-EIC-PostgreSQL.adoc[leveloffset=2]
 
 == Shared Cluster for {eic}
 
-This is an optional setup to onboard a shared Kubernetes cluster in Edge Lifecycle Management.
-// TODO: include what reasons customers would go for this configuration
+// TODO: include more information about Shared Cluster for EIC
+//       i.e., the reasons customers would go for this configuration
+
+This section covers the steps for Shared Cluster setup in {eic}.
 
 NOTE: Keep in mind that the descriptions and instructions provided may differ from the 
 deployment requirements for your specific infrastructure and use cases.
 
+[#serviceMesh]
 === Configuring the Service Mesh
 
-(//TODO)
+// TODO: include more information about Service Mesh for EIC
 
 include::SAP-EIC-SharedCluster-main.adoc[tags=istio-installation, leveloffset=+2]
 
@@ -237,7 +240,8 @@ include::SAP-EIC-SharedCluster-main.adoc[tags=istio-installation, leveloffset=+2
 
 === Configuring the Monitoring
 
-(//TODO)
+This section covers the deployment of key monitoring and observability tools
+that integrate with the Istio Service Mesh configured previously in <<serviceMesh>>.
 
 include::SAP-EIC-SharedCluster-main.adoc[tags=monitoring-prometheus-installation, leveloffset=+2]
 

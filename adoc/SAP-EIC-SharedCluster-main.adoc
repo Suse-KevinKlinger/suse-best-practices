@@ -7,6 +7,9 @@
 [#istioInstall]
 == Installing {istio}
 
+This section guides you through setting up and configuring the Istio Service Mesh.
+Installing {istio} is a requirement for using Shared Cluster feature.
+
 The {istio} chart can be found at https://apps.rancher.io/applications/istio.
 
 // IMPORTANT::
@@ -51,16 +54,16 @@ cni:
   enabled: false
 gateway:
   enabled: true
+  # Optional: Enable support for HTTP/1.0 protocol
   env:
-    # Optional: Enable support for HTTP/1.0 protocol
     ISTIO_META_HTTP10: 1
 global:
   imagePullSecrets:
     - name: application-collection
 istiod:
   enabled: true
+  # Optional: Enable support for HTTP/1.0 protocol
   env:
-    # Optional: Enable support for HTTP/1.0 protocol
     PILOT_HTTP10: 1
   # Optional: Preserve original client IP by specifying the number of trusted proxies
   meshConfig:
@@ -109,11 +112,9 @@ Before deploying {kiali}, ensure the following prerequisites are met:
 * The {istio} application is already deployed. If not, refer to <<istioInstall>> for deployment instructions.
 * The {prometheus} application is already deployed. If not, refer to <<prometheusInstall>> for deployment instructions.
 
-Deploy {kiali} into the *{istio_namespace}* namespace, which should already be configured with an *imagePullSecret*,
-as these are prerequisites for {istio} at <<istioInstall>>.
-Therefore, you do not need to configure them separately for {kiali}.
-
 [#kialiIPS]
+Deploy {prometheus} into the *{istio_namespace}* namespace, which should already be configured with an *imagePullSecret*,
+as this is a prerequisite for {istio} at <<istioInstall>>.
 For instructions on how to create the *imagePullSecret*, refer to <<imagePullSecret>>.
 
 [#kialiLIR]
@@ -127,9 +128,9 @@ The configuration might look like the following:
 external_services:
   grafana:
     auth:
-      password: test_pass
       type: basic
-      username: test_user
+      username: <user>
+      password: <pass>
     dashboards:
       - name: Istio Performance Dashboard
     enabled: true
@@ -140,7 +141,7 @@ external_services:
     url: http://prometheus-server.istio-system
 global:
   imagePullSecrets:
-    - application-collection 
+    - application-collection
 ----
 
 To install the application, run:
@@ -173,11 +174,9 @@ The {prometheus} chart can be found at https://apps.rancher.io/applications/prom
 //       add additional links if necessary
 Before deploying {prometheus}, ensure that the requirements described at https://me.sap.com/notes/3247839 are met. 
 
-Deploy {prometheus} into the *{istio_namespace}* namespace, which should already be configured with an *imagePullSecret*,
-as these are prerequisites for {istio} at <<istioInstall>>.
-Therefore, you do not need to configure them separately for {prometheus}.
-
 [#prometheusIPS]
+Deploy {prometheus} into the *{istio_namespace}* namespace, which should already be configured with an *imagePullSecret*,
+as this is a prerequisite for {istio} at <<istioInstall>>.
 For instructions on how to create the *imagePullSecret*, refer to <<imagePullSecret>>.
 
 [#prometheusLIR]
@@ -229,12 +228,10 @@ The {grafana} chart can be found at https://apps.rancher.io/applications/grafana
 //       add additional links if necessary
 Before deploying {grafana}, ensure that the requirements described at https://me.sap.com/notes/3247839 are met.
 
-Deploy {grafana} into the *{istio_namespace}* namespace, which should already be configured with an *imagePullSecret*,
-as these are prerequisites for {istio} at <<istioInstall>>.
-Therefore, you do not need to configure them separately for {grafana}.
-
 [#grafanaIPS]
-For instructions on how to create the imagePullSecret, refer to <<imagePullSecret>>.
+Deploy {grafana} into the *{istio_namespace}* namespace, which should already be configured with an *imagePullSecret*,
+as this is a prerequisite for {istio} at <<istioInstall>>.
+For instructions on how to create the *imagePullSecret*, refer to <<imagePullSecret>>.
 
 [#grafanaLIR]
 Also, before you install the application, ensure you are logged into the registry; you will find those instructions in <<LoginApplicationCollection>>.
@@ -244,11 +241,11 @@ The configuration might look like the following:
 
 [source, yaml]
 ----
-adminUser: test_user
-adminPassword: test_pass
+adminUser: <user>
+adminPassword: <pass>
 global:
   imagePullSecrets:
-    - application-collection 
+    - application-collection
 ----
 
 To install the application, run:
@@ -329,70 +326,17 @@ kubectl apply -f edge-namespaces.yaml
 
 == (//TODO) Configuring the Permissions
 
-To ensure {elm} and {eic} operate properly, the following Role, ClusterRole, RoleBinding and ClusterRoleBinding are needed.
+// TODO: to be validated with SAP scenario
+// TODO: review the steps and add links
 
-// https://ranchermanager.docs.rancher.com/reference-guides/rancher-manager-architecture/communicating-with-downstream-user-clusters#impersonation
+To ensure {elm} and {eic} operate properly, you need to create a dedicated user and assign it the necessary roles within your downstream Kubernetes cluster.
+This user will then be used to manage and interact with the cluster resources required by {elm} and {eic}.
 
-// TODO: when available, apply the provided RBAC in YAML files.
-// TODO: define a source to store the YAML files and/or script available for the users
+{rancher} simplifies access to downstream user clusters through impersonation, allowing it to act on behalf of a user.
+This capability is crucial for managing permissions effectively without directly exposing sensitive credentials.
+For {elm} and {eic}, you will create a new user in Rancher and grant them specific cluster roles.
 
-// Repetitive apply for list of namespaces
-// NAMESPACES=("ns1" "ns2" "ns3" "ns4" "ns5")
-
-// # Apply ClusterRole y ClusterRoleBinding
-// kubectl apply -f cr-edgelm-cluster-admin.yaml
-// kubectl apply -f crb-edgelm-cluster-admin.yaml
-// kubectl apply -f rbac-ssb-operator.yaml
-// kubectl apply -f rbac-kube-mgmt.yaml
-
-// # Apply Role and RoleBinding for each namespace
-// for ns in "${NAMESPACES[@]}"; do
-//   kubectl apply -n "$ns" -f role.yaml
-//   kubectl apply -n "$ns" -f rolebinding.yaml
-// done
-
-
-[source, bash]
-----
-# Cluster-wide permissions
-kubectl apply -f cr-edgelm-cluster-admin.yaml
-kubectl apply -f crb-edgelm-cluster-admin.yaml
-kubectl apply -f rbac-ssb-operator.yaml
-kubectl apply -f rbac-kube-mgmt.yaml
-
-# edgelm namespace permissions
-kubectl apply -f role-edgelm-manage.yaml -n edgelm # same for every namespace
-kubectl apply -f rb-edgelm-manage.yaml -n edgelm # same for every namespace
-kubectl apply -f role-edgelm-admin.yaml -n edgelm
-kubectl apply -f rb-edgelm-admin.yaml -n edgelm
-
-# edge-icell namespace permissions
-kubectl apply -f role-edgelm-manage.yaml -n edge-icell # same for every namespace
-kubectl apply -f rb-edgelm-manage.yaml -n edge-icell # same for every namespace
-kubectl apply -f rbac-edgelm-admin.yaml -n edge-icell # same for every EIC namespace
-kubectl apply -f rbac-edgelm-edge-icell.yaml -n edge-icell
-
-# edge-icell-ela namespace permissions
-kubectl apply -f role-edgelm-manage.yaml -n edge-icell-ela # same for every namespace
-kubectl apply -f rb-edgelm-manage.yaml -n edge-icell-ela # same for every namespace
-kubectl apply -f rbac-edgelm-admin.yaml -n edge-icell-ela # same for every EIC namespace
-kubectl apply -f rbac-edgelm-edge-icell-ela.yaml -n edge-icell-ela
-
-# edge-icell-secrets namespace permissions
-kubectl apply -f role-edgelm-manage.yaml -n edge-icell-secrets # same for every namespace
-kubectl apply -f rb-edgelm-manage.yaml -n edge-icell-secrets # same for every namespace
-kubectl apply -f rbac-edgelm-admin.yaml -n edge-icell-secrets # same for every EIC namespace
-
-# edge-icell-services namespace permissions
-kubectl apply -f role-edgelm-manage.yaml -n edge-icell-services # same for every namespace
-kubectl apply -f rb-edgelm-manage.yaml -n edge-icell-services # same for every namespace
-kubectl apply -f rbac-edgelm-admin.yaml -n edge-icell-services # same for every EIC namespace
-kubectl apply -f rbac-edgelm-edge-icell-services.yaml -n edge-icell-services
-
-# istio-system namespace permissions
-kubectl apply -f rbac-edgelm-admin-istio-system.yaml -n istio-system
-kubectl apply -f rbac-edgelm-istio-system.yaml -n istio-system
-----
+_(//TODO) - steps or guide to create a New User in Rancher_
 
 // end::shared-cluster-permissions[]
 
@@ -400,14 +344,20 @@ kubectl apply -f rbac-edgelm-istio-system.yaml -n istio-system
 
 == (//TODO) Generating the Kubeconfig file for EdgeLM
 // TODO: when available, explain how to generate the KUBECONFIG.
-(//TODO...)
+
+To enable {eic} and {elm} to interact with your Kubernetes cluster, you will need a kubeconfig file tailored to the specific user you configured with the necessary permissions in the previous step.
+This kubeconfig file acts as a credential, allowing authenticated access to your downstream cluster.
+
+You will download this kubeconfig directly from {rancher}, using the user account that has been granted the appropriate roles.
+
+_(//TODO) - steps or guide to Download a Kubeconfig from Rancher_
 
 // end::shared-cluster-kubeconfig[]
 
 // tag::shared-cluster-registration[]
-== (//TODO) Registrating Cluster in {elm}
+== (//TODO) Registrating the Cluster in {elm}
 
 // // TODO: when available, link to SAP cluster registration
-(//TODO...)
+_(//TODO) - steps or guide to Register the Cluster in ELM_
 
 // end::shared-cluster-registration[]
