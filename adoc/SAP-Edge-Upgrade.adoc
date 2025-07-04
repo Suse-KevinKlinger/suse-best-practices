@@ -36,9 +36,9 @@ In this case, you will need to repeat the steps to upgrade {eic} until you have 
 
 === Upgrading {rke}
 
-//TODO
-// Downsteam cluster upgrade with Rancher whenever possible
-// Always upgrade one minor version after another and always highest patch level
+In this chapter we will describe how to upgrade {rke}.
+
+IMPORTANT: It is highly recommended to upgrade one minor version after another. Furthermore you should always upgrade to the highest patch level before upgrading the minor version.
 
 
 ==== Upgrading {rke} using {rancher}
@@ -83,7 +83,7 @@ WARNING: Whatever strategy you choose, it is highly recommended to upgrade the c
 Furthermore you should upgrade one node at a time.
 
 
-==== Upgrading with temporary nodes
+===== Upgrading with temporary nodes
 
 When upgrading the cluster with temporary nodes, you'll add a new node to the cluster that already holds the upgrades.
 
@@ -104,10 +104,9 @@ Cordoning a node will prevent new workloads to be scheduled on the node, while d
 
 The same procedure can be done for the upgrades of the worker nodes:
 
-//TODO
-//image::SAP-Edge-upgrade-worker.svg[title=Upgrade RKE2 worker,scaledwidth=99%,opts=inline,Embedded]
+image::SAP-Edge-Upgrade-worker.svg[title=Upgrade RKE2 worker,scaledwidth=99%,opts=inline,Embedded]
 
-==== Upgrading without temporary nodes
+===== Upgrading without temporary nodes
 
 Before upgrading an existing node, we recommend to cordon and drain it.
 To do so, run the following commands:
@@ -126,6 +125,9 @@ If you installed {rke} using the RPM, you should not try to upgrade using the in
 
 In this guide we'll give you an example how to upgrade using the installation script.
 
+To upgrade {rke} using the installation script, connect to your {rke} node and run the command below. Make sure to replace the version 
+with your desired target version.
+
 [source, bash]
 ----
 curl -sfL https://get.rke2.io | INSTALL_RKE2_VERSION=vX.Y.Z+rke2rN sh -
@@ -133,7 +135,29 @@ curl -sfL https://get.rke2.io | INSTALL_RKE2_VERSION=vX.Y.Z+rke2rN sh -
 
 You can find a list of {rke} versions at https://github.com/rancher/rke2/releases .
 
+After running the script, you should wait for a minute before you restart the {rke} service.
+To restart the service on a control plane node, run:
 
+[source, bash]
+----
+sudo systemctl restart rke2-server
+----
+
+To restart the service on a worker node, run:
+
+[source, bash]
+----
+sudo systemctl restart rke2-agent
+----
+
+After the service was restarted, you can uncordon your node, so it can be used for scheduling again:
+
+[source, bash]
+----
+kubectl uncordon <node-name>
+----
+
+These steps need to be repeated for every machine of the cluster.
 
 ++++
 <?pdfpagebreak?>
