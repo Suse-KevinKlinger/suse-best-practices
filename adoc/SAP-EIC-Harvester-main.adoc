@@ -329,6 +329,9 @@ include::SAP-EIC-General.adoc[tags=k8s-upload-certificates]
 
 include::SAP-EIC-General.adoc[tags=use-cert-manager]
 
+==== Fully removing {rancher}
+
+include::SAP-EIC-General.adoc[tags=rancher-cleanup]
 
 
 ++++

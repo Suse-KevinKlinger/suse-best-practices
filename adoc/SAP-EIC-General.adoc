@@ -205,5 +205,4 @@ kubectl create -f https://raw.githubusercontent.com/rancher/rancher-cleanup/refs
 kubectl  -n kube-system logs -l job-name=verify-job  -f | grep -v "is deprecated"
 ----
 
-
-# end::rancher-cleanuo[]
+# end::rancher-cleanup[]
