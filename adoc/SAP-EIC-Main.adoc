@@ -222,6 +222,14 @@ to install {eic} in your prepared environments.
 <?pdfpagebreak?>
 ++++
 
+== Day 2 operations
+
+include::SAP-Edge-Upgrade.adoc[tags=!harvester, leveloffset=+1]
+
+++++
+<?pdfpagebreak?>
+++++
+
 [#Appendix]
 == Appendix
 
@@ -265,6 +273,3 @@ include::common_sbp_legal_notice.adoc[]
 // Standard SUSE Best Practices includes
 :leveloffset: 0
 include::common_gfdl1.2_i.adoc[]
-
-
-include::SAP-Edge-Upgrade.adoc[]

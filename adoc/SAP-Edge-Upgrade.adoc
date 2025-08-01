@@ -1,9 +1,12 @@
+
+# tag::intro[]
 == Upgrade guidance
 
 When upgrading your SAP edge application related clusters, SUSE advices to follow the order of upgrading Rancher first, then Kubernetes and afterwards the OS.
 At https://www.suse.com/support/kb/doc/?id=000020061 you can find some information that will help you to prepare the upgrade.
+# end::intro[]
 
-
+# tag::eic[]
 === Upgrading {eic}
 
 Before upgrading your {eic} instance, please make sure that the target version was release for your {rke} cluster version:
@@ -29,11 +32,13 @@ image::SAP-EIC-Upgrade-Dependencies.png[title=EIC Upgrade example,scaledwidth=99
 If you skipped some versions of {eic}, it might be the case that you will need to take intermidiate steps before you can upgrade to the desired version. 
 In this case, you will need to repeat the steps to upgrade {eic} until you have reached your desired version.
 
+# end::eic[]
+
+
+# tag::rke[]
 ++++
 <?pdfpagebreak?>
 ++++
-
-
 === Upgrading {rke}
 
 In this chapter we will describe how to upgrade {rke}.
@@ -163,6 +168,13 @@ These steps need to be repeated for every machine of the cluster.
 <?pdfpagebreak?>
 ++++
 
+# end::rke[]
+
+
+# tag::rancher[]
+++++
+<?pdfpagebreak?>
+++++
 === Upgrading {rancher}
 
 IMPORTANT: We strongly recommend taking a backup before upgrading your {rancher} instance. Please refer to https://ranchermanager.docs.rancher.com/how-to-guides/new-user-guides/backup-restore-and-disaster-recovery/back-up-rancher for further information.
@@ -196,10 +208,41 @@ helm upgrade rancher rancher-prime/rancher \
   --version=<desired-version>
 ----
 
+# end::rancher[]
+
+
+# tag::harvester[]
 ++++
 <?pdfpagebreak?>
 ++++
+=== Upgrading {harvester}
 
+WARNING: Make sure to verify your {harvester} version is supported with your coupled {rancher} instance. You can check this at https://www.suse.com/suse-harvester/support-matrix/all-supported-versions/harvester-v1-5-x/ under *Harvester & Rancher Support Matrix*.
+
+Before upgrading {harvester}, it is highly recommended to use the pre-check script available at https://github.com/harvester/upgrade-helpers/tree/main/pre-check/v1.x.
+This will make sure that your cluster is in a healthy state and ready to be upgrade. If the check finds any issues, please make sure to fix the issue before running an upgrade.
+It is not necessary to run the script on all nodes - just one is enough.
+
+Besides running the check script, we highly recommend to check the official upgrade documentation at https://docs.harvesterhci.io/v1.5/upgrade/index and in particular the sections that refer the upgrade from your current version to the target version.
+
+The upgrade itself can be easily triggered from the {harvester} UI, once an upgrade is available.
+If there is an upgrade availabe, the UI will show an *Upgrade* button in the upper right corner of the Dashboard, as shown below:
+
+//TODO image
+
+If you click on the *Upgrade* button, a window will open, showing all possible target versions.
+
+//TODO image
+
+After selecting the target version, click on *Upgrade* again, to start the upgrade process.
+
+
+# end::harvester[]
+
+# tag::os[]
+++++
+<?pdfpagebreak?>
+++++
 === Upgrading the OS
 
 Depending on the operating system used, the commands and procedures for the upgrade differs.
@@ -228,86 +271,10 @@ Upgrading {slem} can be done in a similar manner:
 sudo transactional-update migration
 ----
 
-
-
-
-
-
-
-image::sap-edge-dependencies.svg[scaledwidth=99%,opts=inline,Embedded]
-
-// Upgrading a cluster depends on the used solutions.
-
-// Harvester influences the supported versions of Rancher.
-// Rancher influences:
-//     - the RKE2 version upstream
-//     - the RKE2 version downstream
-//     - the OS version downstream
-//     - the Longhorn version
-
-// RKE2 influences the versions of the OS
-
-// Longhorn influences the OS
-
-
-// === Thoughts
-
-// SAP EIC does update every month or maximum bimonthly.
-// For EIC only the RKE2 version of the cluster is relevant.
-
-// Therefore the chain looks as follows:
-
-// image::sap-edge-dependencies.svg[scaledwidth=99%,opts=inline,Embedded]
-
-// Convert the graph below into:
-// PNG: $ dot -Tpng input.dot
-// SVG: $ dot -Tsvg input.dot
-// JPEG: $ dot -Tjpeg input.dot
-
-// [graphviz]
-// ---------------------------------------------------------------------
-// digraph g {
-//     SAPEIC -> RKE2_downstream
-//     RKE2_downstream -> Rancher_version
-//     RKE2_downstream -> OS_downstream
-//     Rancher_version -> Longhorn
-//     Rancher_version -> OS_downstream
-//     Rancher_version -> OS_upstream
-//     Rancher_version -> RKE2_upstream
-//     Rancher_version -> RKE2_downstream
-//     RKE2_upstream -> OS_upstream
-//     Longhorn -> OS_downstream
-//     Harvester -> Rancher_version
-// }
-// ---------------------------------------------------------------------
+# end::os[]
 
 // TODO
 // Instructions how to upgrade
-// - RKE2
-// - Rancher
-// - OS
 // - Longhorn (optional)
 // - Harvester (optional)
-
-
-
-
-
-
-Identify:
-1. Identify the RKE2 version supported by SAP EIC for the downstream cluster
-2. Identify the Rancher version desired that supports the RKE2 version of the downstream cluster
-3. Identify the RKE2 version supported by Rancher for the management cluster
-4. Identify the OS version supported by Rancher AND RKE2 for the management cluster
-5. Identify the OS version supported by Rancher and RKE2 for the downstream cluster
-
-Upgrade:
-1. Upgrade Rancher
-2. Upgrade the RKE2 of the Rancher management cluster
-3. Upgrade the OS of the downstream cluster
-4. Upgrade the OS of the Rancher management cluster
-5. Upgrade Longhorn/Harvester
-6. Upgrade the RKE2 of the downstream cluster
-7. Upgrade SAP EIC
-
 
