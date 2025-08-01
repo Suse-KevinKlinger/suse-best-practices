@@ -228,11 +228,11 @@ Besides running the check script, we highly recommend to check the official upgr
 The upgrade itself can be easily triggered from the {harvester} UI, once an upgrade is available.
 If there is an upgrade availabe, the UI will show an *Upgrade* button in the upper right corner of the Dashboard, as shown below:
 
-//TODO image
+image::SAP-Edge-Upgrade-Harvester-Upgrade-Button.png[title=Harvester upgrade vailable,scaledwidth=99%,opts=inline,Embedded]
 
 If you click on the *Upgrade* button, a window will open, showing all possible target versions.
 
-//TODO image
+image::SAP-Edge-Upgrade-Harvester-Version.png[title=Harvester upgrade vailable,scaledwidth=99%,opts=inline,Embedded]
 
 After selecting the target version, click on *Upgrade* again, to start the upgrade process.
 
