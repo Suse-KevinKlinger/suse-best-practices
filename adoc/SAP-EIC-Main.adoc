@@ -248,6 +248,14 @@ to install {eic} in your prepared environments.
 <?pdfpagebreak?>
 ++++
 
+== Day 2 operations
+
+include::SAP-Edge-Upgrade.adoc[tags=!harvester, leveloffset=+1]
+
+++++
+<?pdfpagebreak?>
+++++
+
 [#Appendix]
 == Appendix
 
