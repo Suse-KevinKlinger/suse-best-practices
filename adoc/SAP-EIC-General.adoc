@@ -41,7 +41,7 @@ The following excerpt shows how to create such a CSR:
 openssl req -newkey rsa:2048 -keyout domain.key -out domain.csr -passout pass:<csr-passphrase> -subj  "/C=DE/ST=BW/L=Nuremberg/O=SUSE"
 ----
 
-Before you can sign the CSR, you need to add the DNS names of your Kuberntes Services to the CSR.
+Before you can sign the CSR, you need to add the DNS names of your Kubernetes Services to the CSR.
 Therefore, create a file with the content below and replace the *<servicename>* and *<namespace>* with the name of your Kubernetes service and the namespace in which it is placed:
 
 [source, bash]
@@ -164,7 +164,7 @@ spec:
     - key encipherment
 ----
 
-Apply the yaml file to your kubernetes cluster.
+Apply the yaml file to your Kubernetes cluster.
 [source, bash]
 ----
 kubectl apply -f selfsigned-issuer.yaml
@@ -177,3 +177,32 @@ When you deploy your applications via Helm Charts, you can use the generated cer
 In the Kubernetes Secret Certificate, three files are stored. These are the files _tls.crt_, _tls.key_ and _ca.crt_, which you can use in the _values.yaml_ file of your application.
 
 # end::use-cert-manager[]
+
+# tag::rancher-cleanup[]
+
+While a *helm uninstall* will trigger the removal of the {rancher} components, it is known that timeouts may be execeeded and some components may remain on your cluster.
+Therefore we recommend to uninstall {rancher} fully from your Kubernetes cluster, by using the cleanup scipt at https://github.com/rancher/rancher-cleanup .
+
+To run the script without cloning the repository, you can use the following command:
+
+[source, bash]
+----
+kubectl create -f https://raw.githubusercontent.com/rancher/rancher-cleanup/refs/heads/main/deploy/rancher-cleanup.yaml
+----
+
+To keep track of the deletion process, you can run:
+
+[source, bash]
+----
+kubectl  -n kube-system logs -l job-name=cleanup-job  -f
+----
+
+To verify the deletion was sucessfull, run the following commands where you should get an empty output:
+
+[source, bash]
+----
+kubectl create -f https://raw.githubusercontent.com/rancher/rancher-cleanup/refs/heads/main/deploy/verify.yaml
+kubectl  -n kube-system logs -l job-name=verify-job  -f | grep -v "is deprecated"
+----
+
+# end::rancher-cleanup[]

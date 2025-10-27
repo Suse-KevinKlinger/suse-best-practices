@@ -1,3 +1,4 @@
+// SUSE Linux related variables
 :sles: SUSE Linux Enterprise Server
 :sles4sap: SUSE Linux Enterprise Server for SAP applications
 :slm: SUSE Linux Micro
@@ -5,7 +6,7 @@
 :slem_version: 6.0
 :sles_version: 15 SP5
 
-
+// SUSE container related variables
 :sle_ha: SUSE Linux Enterprise High Availability
 :lh: Longhorn
 :lh_version: 1.7.2
@@ -15,11 +16,12 @@
 :rke: Rancher Kubernetes Engine 2
 :rac: Rancher Application Collection
 
+// SAP related variables
 :eic: Edge Integration Cell
 :elm: SAP Edge Lifecycle Management
 :sis: SAP Integration Suite
 
-
+// Dependency related variables
 :redis: Redis
 :redis_chart_version: 0.2.2
 :redis_version: 7.2.5
@@ -55,3 +57,7 @@
 :grafana_chart_version: 9.4.4
 :grafana_namespace: istio-system
 :grafana_version: 12.1.1
+
+// Third party storage solutions related variables
+:netapp: NetApp
+:trid: Trident
