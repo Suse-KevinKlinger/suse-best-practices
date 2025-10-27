@@ -42,10 +42,10 @@ The support matrix below shows which versions of the given software we will use 
 |{metallb} | {metallb_version} 
 |{pg} | {pg_version}
 |{redis} | {redis_version}
-|{istio} | {istio_version}
-|{kiali} | {kiali_version}
-|{prometheus} | {prometheus_version}
-|{grafana} | {grafana_version}
+|{istio} | {istio_chart_version}
+|{kiali} | {kiali_chart_version}
+|{prometheus} | {prometheus_chart_version}
+|{grafana} | {grafana_chart_version}
 |===
 
 include::SAP-EIC-General.adoc[tags=disclaimer-production-versions]
@@ -217,26 +217,25 @@ include::SAP-EIC-PostgreSQL.adoc[leveloffset=2]
 <?pdfpagebreak?>
 ++++
 
-== Shared Cluster for {eic}
+== Restricted Access for {eic}
 
 // TODO: include more information about Shared Cluster for EIC
 //       i.e., the reasons customers would go for this configuration
 
-This section covers the steps for Shared Cluster setup in {eic}.
+This section provides instructions for configuring Restricted Access feature for {eic}.
+
+// The Restricted Access feature requires the configuration of an {istio} Service Mesh, and Monitoring Tools which will be provided by {kiali}, {prometheus} and {grafana}.
+// After installing these applications, you will configure the restricted access for the {elm} so {eic} can be deployed on the cluster.
 
 NOTE: Keep in mind that the descriptions and instructions provided may differ from the 
 deployment requirements for your specific infrastructure and use cases.
 
 [#serviceMesh]
-=== Configuring the Service Mesh
+=== Configuring the {istio} Service Mesh
 
-// TODO: include more information about Service Mesh for EIC
+This section guides you through configuring the {istio} Service Mesh for the Restricted Access feature on {eic}.
 
 include::SAP-EIC-SharedCluster-main.adoc[tags=istio-installation, leveloffset=+2]
-
-++++
-<?pdfpagebreak?>
-++++
 
 === Configuring the Monitoring
 
@@ -253,25 +252,7 @@ include::SAP-EIC-SharedCluster-main.adoc[tags=monitoring-kiali-installation, lev
 <?pdfpagebreak?>
 ++++
 
-include::SAP-EIC-SharedCluster-main.adoc[tags=shared-cluster-namespaces, leveloffset=+1]
-
-++++
-<?pdfpagebreak?>
-++++
-
-include::SAP-EIC-SharedCluster-main.adoc[tags=shared-cluster-permissions, leveloffset=+1]
-
-++++
-<?pdfpagebreak?>
-++++
-
-include::SAP-EIC-SharedCluster-main.adoc[tags=shared-cluster-kubeconfig, leveloffset=+1]
-
-++++
-<?pdfpagebreak?>
-++++
-
-include::SAP-EIC-SharedCluster-main.adoc[tags=shared-cluster-registration, leveloffset=+1]
+include::SAP-EIC-SharedCluster-main.adoc[tags=shared-cluster-configuration, leveloffset=+1]
 
 ++++
 <?pdfpagebreak?>

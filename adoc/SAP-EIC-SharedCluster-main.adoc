@@ -1,15 +1,9 @@
-
-
-
-
 // tag::istio-installation[]
 
 [#istioInstall]
 == Installing {istio}
 
-This section guides you through setting up and configuring the Istio Service Mesh.
-Installing {istio} is a requirement for using Shared Cluster feature.
-
+Even though {istio} is available for deployment using the {rancher} Apps, we recommend to use the {rac}.
 The {istio} chart can be found at https://apps.rancher.io/applications/istio.
 
 // IMPORTANT::
@@ -17,8 +11,6 @@ The {istio} chart can be found at https://apps.rancher.io/applications/istio.
 // For support requests, contact link:https://istio.io/[Istio].
 
 // TODO: when available, add information from SAP regarding to shared cluster.
-
-=== Deploying the chart
 
 // TODO: when available, double-check that link includes istio as a requirement and
 //       add additional links if necessary
@@ -41,119 +33,32 @@ Before you can install the application, you need to log in to the registry.
 You can find the instructions in <<LoginApplicationCollection>>.
 
 NOTE: The *{istio_namespace}* namespace, *imagePullSecret*, and registry login established for {istio} will be reused by:
-{kiali} at <<kialiInstall>>, {prometheus} at <<prometheusInstall>>, and {grafana} at <<grafanaInstall>>.
+{kiali} at <<kialiInstall>>, {prometheus} at <<prometheusInstall>>, and {grafana} at <<grafanaInstall>>. 
+
+=== Deploying Istio
 
 Create a file _values.yaml_ to store some configurations for the {istio} Helm chart.
 The configuration might look like the following:
 
 [source, yaml]
 ----
-base:
-  enabled: true
-cni:
-  enabled: false
-gateway:
-  enabled: true
-  # Optional: Enable support for HTTP/1.0 protocol
-  env:
-    ISTIO_META_HTTP10: 1
 global:
   imagePullSecrets:
     - name: application-collection
-istiod:
-  enabled: true
-  # Optional: Enable support for HTTP/1.0 protocol
-  env:
-    PILOT_HTTP10: 1
-  # Optional: Preserve original client IP by specifying the number of trusted proxies
-  meshConfig:
-    defaultConfig:
-      gatewayTopology:
-        numTrustedProxies: 1
-ztunnel:
-  enabled: false
 ----
-
-NOTE: Adjust `numTrustedProxies` based on your infrastructure.
-For more details, refer to the official {istio} documentation at 
-https://istio.io/latest/docs/reference/config/istio.mesh.v1alpha1/#Topology-num_trusted_proxies.
 
 To install the application, run:
 [source, bash, subs="attributes"]
 ----
-helm install istio oci://dp.apps.rancher.io/charts/istio \
+helm install istiod oci://dp.apps.rancher.io/charts/istio \
 -f values.yaml \
 --namespace={istio_namespace} \
---version {istio_version}
+--version {istio_chart_version}
 ----
+
+For more information on installing and configuring {istio}, check the reference guide at https://docs.apps.rancher.io/reference-guides/istio/.
 
 // end::istio-installation[]
-
-// tag::monitoring-kiali-installation[]
-
-[#kialiInstall]
-== Installing {kiali}
-
-The {kiali} chart can be found at https://apps.rancher.io/applications/kiali.
-
-// IMPORTANT::
-// SUSE does not offer application support for {kiali}.
-// // For support requests, contact link:https://kiali.io/[Istio].
-
-// TODO: when available, add information from SAP regarding to shared cluster.
-
-=== Deploying the chart
-
-// TODO: when available, double-check that link includes kiali as a requirement and
-//       add additional links if necessary
-Before deploying {kiali}, ensure the following prerequisites are met:
-
-* All requirements specified in https://me.sap.com/notes/3247839 are fulfilled.
-* The {istio} application is already deployed. If not, refer to <<istioInstall>> for deployment instructions.
-* The {prometheus} application is already deployed. If not, refer to <<prometheusInstall>> for deployment instructions.
-
-[#kialiIPS]
-Deploy {prometheus} into the *{istio_namespace}* namespace, which should already be configured with an *imagePullSecret*,
-as this is a prerequisite for {istio} at <<istioInstall>>.
-For instructions on how to create the *imagePullSecret*, refer to <<imagePullSecret>>.
-
-[#kialiLIR]
-Before you can install the application, you need to log in to the registry. You can find the instructions in <<LoginApplicationCollection>>.
-
-Create a file _values.yaml_ to store some configurations for the {kiali} Helm chart.
-The configuration might look like the following:
-
-[source, yaml]
-----
-external_services:
-  grafana:
-    auth:
-      type: basic
-      username: <user>
-      password: <pass>
-    dashboards:
-      - name: Istio Performance Dashboard
-    enabled: true
-    external_url: http://grafana.istio-system
-    internal_url: http://grafana.istio-system
-  prometheus:
-    custom_metrics_url: http://prometheus-server.istio-system
-    url: http://prometheus-server.istio-system
-global:
-  imagePullSecrets:
-    - application-collection
-----
-
-To install the application, run:
-[source, bash, subs="attributes"]
-----
-helm install kiali oci://dp.apps.rancher.io/charts/kiali \
--f values.yaml \
---namespace={kiali_namespace} \
---version {kiali_version}
-----
-
-// end::monitoring-kiali-installation[]
 
 // tag::monitoring-prometheus-installation[]
 
@@ -204,7 +109,7 @@ To install the application, run:
 helm install prometheus oci://dp.apps.rancher.io/charts/prometheus \
 -f values.yaml \
 --namespace={prometheus_namespace} \
---version {prometheus_version}
+--version {prometheus_chart_version}
 ----
 
 // end::monitoring-prometheus-installation[]
@@ -241,11 +146,22 @@ The configuration might look like the following:
 
 [source, yaml]
 ----
-adminUser: <user>
-adminPassword: <pass>
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Prometheus
+      type: prometheus
+      url: http://prometheus-server.istio-system
+      access: proxy
+      isDefault: true
 global:
   imagePullSecrets:
     - application-collection
+# Optional: Expose Grafana with a LoadBalancer
+# service:
+#   enabled: true
+#   type: LoadBalancer
 ----
 
 To install the application, run:
@@ -254,110 +170,232 @@ To install the application, run:
 helm install grafana oci://dp.apps.rancher.io/charts/grafana \
 -f values.yaml \
 --namespace={grafana_namespace} \
---version {grafana_version}
+--version {grafana_chart_version}
 ----
 
 // end::monitoring-grafana-installation[]
 
-// tag::shared-cluster-namespaces[]
+// tag::monitoring-kiali-installation[]
 
-== (//TODO) Adding Namespaces to Service Mesh
+[#kialiInstall]
+== Installing {kiali}
 
-The following namespaces are required by {eic}. They must be created and injected to the Service Mesh:
+The {kiali} chart can be found at https://apps.rancher.io/applications/kiali.
 
-* edgelm
-* edgelm
-* edge-icell
-* edge-icell-secrets
-* edge-icell-ela
-* edge-icell-services
+// IMPORTANT::
+// SUSE does not offer application support for {kiali}.
+// // For support requests, contact link:https://kiali.io/[Istio].
 
-To establish these namespaces, create a file named _edge-namespaces.yaml_ with the definitions below:
+// TODO: when available, add information from SAP regarding to shared cluster.
 
-[source, bash]
+=== Deploying the chart
+
+// TODO: when available, double-check that link includes kiali as a requirement and
+//       add additional links if necessary
+Before deploying {kiali}, ensure the following prerequisites are met:
+
+* The {istio} application is already deployed. If not, refer to <<istioInstall>> for deployment instructions.
+* The {prometheus} application is already deployed. If not, refer to <<prometheusInstall>> for deployment instructions.
+* The {grafana} application is already deployed. If not, refer to <<grafanaInstall>> for deployment instructions.
+
+[#kialiIPS]
+Deploy {prometheus} into the *{istio_namespace}* namespace, which should already be configured with an *imagePullSecret*,
+as this is a prerequisite for {istio} at <<istioInstall>>.
+For instructions on how to create the *imagePullSecret*, refer to <<imagePullSecret>>.
+
+[#kialiLIR]
+Before you can install the application, you need to log in to the registry. You can find the instructions in <<LoginApplicationCollection>>.
+
+Create a _values.yaml_ file to store some configurations for the {kiali} Helm chart.
+You can do this by running the following command:
+
+[source, yaml]
 ----
-cat <<EOF > edge-namespaces.yaml
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: edgelm
-  labels:
-    istio-injection: enabled
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: edge-icell
-  labels:
-    istio-injection: enabled
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: edge-icell-services
-  labels:
-    istio-injection: enabled
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: edge-icell-secrets
-  labels:
-    istio-injection: enabled
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: edge-icell-ela
-  labels:
-    istio-injection: enabled
+GRAFANA_PASSWORD=$(kubectl get secret --namespace istio-system grafana -o jsonpath="{.data.admin-password}" | base64 -d ; echo)
+cat <<EOF > values.yaml
+external_services:
+  grafana:
+    auth:
+      type: basic
+      username: admin
+      password: $GRAFANA_PASSWORD
+    enabled: true
+    external_url: http://grafana.istio-system
+    internal_url: http://grafana.istio-system
+  prometheus:
+    custom_metrics_url: http://prometheus-server.istio-system
+    url: http://prometheus-server.istio-system
+global:
+  imagePullSecrets:
+    - application-collection
+# Optional: Expose the Kiali with an Ingress
+# deployment:
+#   ingress:
+#     enabled: true
 EOF
 ----
 
-After creating the file, apply it to your cluster:
+To install the application, run:
 [source, bash, subs="attributes"]
 ----
-kubectl apply -f edge-namespaces.yaml
+helm install kiali oci://dp.apps.rancher.io/charts/kiali \
+-f values.yaml \
+--namespace={kiali_namespace} \
+--version {kiali_chart_version}
 ----
 
-// end::shared-cluster-namespaces[]
+NOTE: For more information on installing and configuring {kiali}, check the reference guide at https://docs.apps.rancher.io/reference-guides/kiali/.
 
-// tag::shared-cluster-permissions[]
+// end::monitoring-kiali-installation[]
 
-== (//TODO) Configuring the Permissions
+// tag::shared-cluster-configuration[]
 
-// TODO: to be validated with SAP scenario
-// TODO: review the steps and add links
+== Configuring the Cluster for Restricted Access
 
-To ensure {elm} and {eic} operate properly, you need to create a dedicated user and assign it the necessary roles within your downstream Kubernetes cluster.
-This user will then be used to manage and interact with the cluster resources required by {elm} and {eic}.
+Installations of {elm} and {eic} with **Restricted Access** require specific namespaces. Follow the steps in https://me.sap.com/notes/3618713 to create and configure these namespaces.
 
-{rancher} simplifies access to downstream user clusters through impersonation, allowing it to act on behalf of a user.
-This capability is crucial for managing permissions effectively without directly exposing sensitive credentials.
-For {elm} and {eic}, you will create a new user in Rancher and grant them specific cluster roles.
+After creating the required namespaces, verify they are correctly created and labeled for Istio injection by navigating to **Cluster > Project/Namespaces**.
 
-_(//TODO) - steps or guide to create a New User in Rancher_
+image::SAP-Rancher-Main-Namespaces.png[title=Rancher namespaces,scaledwidth=99%]
 
-// end::shared-cluster-permissions[]
+The following namespaces are targeted for Istio sidecar injection and must have an *imagePullSecret* to enable image pulling:
 
-// tag::shared-cluster-kubeconfig[]
+* edgelm
+* edge-icell
+* edge-icell-services
+* edge-icell-ela
+* istio-gateways
 
-== (//TODO) Generating the Kubeconfig file for EdgeLM
-// TODO: when available, explain how to generate the KUBECONFIG.
+[#elmIPS]
+For instructions on creating the *imagePullSecret*, refer to <<imagePullSecret>>.
 
-To enable {eic} and {elm} to interact with your Kubernetes cluster, you will need a kubeconfig file tailored to the specific user you configured with the necessary permissions in the previous step.
-This kubeconfig file acts as a credential, allowing authenticated access to your downstream cluster.
+Alternatively, run the following script to create the *imagePullSecret* in all required namespaces:
 
-You will download this kubeconfig directly from {rancher}, using the user account that has been granted the appropriate roles.
+[source, bash]
+----
+NAMESPACES_INJECTION=("edgelm" "edge-icell" "edge-icell-services" "edge-icell-ela" "istio-gateways")
+for ns in "${NAMESPACES_INJECTION[@]}"; do
+  echo "Creating imagePullSecret for namespace: $ns"
+  kubectl create secret docker-registry application-collection -n $ns \
+    --docker-server=dp.apps.rancher.io \
+    --docker-username=<yourUser> \
+    --docker-password=<yourPassword>
+  sleep 1
+  echo "---"
+done
+echo "Done"
+----
 
-_(//TODO) - steps or guide to Download a Kubeconfig from Rancher_
+== Generating the Kubeconfig File
 
-// end::shared-cluster-kubeconfig[]
+The {eic} Restricted Access deployment requires a Kubeconfig file, which you can download from the Rancher UI.
 
-// tag::shared-cluster-registration[]
-== (//TODO) Registrating the Cluster in {elm}
+In this section, we create a restricted user and grant it the necessary permissions for {eic} deployment. The process involves assigning the restricted user to the downstream cluster and then using this user to download the Kubeconfig file from Rancher.
 
-// // TODO: when available, link to SAP cluster registration
-_(//TODO) - steps or guide to Register the Cluster in ELM_
+=== Creating the Restricted User
 
-// end::shared-cluster-registration[]
+1.  Navigate to "Users & Authentication" and click "Create".
+2.  Set a username (e.g., `eic-restricted`), a password, and select "Global Permissions > Standard User".
+3.  **Record this password** for subsequent configuration steps.
+
+After creation, the new user will be listed. **Record the User ID** (formatted as "u-XXXXX"), as both the ID and password are required for assigning permissions in the downstream cluster.
+
+NOTE: This restricted user only needs to be created once in Rancher, as user management is centralized and applies to all downstream clusters.
+
+image::SAP-Rancher-Main-Users.png[title=Rancher users list,scaledwidth=99%]
+
+=== Assigning Restricted User to the Cluster
+
+_(//TODO) To be changed when ClusterRoleTemplate rules are provided (Simeon)._
+
+Assign the newly created restricted user to the downstream cluster where {eic} will be deployed.
+
+1.  Navigate to **Cluster > Cluster and Project Members** in the Rancher UI.
+2.  Click **Add**. Select the restricted user and choose **Cluster Permission > Custom > View Nodes**.
+
+image::SAP-Rancher-Add-ClusterMembership.png[title=Rancher add user membership,scaledwidth=99%]
+
+=== Configuring Restricted Access User Permissions
+
+_(//TODO) To be changed when ClusterRoleTemplate rules are provided (Simeon)._
+
+Create a script file named `configuring_permissions.sh` with the following content:
+
+[source, bash]
+----
+#!/bin/bash
+set -eu
+
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $0 <USER_ID>"
+  exit 1
+fi
+# Restricted user ID to be added
+USER_ID="$1"
+
+echo "Adding EIC ClusterRoleBindings and RoleBindings for user: $USER_ID"
+
+# crb-edgelm-cluster-admin
+kubectl patch clusterrolebindings crb-edgelm-cluster-admin --type=json \
+-p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
+
+# rb-edgelm-manage for every namespace
+kubectl patch rolebindings rb-edgelm-manage -n edgelm --type=json \
+-p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
+kubectl patch rolebindings rb-edgelm-manage -n istio-gateways --type=json \
+-p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
+kubectl patch rolebindings rb-edgelm-manage -n edge-icell --type=json \
+-p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
+kubectl patch rolebindings rb-edgelm-manage -n edge-icell-secrets --type=json \
+-p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
+kubectl patch rolebindings rb-edgelm-manage -n edge-icell-ela --type=json \
+-p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
+kubectl patch rolebindings rb-edgelm-manage -n edge-icell-services --type=json \
+-p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
+
+# rb-edgelm-admin
+kubectl patch rolebindings rb-edgelm-admin -n edgelm --type=json \
+-p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
+kubectl patch rolebindings rb-istio-gateways-admin -n istio-gateways --type=json \
+-p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
+
+# rolebindings for edge-icell namespace
+kubectl patch rolebindings rb-app-admin -n edge-icell --type=json \
+-p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
+kubectl patch rolebindings rb-admin -n edge-icell --type=json \
+-p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
+
+# rolebindings for edge-icell-ela namespace
+kubectl patch rolebindings rb-app-admin -n edge-icell-ela --type=json \
+-p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
+kubectl patch rolebindings rb-admin -n edge-icell-ela --type=json \
+-p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
+
+# rolebinding for edge-icell-secrets namespace
+kubectl patch rolebindings rb-admin -n edge-icell-secrets --type=json \
+-p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
+
+# rolebindings for edge-icell-services namespace
+kubectl patch rolebindings rb-app-admin -n edge-icell-services --type=json \
+-p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
+kubectl patch rolebindings rb-admin -n edge-icell-services --type=json \
+-p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
+
+echo "Done"
+----
+
+//TODO
+// Details on Adding Members to an Existing Project
+// https://ranchermanager.docs.rancher.com/how-to-guides/new-user-guides/add-users-to-projects#adding-members-to-an-existing-project
+
+=== Downloading the Kubeconfig File
+
+Once the restricted user is created and configured for the downstream cluster, download the Kubeconfig file.
+
+1.  Log in to the Rancher UI with the restricted user's credentials.
+2.  Navigate to the target cluster for {eic} deployment.
+3.  Download the Kubeconfig file.
+
+image::SAP-Rancher-Main-Download.png[title=Rancher download kubeconfig,scaledwidth=99%]
+
+// end::shared-cluster-configuration[]
