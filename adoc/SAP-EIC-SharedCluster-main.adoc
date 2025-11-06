@@ -306,8 +306,6 @@ image::SAP-Rancher-Main-Users.png[title=Rancher users list,scaledwidth=99%]
 
 === Assigning Restricted User to the Cluster
 
-_(//TODO) To be changed when ClusterRoleTemplate rules are provided (Simeon)._
-
 Assign the newly created restricted user to the downstream cluster where {eic} will be deployed.
 
 1.  Navigate to **Cluster > Cluster and Project Members** in the Rancher UI.
@@ -316,8 +314,6 @@ Assign the newly created restricted user to the downstream cluster where {eic} w
 image::SAP-Rancher-Add-ClusterMembership.png[title=Rancher add user membership,scaledwidth=99%]
 
 === Configuring Restricted Access User Permissions
-
-_(//TODO) To be changed when ClusterRoleTemplate rules are provided (Simeon)._
 
 Create a script file named `configuring_permissions.sh` with the following content:
 
