@@ -270,11 +270,6 @@ https://me.sap.com/notes/3247839 are met.
 
 include::SAP-EIC-PostgreSQL.adoc[leveloffset=2]
 
-++++
-<?pdfpagebreak?>
-++++
-
-include::SAP-EIC-Istio-main.adoc[tags=istio-installation]
 
 ++++
 <?pdfpagebreak?>
@@ -282,13 +277,6 @@ include::SAP-EIC-Istio-main.adoc[tags=istio-installation]
 
 [#eicPreperation]
 == Preparing the cluster for {eic}
-
-This section outlines the essential steps for configuring your Kubernetes cluster to properly host and run the {eic}. 
-It includes creating necessary namespaces and permissions, generating a Kubeconfig file for the {eic} installation, and addressing important cluster infrastructure considerations.
-
-include::SAP-EIC-Istio-main.adoc[tags=shared-cluster-permissions, leveloffset=+1]
-
-=== Cluster considerations
 
 include::SAP-EIC-Harvester.adoc[tags=harvester-kubernetes-storage;harvester-lb, leveloffset=+1]
 

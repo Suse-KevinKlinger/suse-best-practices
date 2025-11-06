@@ -37,6 +37,5 @@ The login process is needed for the following application installations:
 * Cert-Manager (<<rancherLIR>>)
 * Redis (<<redisLIR>>)
 * PostgreSQL (<<pgLIR>>)
-* Istio (<<istioLIR>>)
 
 # end::eic-harvester-reference[]
