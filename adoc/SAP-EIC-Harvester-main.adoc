@@ -42,7 +42,7 @@ include::SAP-EIC-General.adoc[tags=disclaimer-EIC-sizing]
 ++++
 
 
-== Supported and used versions-harvester
+== Supported and used versions
 
 The support matrix below outlines the versions of the software we will be using in this guide.
 
