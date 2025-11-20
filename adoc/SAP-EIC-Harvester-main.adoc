@@ -54,7 +54,6 @@ The support matrix below outlines the versions of the software we will be using 
 |{rke} | {rke2_version}     
 |{rancher} | {rancher_version}
 |{harvester} | {harvester_version}
-|{lh} | {lh_version}
 |{cm} | {cm_version}
 |{pg} | {pg_version}
 |{redis} | {redis_version}
