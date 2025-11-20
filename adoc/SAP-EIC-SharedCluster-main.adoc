@@ -384,7 +384,7 @@ echo "Done"
 // Details on Adding Members to an Existing Project
 // https://ranchermanager.docs.rancher.com/how-to-guides/new-user-guides/add-users-to-projects#adding-members-to-an-existing-project
 
-=== Downloading the Kubeconfig File
+=== Download the restricted access kubeconfig file
 
 Once the restricted user is created and configured for the downstream cluster, download the Kubeconfig file.
 
