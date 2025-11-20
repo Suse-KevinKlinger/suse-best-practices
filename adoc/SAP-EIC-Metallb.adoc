@@ -82,9 +82,6 @@ kind: L2Advertisement
 metadata:
   name: example
   namespace: metallb
-spec:
-  ipAddressPools:
-    - first-example-pool
 EOF
 ----
 
