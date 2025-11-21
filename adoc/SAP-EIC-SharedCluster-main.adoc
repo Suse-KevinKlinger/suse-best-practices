@@ -250,9 +250,13 @@ NOTE: For more information on installing and configuring {kiali}, check the refe
 
 // tag::shared-cluster-configuration[]
 
+[#raNamespaceConfig]
 == Configuring the Cluster for Restricted Access
 
-Installations of {elm} and {eic} with **Restricted Access** require specific namespaces. Follow the steps in https://me.sap.com/notes/3618713 to create and configure these namespaces.
+To install {elm} and deploy {eic} with **Restricted Access**, you need to configure specific namespaces, Kubernetes Custom Resource Definitions (CRDs), and Role-Based Access Control (RBAC).
+Refer to https://me.sap.com/notes/3618713 for detailed instructions on creating and configuring these components.
+
+NOTE: The RBAC configured here will be utilized in the subsequent section to grant permissions to the restricted user, as detailed in <<raUserConfig>>.
 
 After creating the required namespaces, verify they are correctly created and labeled for Istio injection by navigating to **Cluster > Project/Namespaces**.
 
@@ -313,9 +317,12 @@ Assign the newly created restricted user to the downstream cluster where {eic} w
 
 image::SAP-Rancher-Add-ClusterMembership.png[title=Rancher add user membership,scaledwidth=99%]
 
+[#raUserConfig]
 === Configuring Restricted Access User Permissions
 
-Create a script file named `configuring_permissions.sh` with the following content:
+The restricted user needs specific permissions to deploy {eic}. These permissions are granted through ClusterRoleBindings and RoleBindings, which were created during the namespace configuration process described in <<raNamespaceConfig>>.
+
+Create a script file named `configuring_permissions.sh` with the following content. Remember to replace `USER_ID` with the actual ID of the restricted user you created earlier:
 
 [source, bash]
 ----
@@ -378,6 +385,14 @@ kubectl patch rolebindings rb-admin -n edge-icell-services --type=json \
 -p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
 
 echo "Done"
+----
+
+Run the script with the `USER_ID` obtained from the previous step:
+
+[source, bash]
+----
+chmod +x configuring_permissions.sh
+./configuring_permissions.sh <USER_ID>
 ----
 
 //TODO
