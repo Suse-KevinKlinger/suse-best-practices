@@ -103,6 +103,9 @@ server:
     storageClassName: longhorn
 ----
 
+NOTE: The `storageClassName` in the `values.yaml` file should be adjusted to match the storage class you intend to use.
+For more details on configuring storage, refer to <<preparingStorage>>.
+
 To install the application, run:
 [source, bash, subs="attributes"]
 ----

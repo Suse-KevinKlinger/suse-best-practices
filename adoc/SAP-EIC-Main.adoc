@@ -152,7 +152,7 @@ include::SAP-Rancher-RKE2-Installation.adoc[tags=!install-rke2-harvester]
 <?pdfpagebreak?>
 ++++
 
-
+[#preparingStorage]
 == Preparing storage
 
 To make storage available for Kubernetes workloads, prepare the storage solution you want to use.
