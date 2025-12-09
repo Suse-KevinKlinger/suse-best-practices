@@ -47,7 +47,7 @@ Then install the metallb application.
 helm install metallb oci://dp.apps.rancher.io/charts/metallb \
 -f values.yaml \
 --namespace=metallb \
---version {metallb_version}
+--version {metallb_chart_version}
 ----
 
 

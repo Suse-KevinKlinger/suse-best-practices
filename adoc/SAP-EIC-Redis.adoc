@@ -85,5 +85,6 @@ To install the application, run:
 ----
 helm install {app_name} oci://dp.apps.rancher.io/charts/{app_name} \
 -f values.yaml \
---namespace={app_name}
+--namespace={app_name} \
+--version {redis_chart_version}
 ----

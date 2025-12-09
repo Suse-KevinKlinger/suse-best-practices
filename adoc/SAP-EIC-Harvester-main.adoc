@@ -57,10 +57,10 @@ The support matrix below outlines the versions of the software we will be using 
 |{cm} | {cm_version}
 |{pg} | {pg_version}
 |{redis} | {redis_version}
-|{istio} | {istio_chart_version}
-|{kiali} | {kiali_chart_version}
-|{prometheus} | {prometheus_chart_version}
-|{grafana} | {grafana_chart_version}
+|{istio} | {istio_version}
+|{kiali} | {kiali_version}
+|{prometheus} | {prometheus_version}
+|{grafana} | {grafana_version}
 |===
 
 include::SAP-EIC-General.adoc[tags=disclaimer-production-versions-harvester]
