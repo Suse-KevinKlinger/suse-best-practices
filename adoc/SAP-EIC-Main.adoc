@@ -152,6 +152,7 @@ include::SAP-Rancher-RKE2-Installation.adoc[tags=!install-rke2-harvester]
 <?pdfpagebreak?>
 ++++
 
+:context-eic-main:
 [#preparingStorage]
 == Preparing storage
 
