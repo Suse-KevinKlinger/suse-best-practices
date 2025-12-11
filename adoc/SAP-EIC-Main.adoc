@@ -48,7 +48,11 @@ The support matrix below shows which versions of the given software we will use 
 |{grafana} | {grafana_version}
 |===
 
+[IMPORTANT]
+====
 include::SAP-EIC-General.adoc[tags=disclaimer-production-versions]
+Other versions of {metallb} or {cm} can be used, but they may not have been tested. 
+====
 
 ++++
 <?pdfpagebreak?>

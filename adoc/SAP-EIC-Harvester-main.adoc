@@ -63,7 +63,11 @@ The support matrix below outlines the versions of the software we will be using 
 |{grafana} | {grafana_version}
 |===
 
-include::SAP-EIC-General.adoc[tags=disclaimer-production-versions-harvester]
+[IMPORTANT]
+====
+include::SAP-EIC-General.adoc[tags=disclaimer-production-versions]
+Other versions of {cm} can be used, but they may not have been tested. 
+====
 
 ++++
 <?pdfpagebreak?>
