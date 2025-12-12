@@ -398,25 +398,25 @@ epyc:~ # taskset -c `cat /sys/devices/system/cpu/cpu1/cache/index3/shared_cpu_li
     </sect2>
 
     <sect2 xml:id="sec-cpusets-memory-control-groups">
-      <title>CPUsets and Memory Control Groups</title>
+      <title>cpusets and Memory Control Groups</title>
 
-      <para><emphasis role="italic">CPUsets</emphasis> are ideal when multiple workloads must be
-        isolated on a machine in a predictable fashion. CPUsets allow a machine to be partitioned
+      <para><emphasis role="italic">cpusets</emphasis> are ideal when multiple workloads must be
+        isolated on a machine in a predictable fashion. cpusets allow a machine to be partitioned
         into subsets. These sets may overlap, and in that case they suffer from similar problems as
         CPU affinities. In the event there is no overlap, they can be switched to
           <quote>exclusive</quote> mode which treats them completely in isolation with relatively
         little overhead. Similarly, they are well suited when a primary workload must be protected
         from interference because of low-priority tasks in which case the low priority tasks can be
-        placed in a CPUset. The caveat with CPUsets is that the overhead is higher than using
-        scheduler and memory policies. Ordinarily, the accounting code for CPUsets is completely
-        disabled. But when a single CPUset is created, there is a second layer of checks against
+        placed in a cpuset. The caveat with cpusets is that the overhead is higher than using
+        scheduler and memory policies. Ordinarily, the accounting code for cpusets is completely
+        disabled. But when a single cpuset is created, there is a second layer of checks against
         scheduler and memory policies.</para>
 
       <para>Similarly <package>memcg</package> can be used to limit the amount of memory that can be
         used by a set of processes. When the limits are exceeded then the memory will be reclaimed
         by tasks within <package>memcg</package> directly without interfering with any other tasks.
         This is ideal for ensuring there is no inference between two or more sets of tasks. Similar
-        to CPUsets, there is some management overhead incurred. This means if tasks can simply be
+        to cpusets, there is some management overhead incurred. This means if tasks can simply be
         isolated on a NUMA boundary then this is preferred from a performance perspective. The major
         hazard is that, if the limits are exceeded, then the processes directly stall to reclaim the
         memory which can incur significant latencies. </para>
@@ -468,7 +468,7 @@ epyc:~ # taskset -c `cat /sys/devices/system/cpu/cpu1/cache/index3/shared_cpu_li
       considered or applied, it is critical that the primary metric be examined before conducting
       any further analysis to avoid intensive focus on the wrong bottleneck. Make sure that the
       metric is measured multiple times to ensure that the result is reproducible and reliable
-      within reasonable boundaries. When that is established, analyse how the workload is using
+      within reasonable boundaries. When that is established, analyze how the workload is using
       different system resources to determine what area should be the focus. The focus in this paper
       is on how CPU and memory is used. But other evaluations may need to consider the IO subsystem,
       network subsystem, system call interfaces, external libraries etc. The methodologies that can
@@ -509,7 +509,7 @@ epyc:~ # taskset -c `cat /sys/devices/system/cpu/cpu1/cache/index3/shared_cpu_li
         independent with no shared data, it may be best to isolate them on a subset of CPUs from
         each node. This is to maximize the number of available memory channels and throughput to
         main memory. For some computational workloads, it may be possible to use hybrid models such
-        as MPI for parallelization across nodes and using openMP for threads within nodes.</para>
+        as MPI for parallelization across nodes and using OpenMP for threads within nodes.</para>
     </sect2>
 
     <sect2 xml:id="sec-transparent-huge-pages">
@@ -683,7 +683,7 @@ epyc:~ # taskset -c `cat /sys/devices/system/cpu/cpu1/cache/index3/shared_cpu_li
       <note>
         <title>NUMA Statistics</title>
         <para>These NUMA statistics only apply at the time a physical page is allocated and is not
-          related to the reference behaviour of the workload. For example, if a task running on node
+          related to the reference behavior of the workload. For example, if a task running on node
           0 allocates memory local to node 0 then it will be accounted for as a
             <command>node_hit</command> in the statistics. However, if the memory is shared with a
           task running on node 1, all the accesses may be remote, which is a miss from the
@@ -827,7 +827,7 @@ Setting cpu: 2
       variants of <emphasis role="strong">Spectre</emphasis>. The AMD EPYC 7002 Series Processor is
       immune to the Meltdown variant. Page table isolation is never active. However, it is
       vulnerable to both Spectre variants. The following table lists all security vulnerabilities
-      that affect the 2nd Generation AMD EPYC Processor and which mitgations are enabled by default
+      that affect the 2nd Generation AMD EPYC Processor and which mitigations are enabled by default
       for SUSE Linux Enterprise Server 15 SP1.</para>
 
     <table>
@@ -944,7 +944,7 @@ Setting cpu: 2
       parallelized, and each thread can operate independently for the majority of the workloads
       lifetime. For memory-bound workloads, the primary benefit will be taking advantage of the high
       bandwidth available on each channel. For IO-bound workloads, the primary benefit will be
-      realised when there are multiple storage devices, each of which is connected to the node local
+      realized when there are multiple storage devices, each of which is connected to the node local
       to a task issuing IO.</para>
 
     <sect2 xml:id="sec-test-setup">
@@ -1119,7 +1119,7 @@ Setting cpu: 2
 
       <para>The <parameter>march=znver1</parameter> is a reflection of the compiler available in SLE
         15 SP1. From <command>gcc 9.2</command>, full architectural support via
-          <parameter>march=znver2</parameter> will be available. The number of openMP threads was
+          <parameter>march=znver2</parameter> will be available. The number of OpenMP threads was
         selected to have at least one thread running for every memory channel by having one thread
         per L3 cache available. The <parameter>OMP_PROC_BIND</parameter> parameter spreads the
         threads such that one thread is bound to each available dedicated L3 cache to maximize
@@ -1165,7 +1165,7 @@ stream-47249 x: sched_migrate_task: comm=stream pid=7280 prio=120 orig_cpu=0 des
       <para>Several options were considered for the test system that were unnecessary for STREAM
         running on the AMD EPYC 7002 Series Processor but may be useful in other situations. STREAM
         performance can be limited if a load/store instruction stalls to fetch data. CPUs may
-        automatically prefetch data based on historical behaviour but it is not guaranteed. In
+        automatically prefetch data based on historical behavior but it is not guaranteed. In
         limited cases depending on the CPU and workload, this may be addressed by specifying
           <parameter>-fprefetch-loop-arrays</parameter> and depending on whether the workload is
         store-intensive, <parameter>-mprefetchwt1</parameter>. In the test system using AMD EPYC
@@ -1287,7 +1287,7 @@ stream-47249 x: sched_migrate_task: comm=stream pid=7280 prio=120 orig_cpu=0 des
         available CPUs. Hence, the default configuration used all available CPUs (256) which is both
         a power-of-two and square number of CPUs because it was a sensible starting point. However,
         this is not universally true. Using <package>perf</package>, it was found that some
-        workloads are memory-bound and do not benefit from a high degree of parallelisation. In
+        workloads are memory-bound and do not benefit from a high degree of parallelization. In
         addition, for the final configuration, some workloads were parallelized to have one task per
         L3 cache in the system to maximize cache usage. The exception was the <emphasis
           role="italic">Scalar Pentadiagonal (SP)</emphasis> workload which was both memory bound
@@ -1295,13 +1295,13 @@ stream-47249 x: sched_migrate_task: comm=stream pid=7280 prio=120 orig_cpu=0 des
         pre-production CPU, that all memory channels were not populated and the memory speed was not
         the maximum speed supported by the platform. Hence, the optimal choices for this test may
         not be universally true for all AMD EPYC platforms. This highlights that there is no
-        universal good choice for optimiuation a workload for a platform and that experimentation
+        universal good choice for optimization a workload for a platform and that experimentation
         and validation of tuning parameters is vital.</para>
 
       <para>The basic compilation flags simply turned on all safe optimizations. The tuned flags
         used <parameter>-Ofast</parameter> which can be unsafe for some mathematical workloads but
         generated the correct output for NPB. The other flags used the optimal instructions
-        available on the distribution compiler and vectorised some operations.</para>
+        available on the distribution compiler and vectorized some operations.</para>
 
       <para>As NPB uses shared files, an XFS partition was used for the temporary files. It is,
         however, only used for mapping shared files and is not a critical path for the benchmark and
@@ -1457,7 +1457,7 @@ stream-47249 x: sched_migrate_task: comm=stream pid=7280 prio=120 orig_cpu=0 des
         generates binaries that are incompatible with other vendors. In such cases, it is possible
         to specify the ISA-specific options that are cross-compatible with many x86-based CPUs such
         as <parameter>-mavx2</parameter>, <parameter>-mfma</parameter>,
-          <parameter>-msse2</parameter> or <parameter>msse4a</parameter> while favouring optimal
+          <parameter>-msse2</parameter> or <parameter>msse4a</parameter> while favoring optimal
         code generation for AMD EPYC 7002 Series Processors with
           <parameter>-mtune=znver1</parameter>. This can be used to strike a balance between
         excellent performance on a single CPU and great performance on multiple CPUs.</para>
@@ -1575,7 +1575,7 @@ stream-47249 x: sched_migrate_task: comm=stream pid=7280 prio=120 orig_cpu=0 des
       <para> In the absence of any specific requirements involving host resources, a good rule of
         thumb suggests that 5 to 10 percent of the physical RAM should be reserved to the host OS.
         On KVM, increase that quota in case the plan is to run many (for example hundreds) of VMs.
-        On Xen, it is ok to always give dom0 not more than a few GigaBytes of memory. This is
+        On Xen, it is ok to always give dom0 not more than a few gigabytes of memory. This is
         especially the case when planning to take advantage of disaggregation (see <link
           xlink:href="https://wiki.xenproject.org/wiki/Dom0_Disaggregation">
           https://wiki.xenproject.org/wiki/Dom0_Disaggregation</link>). </para>
@@ -1784,7 +1784,7 @@ stream-47249 x: sched_migrate_task: comm=stream pid=7280 prio=120 orig_cpu=0 des
       <screen>mem_encrypt=on kvm_amd.sev=1</screen>
 
       <para> For further details, refer to <link
-          xlink:href="https://libvirt.org/kbase/launch_security_sev.html#Host"> Libvirt
+          xlink:href="https://libvirt.org/kbase/launch_security_sev.html#Host"> libvirt
           documentation: Enabling SEV on the host</link>. </para>
 
       <para> It should be noted that, at least as far as the workload analyzed in this document,
@@ -1824,7 +1824,7 @@ stream-47249 x: sched_migrate_task: comm=stream pid=7280 prio=120 orig_cpu=0 des
         <para>partitioning of host resources and placement of the VMs;</para>
       </listitem>
       <listitem>
-        <para>enlightement of the VMs about their virtual topology.</para>
+        <para>enlightenment of the VMs about their virtual topology.</para>
       </listitem>
     </orderedlist>
 
@@ -2121,7 +2121,7 @@ node   0
 
       <para> On KVM, swapping is handled by Linux virtual memory management and paging code and
         mechanism, exactly as it happens for host/bare metal processes. On Xen, this is not
-        supported unless special technologies (<package>xenpaging</package> or trascendent memory)
+        supported unless special technologies (<package>xenpaging</package> or transcendent memory)
         are employed. </para>
 
       <para>Then there are page sharing and memory ballooning.</para>
@@ -2150,9 +2150,9 @@ node   0
     </sect2>
 
     <sect2 xml:id="sec-enlightment-vms">
-      <title>Enlightment of VMs</title>
+      <title>Enlightenment of VMs</title>
 
-      <para> The term <quote>enlightment</quote> refers to letting the guest OS know as many details
+      <para> The term <quote>enlightenment</quote> refers to letting the guest OS know as many details
         as possible about the virtual topology of the VM. This is only useful and brings actual
         performance improvements <emphasis>only</emphasis> if such topology is properly and
         effectively mapped on host resources, and if such mapping is stable and does not change
@@ -2376,7 +2376,7 @@ cat /sys/devices/system/cpu/cpu0/cache/index3/shared_cpu_list
       <itemizedlist>
         <listitem>
           <para>
-            <link xlink:href="https://libvirt.org/kbase/launch_security_sev.html"> Libvirt
+            <link xlink:href="https://libvirt.org/kbase/launch_security_sev.html"> libvirt
               Documentation: Launch security with AMD SEV</link>
           </para>
         </listitem>
@@ -2510,7 +2510,7 @@ dmesg |grep SEV
         STREAM configuration parameters used in <xref linkend="sec-workload-stream"/>, are used also
         here. The only difference is that we used 30 threads, instead of 32. The VM has
           <quote>only</quote> 240 vCPUs, instead than 256 CPUs. Hence no more than 15 STREAM threads
-        per node can run together on separaate LLC domains, without competing with each other and
+        per node can run together on separate LLC domains, without competing with each other and
         spoiling the results. </para>
 
       <figure xml:id="fig-stream-onevm-32">

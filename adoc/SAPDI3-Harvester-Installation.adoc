@@ -7,7 +7,7 @@
 Harvester is the open source Hyper Converged Infrastructure (HCI) solution running on Kubernetes, {lh} and Kubevirt.
 Harvester provides the ability to provision, manage and run virtual machines. 
 
-=== Prerequistites
+=== Prerequisites
 
 Depending on the purpose of the Harvester installation (development, testing or productive use), one or more (virtual) machines are needed.
 At the time of writing, the system architecture is x86_64 only.
@@ -19,7 +19,7 @@ For the Harvester deployment, the following information should be handy:
 * Gateway address
 * IP address of name server
 * Access to a time server
-* Access to the Internet (for airgapped installations see: https://docs.harvesterhci.io/v1.1/airgap)
+* Access to the Internet (for air-gapped installations see: https://docs.harvesterhci.io/v1.1/airgap)
 
 For more information, see the product documentation for Harvester:
 https://docs.harvesterhci.io/v1.1/

@@ -69,7 +69,7 @@ The textfile.collector functionality of the Prometheus node_exporter is already 
 https://github.com/prometheus/node_exporter#textfile-collector
 
 The option must be activated in the node_exporter configuration file by add the path where the node_exporter has to look for `*.prom` files. The option is called `--collector.textfile.directory=”<path>”`.
-The content in this files have to be formated in a node_exporter consumable way.
+The content in this files have to be formatted in a node_exporter consumable way.
 
 These information sources helped:
 
@@ -231,7 +231,7 @@ amcli_disk_information_summary{name="32/13", vendor="TOSHIBA", product="MBF2300R
 amcli_disk_information_summary{name="32/12", vendor="TOSHIBA", product="MBF2300RC", port_number="4", rotational_speed="10Krpm", power_status="Active", slot="7", status="Operational", ts="1646052400" } 1
 ----
 
-And the view from the node_exporter webui:
+And the view from the node_exporter WebUI:
 
 image::amcli-disk-info.png[amCLI disk information, collected from `amCLI` and sorted by `awk`,scaledwidth=100%,title="amCLI basic disk information"]
 
