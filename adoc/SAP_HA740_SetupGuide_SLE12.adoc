@@ -322,7 +322,7 @@ TODO: non line break with in command or variables
 - {myNode1}:   {myDevPartAscs}   {myMpAscs}
 - {myNode2}:   {myDevPartErs}   {myMpErs}
 
-==== Disk for DB and cialog instances (MaxDB Example)
+==== Disk for DB and dialog instances (MaxDB Example)
 
 The disk for the database and primary application server is assigned to
 {myNode3}. In an advanced setup this disk should be shared between {myNode3}
@@ -690,7 +690,7 @@ service/halib = $(DIR_EXECUTABLE)/saphascriptco.so
 service/halib_cluster_connector = /usr/bin/sap_suse_cluster_connector
 ----
 
-Add the user {mySapAdm} to the unix user group haclient.
+Add the user {mySapAdm} to the UNIX user group haclient.
 
 [subs="attributes"]
 ----

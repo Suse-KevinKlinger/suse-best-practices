@@ -70,7 +70,7 @@ From the infrastructure perspective the following variants are covered:
 - Public cloud deployment (usually needs additional documentation on cloud specific details)
 
 Deployment automation simplifies roll-out. There are several options available,
-particularly on public cloud platfoms. Ask your public cloud provider or your
+particularly on public cloud platforms. Ask your public cloud provider or your
 {SUSE} contact for details.
 
 NOTE: In this guide the software package SAPHanaSR-angi is used. This package replaces
@@ -320,10 +320,10 @@ feature AUTOMATED_REGISTER=true is not possible with pure Multi-Tier replication
 See also the requirements section below.
 
 Multi-Target Replication ([A \<= B] \-> C)::
-This scenario and setup is described in this document. A Multi-Target system
+This scenario and setup is described in this document. A multi-target system
 replication has an additional target, which is connected to
 either the secondary (chain topology) or to the primary (star topology).
-Multi-Target replication is possible since {saphana} 2.0 SPS04.
+Multi-target replication is possible since {saphana} 2.0 SPS04.
 See also the requirements section below.
 
 
@@ -413,15 +413,19 @@ However, all nodes in one Linux cluster need to use the same style.
   *off*.
 * The replication mode should be either 'sync' or 'syncmem'. 'async' is
   supported outside the Linux cluster.
+* No firewall rules must block any needed port. 
+* No SELinux rules must block any needed action. 
+* Sizing of both {HANA} sites needs to be done according to SAP rules. The scale-out
+  scenarios require both sites to be prepared to run the primary {HANA} database.
 * {HANA} 2.0 SPS05 rev.059.04 and later provides Python 3 and the HA/DR provider hook
   method srConnectionChanged() with needed parameters for _susHanaSR.py_.
 * {HANA} 2.0 SPS05 or later provides the HA/DR provider hook method srServiceStateChanged()
   with needed parameters for susChkSrv.py.
-* {HANA} 2.0 SPS06 or later provides the HA/DR provider hook  method preTakeover() with
-  multi-target aware parameters and separate return code for Linux HA clusters.
+* {HANA} 2.0 SPS06 or later provides the HA/DR provider hook method preTakeover() with
+  multi-target-aware parameters and separate return code for Linux HA clusters.
 * No other HA/DR provider hook script should be configured for the above mentioned methods.
   Hook scripts for other methods, provided in SAPHanaSR-angi, can  be used in parallel,
-  if not documented contradictingly.
+  if not documented otherwise.
 * The Linux cluster needs to be up and running to allow HA/DR provider events being written
   into CIB attributes. The current HANA SR status might differ from CIB srHook attribute
   after Linux cluster maintenance.
@@ -891,7 +895,7 @@ The {saphana} database superuser.
 - Mount the file systems to install {saphana} database software and database
   content (data and log).
 
-- Start the installtion.
+- Start the installation.
 
 // === Installation
 
@@ -1676,7 +1680,7 @@ Check if {saphana} has finished starting.
 When the {saphana} database has been restarted after the changes, check if the
 hook scripts have been loaded correctly.
 A useful verification is to check the {saphana} trace files as {refsidadm}.
-More complete checks wil be done later, when the Linux cluster is up and running.
+More complete checks will be done later, when the Linux cluster is up and running.
 
 ==== Checking for _susHanaSR.py_
 
@@ -1701,7 +1705,7 @@ See also manual page susHanaSR.py(7).
 // TODO PRIO2: what makes sense right after first init? should we move this example to general testing?
 ////
 After an *srConnectionChanged* event has been processed by the HA/DR provider
-script, check for the correct behaviour. Do this on the primary site´s master
+script, check for the correct behavior. Do this on the primary site´s master
 nameserver. See also manual page SAPHanaSrMultiTarget.py(7).
 [subs="specialchars,attributes"]
 ----
@@ -1737,7 +1741,7 @@ See also manual page susChkSrv.py(7).
 // TODO PRIO2: what makes sense right after first init? should we move this example to general testing?
 ////
 After an *srServiceStateChanged* event has been processed by the HA/DR provider
-script, check for the correct behaviour. Do this on all nodes.
+script, check for the correct behavior. Do this on all nodes.
 See also manual page susChkSrv.py(7).
 ----
 ~> cdtrace
@@ -2292,7 +2296,7 @@ clone mst_SAPHanaCon_{refSID}_HDB{refInst} \
 The most important parameters here are {refSID} ({SID}) and {refInst}
 ({Inst}), which are in the SAP context quite self explaining.
 Beside these parameters, the timeout values or the operations (start, monitor,
-stop) are typical tuneables.
+stop) are typical tunables.
 Find more details in manual page ocf_suse_SAPHanaController(7).
 
 // !! The example title MUST NOT include a line break in the ADOC source !!
@@ -2662,7 +2666,7 @@ IIt covers configuring the third site in a multi-target setup after reinstalling
 === Setting up third {saphana} site in a multi-target architecture
 
 This section applies only if you plan to attach a 3rd replication site to the
-existing multi-targe aware cluster. This is a general approach. Neverteless, a
+existing multi-target-aware cluster. This is a general approach. Neverteless, a
 3rd site could have been prepared already.
 
 When the existing or newly created part of the scale-out performance optimized cluster is ready, complete the following steps to configure the third {saphana} site into multi-target.
@@ -2813,7 +2817,7 @@ Expected observation: The cluster initiates a takeover. The master name server a
 
 * Manually registering a failed primary site as new secondary.
 
-Prerequistes: A failed former primary sites has been manually registered. The exact site name has been used as already known to the cluster, see parameter sheet.
+Prerequisites: A failed former primary sites has been manually registered. The exact site name has been used as already known to the cluster, see parameter sheet.
 
 Expected observation: The cluster accepts the registered site as secondary. The HANA resources are looking fine. After a while, system replication for the new secondary site gets okay (srHook SOK). 
 
