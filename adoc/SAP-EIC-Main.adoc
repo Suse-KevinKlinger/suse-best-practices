@@ -157,6 +157,18 @@ include::SAP-Rancher-RKE2-Installation.adoc[tags=!install-rke2-harvester]
 <?pdfpagebreak?>
 ++++
 
+== Installing {reg} (optional)
+
+include::SAP-Edge-Registry.adoc[tags=intro]
+
+NOTE: The installation of {reg} is not a mandatory requirement for the deployment of {eic} and is thereby optional. If you want to continue without using a {reg}, please continue with the next chapter <<preparingStorage>>.
+
+include::SAP-Edge-Registry.adoc[tags=!intro]
+
+++++
+<?pdfpagebreak?>
+++++
+
 :context-eic-main:
 [#preparingStorage]
 == Preparing storage
@@ -329,9 +341,13 @@ include::SAP-EIC-General.adoc[tags=k8s-upload-certificates]
 include::SAP-EIC-General.adoc[tags=use-cert-manager]
 
 
-==== Fully removing {rancher}
+=== Fully removing {rancher}
 
 include::SAP-EIC-General.adoc[tags=rancher-cleanup]
+
+=== Adding a registry
+
+include::SAP-EIC-General.adoc[tags=rancher-registries]
 
 ++++
 <?pdfpagebreak?>

@@ -203,3 +203,29 @@ kubectl  -n kube-system logs -l job-name=verify-job  -f | grep -v "is deprecated
 ----
 
 # end::rancher-cleanup[]
+
+# tag::rancher-registries[]
+
+[#rancherRegistries]
+
+To avoid creating identical imagePullSecrets in multiple namespaces, you can also introduce a registry in your cluster config.
+This can be configured in the Cluster Configuration at the tab _Registries_ as shown below:
+
+image::SAP-Edge-Registry-Config.png[title=Cluster Config Registry,scaledwidth=99%]
+
+Once opened, click on _Show Advanced_ as displyed in the picture below:
+
+image::SAP-Edge-Registry-Registries.png[title=Cluster Config Registry Advanced,scaledwidth=99%]
+
+++++
+<?pdfpagebreak?>
+++++
+
+Scroll to the very bottom and enter your registry FQDN, as shown below:
+
+image::SAP-Edge-Registry-Add.png[title=Configure Registry at cluster config,scaledwidth=99%]
+
+There's no need to start with http:// or https:// prefix, neither with the /project as a suffix.
+If you are using certificates from an unknown CA, make sure to enable *Skip TLS Verifications*.
+
+# end::rancher-registries[]
