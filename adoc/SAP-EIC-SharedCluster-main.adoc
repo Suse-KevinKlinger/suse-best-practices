@@ -35,7 +35,7 @@ You can find the instructions in <<LoginApplicationCollection>>.
 NOTE: The *{istio_namespace}* namespace, *imagePullSecret*, and registry login established for {istio} will be reused by:
 {kiali} at <<kialiInstall>>, {prometheus} at <<prometheusInstall>>, and {grafana} at <<grafanaInstall>>. 
 
-=== Deploying Istio
+== Deploying the chart
 
 Create a file _values.yaml_ to store some configurations for the {istio} Helm chart.
 The configuration might look like the following:
@@ -256,80 +256,67 @@ NOTE: For more information on installing and configuring {kiali}, check the refe
 // tag::shared-cluster-configuration[]
 
 [#raNamespaceConfig]
-== Configuring the cluster for restricted access
+== Configuring the cluster for Restricted Access
 
-To install {elm} and deploy {eic} with **Restricted Access**, you need to configure specific namespaces, Kubernetes Custom Resource Definitions (CRDs), and Role-Based Access Control (RBAC).
-Refer to https://me.sap.com/notes/3618713 for detailed instructions on creating and configuring these components.
+To install {elm} and deploy {eic} with **Restricted Access**, the process is now divided into two phases to adhere to the principle of least privilege:
 
-NOTE: The RBAC configured here will be utilized in the subsequent section to grant permissions to the restricted user, as detailed in <<raUserConfig>>.
+1. **ELM Initialization Phase:** Configuration of the `edgelm` namespace and base cluster permissions.
+2. **EIC Deployment Phase:** Configuration of solution-specific namespaces when the deployment reaches the "Prepared" state.
 
-After creating the required namespaces, verify they are correctly created and labeled for Istio injection by navigating to **Cluster > Project/Namespaces**.
+Refer to https://me.sap.com/notes/3618713 for detailed instructions on the restricted resources process via the {elm} UI.
 
-image::SAP-Rancher-Main-Namespaces.png[title=Rancher namespaces,scaledwidth=99%]
+=== Phase 1: ELM Initialization
 
-The following namespaces are targeted for Istio sidecar injection and must have an *imagePullSecret* to enable image pulling:
+When you add a new Edge Node with the "Restricted Access cluster" option enabled in the {elm} UI, you will be prompted to download the first `resources.zip` bundle. 
 
-* edgelm
-* edge-icell
-* edge-icell-services
-* edge-icell-ela
-* istio-gateways
+Extract the downloaded ZIP file to a new directory (e.g., `elm-resources`).
 
-[#elmIPS]
-For instructions on creating the *imagePullSecret*, refer to <<imagePullSecret>>.
-
-Alternatively, run the following script to create the *imagePullSecret* in all required namespaces:
+Apply the manifests to your cluster by pointing `kubectl` to the extracted directory:
 
 [source, bash]
 ----
-NAMESPACES_INJECTION=("edgelm" "edge-icell" "edge-icell-services" "edge-icell-ela" "istio-gateways")
-for ns in "${NAMESPACES_INJECTION[@]}"; do
-  echo "Creating imagePullSecret for namespace: $ns"
-  kubectl create secret docker-registry application-collection -n $ns \
-    --docker-server=dp.apps.rancher.io \
-    --docker-username=<yourUser> \
-    --docker-password=<yourPassword>
-  sleep 1
-  echo "---"
-done
-echo "Done"
+kubectl apply -f elm-resources/
 ----
 
-== Generating the kubeconfig file
+This action creates the `edgelm` namespace and applies the foundational security and configuration policies required by {elm}.
 
-The {eic} Restricted Access deployment requires a kubeconfig file, which you can download from the Rancher UI.
+[#elmIPS]
+Since the `edgelm` namespace is targeted for Istio sidecar injection, it requires an *imagePullSecret* to enable image pulling. For detailed instructions on creating the credentials, refer to <<imagePullSecret>>.
 
-In this section, we create a restricted user and grant the necessary permissions for {eic} deployment. 
-The process involves assigning the restricted user to the downstream cluster and subsequently using their account to download 
-the kubeconfig file from Rancher.
+Run the following command to create the secret in the `edgelm` namespace:
 
-=== Creating the restricted user
+[source, bash]
+----
+kubectl create secret docker-registry application-collection -n edgelm \
+  --docker-server=dp.apps.rancher.io \
+  --docker-username=<yourUser> \
+  --docker-password=<yourPassword>
+----
 
-1.  Navigate to "Users & Authentication" and click *Create*.
-2.  Set a username (e.g., `eic-restricted`), a password, and select *Global Permissions > Standard User*.
-3.  **Record this password** for subsequent configuration steps.
+==== Creating the restricted user in Rancher
 
-After creation, the new user will be listed. **Record the User ID** (formatted as "u-XXXXX"), as both the ID and password are required for assigning permissions in the downstream cluster.
+This restricted user will be utilized by {elm} to securely connect and deploy solutions to your cluster without requiring full administrator privileges.
 
-NOTE: This restricted user only needs to be created once in Rancher, as user management is centralized and applies to all downstream clusters.
+Before patching the permissions, create the restricted user in Rancher:
+
+1. Navigate to **Users & Authentication** and click *Create*.
+2. Set a username (e.g., `eic-restricted`), a password, and select **Global Permissions > Standard User**.
+3. **Record this password** and the **User ID** (formatted as "u-XXXXX") for the subsequent configuration steps.
+
+Next, assign this user to your downstream cluster:
+
+1. Navigate to **Cluster > Cluster and Project Members** in the Rancher UI.
+2. Click **Add**.
+3. Select the restricted user and choose **Cluster Permission > Custom > View Nodes**.
 
 image::SAP-Rancher-Main-Users.png[title=Rancher users list,scaledwidth=99%]
 
-=== Assigning restricted user to the cluster
+[#raUserConfigPhase1]
+==== Patching ELM restricted user permissions
 
-Assign the newly created restricted user to the downstream cluster where {eic} will be deployed.
+You must now associate your restricted user with the security policies created from the zip file. This grants the user the exact access rights required by {elm}. 
 
-1.  Navigate to **Cluster > Cluster and Project Members** in the Rancher UI.
-2.  Click **Add**. Select the restricted user and choose **Cluster Permission > Custom > View Nodes**.
-
-image::SAP-Rancher-Add-ClusterMembership.png[title=Rancher add user membership,scaledwidth=99%]
-
-[#raUserConfig]
-=== Configuring restricted access user permissions
-
-The restricted user needs specific permissions to deploy {eic}. These permissions are granted through ClusterRoleBindings and RoleBindings, which were created during the namespace configuration process described in <<raNamespaceConfig>>.
-
-Create a script file named `configuring_permissions.sh` with the following content. Remember to replace `USER_ID` with the actual ID of the restricted user you created earlier:
+Create a file named `patch-elm-rbac.sh` and add the following script:
 
 [source, bash]
 ----
@@ -340,80 +327,131 @@ if [ "$#" -ne 1 ]; then
   echo "Usage: $0 <USER_ID>"
   exit 1
 fi
-# Restricted user ID to be added
 USER_ID="$1"
+PATCH_PAYLOAD=$(printf '[{"op":"add","path":"/subjects/-","value":{"apiGroup":"rbac.authorization.k8s.io","kind":"User","name":"%s"}}]' "$USER_ID")
 
-echo "Adding EIC ClusterRoleBindings and RoleBindings for user: $USER_ID"
+echo "Adding ELM RoleBindings and ClusterRoleBindings for user: $USER_ID"
 
-# crb-edgelm-cluster-admin
-kubectl patch clusterrolebindings crb-edgelm-cluster-admin --type=json \
--p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
+kubectl patch rolebindings rb-edgelm-manage -n edgelm --type=json -p "$PATCH_PAYLOAD"
+kubectl patch rolebindings rb-edgelm-admin -n edgelm --type=json -p "$PATCH_PAYLOAD"
+kubectl patch clusterrolebindings crb-edgelm-cluster-admin -n edgelm --type=json -p "$PATCH_PAYLOAD"
 
-# rb-edgelm-manage for every namespace
-kubectl patch rolebindings rb-edgelm-manage -n edgelm --type=json \
--p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
-kubectl patch rolebindings rb-edgelm-manage -n istio-gateways --type=json \
--p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
-kubectl patch rolebindings rb-edgelm-manage -n edge-icell --type=json \
--p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
-kubectl patch rolebindings rb-edgelm-manage -n edge-icell-secrets --type=json \
--p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
-kubectl patch rolebindings rb-edgelm-manage -n edge-icell-ela --type=json \
--p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
-kubectl patch rolebindings rb-edgelm-manage -n edge-icell-services --type=json \
--p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
-
-# rb-edgelm-admin
-kubectl patch rolebindings rb-edgelm-admin -n edgelm --type=json \
--p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
-kubectl patch rolebindings rb-istio-gateways-admin -n istio-gateways --type=json \
--p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
-
-# rolebindings for edge-icell namespace
-kubectl patch rolebindings rb-app-admin -n edge-icell --type=json \
--p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
-kubectl patch rolebindings rb-admin -n edge-icell --type=json \
--p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
-
-# rolebindings for edge-icell-ela namespace
-kubectl patch rolebindings rb-app-admin -n edge-icell-ela --type=json \
--p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
-kubectl patch rolebindings rb-admin -n edge-icell-ela --type=json \
--p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
-
-# rolebinding for edge-icell-secrets namespace
-kubectl patch rolebindings rb-admin -n edge-icell-secrets --type=json \
--p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
-
-# rolebindings for edge-icell-services namespace
-kubectl patch rolebindings rb-app-admin -n edge-icell-services --type=json \
--p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
-kubectl patch rolebindings rb-admin -n edge-icell-services --type=json \
--p='[{"op": "add", "path": "/subjects/-", "value": {"apiGroup": "rbac.authorization.k8s.io", "kind": "User", "name": "'$USER_ID'"}}]'
-
-echo "Done"
+echo "ELM patching complete."
 ----
 
-Run the script with the `USER_ID` obtained from the previous step:
+Make the script executable and run it, replacing `<USER_ID>` with the actual ID (e.g., `u-XXXXX`) you recorded previously:
 
 [source, bash]
 ----
-chmod +x configuring_permissions.sh
-./configuring_permissions.sh <USER_ID>
+chmod +x patch-elm-rbac.sh
+./patch-elm-rbac.sh <USER_ID>
 ----
 
-//TODO
-// Details on Adding Members to an Existing Project
-// https://ranchermanager.docs.rancher.com/how-to-guides/new-user-guides/add-users-to-projects#adding-members-to-an-existing-project
+==== Download the restricted access kubeconfig file
 
-=== Download the restricted access kubeconfig file
-
-Once the restricted user is created and configured for the downstream cluster, download the kubeconfig file.
-
-1.  Log in to the Rancher UI with the restricted user's credentials.
-2.  Navigate to the target cluster for {eic} deployment.
-3.  Download the kubeconfig file.
+1. Log in to the Rancher UI **using the credentials of the restricted user** you created in the previous steps.
+2. Navigate to the target cluster.
+3. Download the kubeconfig file and use it in the {elm} UI to finish adding the Edge Node.
 
 image::SAP-Rancher-Main-Download.png[title=Rancher download kubeconfig,scaledwidth=99%]
+
+=== Phase 2: EIC Deployment
+
+Once the Edge Node is available, start the {eic} deployment from the {elm} UI. The wizard will eventually pause, and the operation will transition to a **Prepared** state. 
+
+At this point, {elm} provides a second zip file (typically named `restricted-resources-Edge_Integration_Cell-<version>.zip`) containing the specific manifests for the EIC solution. 
+
+Extract the contents of this new zip file to a directory (for example, `eic-resources`) and apply them to your cluster:
+
+[source, bash]
+----
+kubectl apply -f eic-resources/
+----
+
+This will create the remaining namespaces: `istio-gateways`, `edge-icell`, `edge-icell-services`, `edge-icell-secrets`, and `edge-icell-ela`.
+
+==== Configuring ImagePullSecrets for EIC namespaces
+
+As described in <<imagePullSecret>>, all newly created namespaces (except `edge-icell-secrets`) have the Istio injection label and require the *imagePullSecret*. 
+
+To avoid running the creation command manually for each namespace, you can use the following script to automate the process. Create a file named `create-eic-ips.sh` and add the following content:
+
+[source, bash]
+----
+#!/bin/bash
+NAMESPACES_INJECTION=("istio-gateways" "edge-icell" "edge-icell-services" "edge-icell-ela")
+for ns in "${NAMESPACES_INJECTION[@]}"; do
+  echo "Creating imagePullSecret for namespace: $ns"
+  kubectl create secret docker-registry application-collection -n $ns \
+    --docker-server=dp.apps.rancher.io \
+    --docker-username=<yourUser> \
+    --docker-password=<yourPassword>
+done
+echo "ImagePullSecrets deployment complete."
+----
+
+Remember to replace `<yourUser>` and `<yourPassword>` with your actual registry credentials inside the file before executing it:
+
+[source, bash]
+----
+chmod +x create-eic-ips.sh
+./create-eic-ips.sh
+----
+
+[#raUserConfigPhase2]
+==== Patching EIC restricted user permissions
+
+Similarly, you must associate your restricted user with the new solution-specific security policies applied from the second zip file.
+
+Create a file named `patch-eic-rbac.sh` and add the following script:
+
+[source, bash]
+----
+#!/bin/bash
+set -eu
+
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $0 <USER_ID>"
+  exit 1
+fi
+USER_ID="$1"
+
+echo "Adding EIC RoleBindings for user: $USER_ID"
+
+PATCH_PAYLOAD=$(printf '[{"op":"add","path":"/subjects/-","value":{"apiGroup":"rbac.authorization.k8s.io","kind":"User","name":"%s"}}]' "$USER_ID")
+
+for RB in \
+  "istio-gateways:rb-edgelm-manage" \
+  "istio-gateways:rb-istio-gateways-admin" \
+  "edge-icell-services:rb-edgelm-manage" \
+  "edge-icell-services:rb-admin" \
+  "edge-icell-services:rb-app-admin" \
+  "edge-icell:rb-edgelm-manage" \
+  "edge-icell:rb-admin" \
+  "edge-icell:rb-app-admin" \
+  "edge-icell-secrets:rb-edgelm-manage" \
+  "edge-icell-secrets:rb-admin" \
+  "edge-icell-ela:rb-edgelm-manage" \
+  "edge-icell-ela:rb-admin" \
+  "edge-icell-ela:rb-app-admin"
+do
+  NAMESPACE="${RB%%:*}"
+  NAME="${RB##*:}"
+  echo "Patching $NAME in namespace $NAMESPACE..."
+  kubectl patch rolebindings "$NAME" -n "$NAMESPACE" --type=json -p "$PATCH_PAYLOAD"
+done
+
+echo "EIC patching complete."
+----
+
+Make it executable and run it with your `USER_ID`:
+
+[source, bash]
+----
+chmod +x patch-eic-rbac.sh
+./patch-eic-rbac.sh <USER_ID>
+----
+
+Once the scripts have executed successfully, return to the {elm} UI and click **Resume deployment** to finalize the {eic} installation.
 
 // end::shared-cluster-configuration[]
