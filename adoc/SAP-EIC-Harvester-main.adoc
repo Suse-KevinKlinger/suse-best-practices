@@ -295,7 +295,7 @@ include::SAP-EIC-PostgreSQL.adoc[leveloffset=2]
 
 == Restricted Access for {eic}
 
-This section provides instructions for configuring Restricted Access feature for {eic}.
+This section provides instructions for configuring Restricted Access option for {eic}.
 
 NOTE: Keep in mind that the descriptions and instructions provided may differ from the 
 deployment requirements for your specific infrastructure and use cases.
@@ -303,7 +303,7 @@ deployment requirements for your specific infrastructure and use cases.
 [#serviceMesh]
 === Configuring the {istio} Service Mesh
 
-This section guides you through configuring the {istio} Service Mesh for the Restricted Access feature on {eic}.
+This section guides you through configuring the {istio} Service Mesh for the Restricted Access option on {eic}.
 
 include::SAP-EIC-SharedCluster-main.adoc[tags=istio-installation, leveloffset=+2]
 
@@ -396,6 +396,10 @@ include::SAP-EIC-General.adoc[tags=rancher-cleanup]
 === Adding a registry
 
 include::SAP-EIC-General.adoc[tags=rancher-registries]
+
+=== Legacy Restricted Access Configuration (EIC < 8.41)
+
+include::SAP-EIC-General.adoc[tags=legacyRestrictedAccess]
 
 ++++
 <?pdfpagebreak?>
