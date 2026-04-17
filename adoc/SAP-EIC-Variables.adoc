@@ -24,6 +24,7 @@
 :eic: Edge Integration Cell
 :elm: SAP Edge Lifecycle Management
 :sis: SAP Integration Suite
+:hana: SAP HANA
 
 // Dependency related variables
 :redis: Redis

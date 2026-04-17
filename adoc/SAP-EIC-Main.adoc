@@ -201,6 +201,7 @@ include::SAP-EIC-Netapp.adoc[leveloffset=1, tags=**]
 == Installing {metallb} and databases
 
 In the following chapter, we present an example for setting up {metallb}, {redis} and {pg}.
+We alternatively describe how you could use a {hana} in favor of {pg} and/or {redis}.
 
 NOTE: Keep in mind that the descriptions and instructions below might differ from the deployment you need for your specific infrastructure and use cases.
 
@@ -254,6 +255,17 @@ Before deploying {pg}, ensure that the requirements described at
 https://me.sap.com/notes/3247839 are met.
 
 include::SAP-EIC-PostgreSQL.adoc[leveloffset=2]
+
+++++
+<?pdfpagebreak?>
+++++
+
+=== Use {hana}
+
+Before getting started to prepare you {hana} for the usage with {eic}, enusre the requirements described at
+https://me.sap.com/notes/3247839 are met.
+
+include::SAP-EIC-HANA.adoc[leveloffset=2]
 
 ++++
 <?pdfpagebreak?>

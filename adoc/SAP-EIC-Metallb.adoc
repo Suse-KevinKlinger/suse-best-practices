@@ -1,4 +1,4 @@
-== Installing and configuring {metallb}
+== Deplyoing and configuring {metallb}
 
 There are multiple ways to install the {metallb} software. In this guide, we cover how to install {metallb} using `kubectl` or Helm.
 A complete overview and more details about {metallb} can be found at https://metallb.universe.tf/[official website for {metallb}].
