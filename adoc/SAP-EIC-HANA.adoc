@@ -8,9 +8,10 @@ link:https://documentation.suse.com/sbp/high-availability/[]
 
 == Architecture overview
 
-IMPORTANT: HANA is supposed to run in a side-by-side approach with the {eic} Kubernetes cluster. {hana} is not part of that Kubernetes cluster.
+IMPORTANT: HANA is supposed to run in a side-by-side approach with the {eic} Kubernetes cluster. {hana} is not part of that Kubernetes cluster. The picture below shows the side-by-side installation from an architectural point of view.
 
-//TODO picture
+image::SAP-EIC-HANA.svg[title=HANA architecture overview,scaledwidth=99%,opts=inline,Embedded]
+
 
 == Prepare {hana}
 
