@@ -2,9 +2,14 @@
 This chapter descibes a basic example of how to use {hana} with {eic}.
 It will *NOT* instruct how to set up {hana} or high availability for {hana}.
 
-For more information around the later one, please refer to SUSE's best practices guides:
+TIP: For more information around high availability, please refer to 
+link:https://documentation.suse.com/sbp/high-availability/[SUSE's best practices guides]
 
-link:https://documentation.suse.com/sbp/high-availability/[]
+TIP: If you are looking for automated deployments of {hana}, there are Ansible scripts available at https://github.com/sap-linuxlab/ansible.playbooks_for_sap 
+
+++++
+<?pdfpagebreak?>
+++++
 
 == Architecture overview
 
