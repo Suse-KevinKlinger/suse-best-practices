@@ -141,7 +141,7 @@ You can then run the command below to deploy {reg}:
 helm install suse-registry oci://registry.suse.com/private-registry/private-registry-helm -f values.yaml --namespace <PRIVATE_REGISTRY_NAMESPACE>
 ----
 
-# tag::deploy[]
+# end::deploy[]
 
 // === Deplyoying with high-availibilty
 
