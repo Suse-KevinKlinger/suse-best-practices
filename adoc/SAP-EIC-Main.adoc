@@ -232,6 +232,9 @@ The following chapter should guide you through the installation and configuratio
 
 include::SAP-EIC-Metallb.adoc[Metallb, leveloffset=2]
 
+++++
+<?pdfpagebreak?>
+++++
 
 === Installing {redis}
 
@@ -247,6 +250,9 @@ https://redis.io/docs/management/persistence/.
 
 include::SAP-EIC-Redis.adoc[leveloffset=2]
 
+++++
+<?pdfpagebreak?>
+++++
 
 === Installing {pg}
 
@@ -272,16 +278,6 @@ include::SAP-EIC-HANA.adoc[leveloffset=2]
 <?pdfpagebreak?>
 ++++
 
-=== Use {hana}
-
-Before getting started to prepare you {hana} for the usage with {eic}, enusre the requirements described at
-https://me.sap.com/notes/3247839 are met.
-
-include::SAP-EIC-HANA.adoc[leveloffset=2]
-
-++++
-<?pdfpagebreak?>
-++++
 
 [#restricted-access]
 == Restricted Access for {eic}
