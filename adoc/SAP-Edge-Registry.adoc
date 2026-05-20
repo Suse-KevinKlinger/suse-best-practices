@@ -19,11 +19,11 @@ As the referenced Persistent Volume (PV) provisioner, {lh} can be used.
 # tag::deploy[]
 === Deployment
 
-This chapter describes a basic example how to deploy the {reg} without high-availibilty.
+This chapter describes a basic example how to deploy the {reg} without high-availability.
 
 WARNING: In the example deployment, self signed certificates will be used. It's highly recommended to use a trusted CA for signing certificates for production landscapes.
 
-Before heading into the actual deployment, please make sure to create a Kuberentes secret that holds your login information as described in:
+Before heading into the actual deployment, please make sure to create a Kubernetes secret that holds your login information as described in:
 link:https://documentation.suse.com/en-us/cloudnative/suse-private-registry/html/private-registry/pr-deployment.html#pr-deployment-kube-secrets[]
 
 ==== Gather login information
@@ -74,9 +74,9 @@ kubectl create secret docker-registry suse-registry \
 In our example the secret is called _suse-registry_ and we'll refer to it in the next chapter.
 
 
-==== Deploying without high-availibilty
+==== Deploying without high-availability
 
-The most basic approach to deloy is without high-availibilty, as there are no dependencies for a keystore and a database.
+The most basic approach to deploy is without high-availability, as there are no dependencies for a keystore and a database.
 The excerpt below shows example values that can be used with Helm to deploy the registry using a NodePort for exposure: 
 
 [source, yaml]
@@ -143,9 +143,9 @@ helm install suse-registry oci://registry.suse.com/private-registry/private-regi
 
 # end::deploy[]
 
-// === Deplyoying with high-availibilty
+// === Deploying with high-availability
 
-// To deploy {reg} using high-availbility, {redis} and {pq} are needed.
+// To deploy {reg} using high-availability, {redis} and {pq} are needed.
 
 // [source, yaml]
 // ----
@@ -213,7 +213,7 @@ To use {reg} with {elm}, you'll need to configure the {rke} cluster that will be
 ==== Configure the {rke} cluster that hosts ELM
 
 In order to avoid setting up multiple imagePullSecrets for each namespace, we recommend to add the {reg} to you cluster configuration as described in <<rancherRegistries>>.
-If you are using self signed certificates or a certifcate signed by an unknown CA, tick in the _Skip TLS Verifications_ box.
+If you are using self signed certificates or a certificate signed by an unknown CA, tick in the _Skip TLS Verifications_ box.
 
 ==== Adjust ELM Edge Node
 
@@ -225,7 +225,7 @@ E.g. if you registry is hosted at `example.com` and your project is called `my-e
 Also make sure to toggle the *Authentication* to be enabled.
 Enter the username and password for your registry.
 
-When using a self signed certificate, opt-in the *No-Trusted Certificate* and upload the certifcate, you fetched as described
+When using a self signed certificate, opt-in the *No-Trusted Certificate* and upload the certificate, you fetched as described
 in <<Prepare for {elm}>>.
 
 image::SAP-Edge-Registry-ELM-Config.png[title=ELM enable private registry,scaledwidth=99%]
