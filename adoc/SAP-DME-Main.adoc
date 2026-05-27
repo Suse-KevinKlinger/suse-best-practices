@@ -1,0 +1,259 @@
+
+include::SAP-EIC-Variables.adoc[]
+
+:idprefix: sec-
+:idseparator: -
+
+:dme: Digital Manufacturing Edge
+
+= SAP {dme} on SUSE
+
+== Introduction
+
+This guide describes how to prepare your infrastructure for the installation of {dme} on {rke} using {rancher}.
+It will guide you through the steps of:
+
+* Installing {rancher}
+* Setting up {rke} clusters
+* Deploying mandatory components for {dme}
+
+++++
+<?pdfpagebreak?>
+++++
+
+== Supported and used versions
+
+The support matrix below shows which versions of the given software we will use in this guide.
+
+[cols="1,1"]
+|===
+|Product | Version
+
+|{slem} | {slem_version}
+|{rke} | 1.34     
+|{rancher} | {rancher_version}
+|{lh} | {lh_version}
+|{cm} | {cm_version}
+|{metallb} | {metallb_version} 
+|{pg} | {pg_version}
+|{istio} | {istio_version}
+|{kiali} | {kiali_version}
+|{prometheus} | {prometheus_version}
+|{grafana} | {grafana_version}
+|===
+
+[IMPORTANT]
+====
+Other versions of {metallb} or {cm} can be used, but they may not have been tested. 
+====
+
+
+
+++++
+<?pdfpagebreak?>
+++++
+
+== Prerequisites
+
+* Get subscriptions for:
+** {rancher4SAP} *
+** {sle_ha} **
+
++++*+++ The {rancher4SAP} subscription holds support for all required components like {slem}, {rancher} and {lh}.
+
++++**+++ Only needed if you want to set up {rancher} in a high availability setup
+
+Additionally,
+
+* check the storage requirements.
+
+* get an SAP S-user ID to access software and documentation from SAP.
+
+* read the relevant SAP documentation:
+
+** https://help.sap.com/docs/sap-digital-manufacturing/setup-and-operations-guide-for-sap-digital-manufacturing-for-edge-computing/
+
+//TODO add sap note
+
+
+++++
+<?pdfpagebreak?>
+++++
+
+== Landscape Overview
+
+== Installing {slem} {slem_version}
+There are several ways to install {slem} {slem_version}. For this best practice guide, we use the installation method via graphical installer. 
+But in cloud native deployments, it is highly recommended to use Infrastructure-as-Code technologies to fully automate the deployment and lifecycle processes. 
+
+include::SAP-EIC-SLEMicro.adoc[SLEMicro]
+
+++++
+<?pdfpagebreak?>
+++++
+
+== Installing {rancher} cluster
+
+By now, you should have the operating system installed on every Kubernetes node.
+You are ready to install a {rancher} cluster.
+Referring to the landscape overview, we now focus on how to set up the upper section of the graphic below:
+
+image::SAP-EIC-Architecture-Rancher.svg[title=Architecture SUSE Rancher Prime,scaledwidth=99%,opts=inline,Embedded]
+
+include::SAP-K8s-HA.adoc[tags=**]
+
+include::SAPDI3-Rancher.adoc[tags=**]
+
+++++
+<?pdfpagebreak?>
+++++
+
+== Installing RKE2 using {rancher}
+
+After having installed the {rancher} cluster, you can use it to create {rke} clusters for {eic}.
+SAP recommends setting separate QA/Dev systems for {eic} in addition to a production landscape. 
+Both can be configured similarly using {rancher}, as described in this chapter.
+Referring to the landscape overview, we now focus on the lower section of the graphic below:
+
+image::SAP-EIC-Architecture-RKE2.svg[title=Architecture Overview RKE2,scaledwidth=99%,opts=inline,Embedded]
+
+
+include::SAP-Rancher-RKE2-Installation.adoc[tags=!install-rke2-harvester]
+
+++++
+<?pdfpagebreak?>
+++++
+
+== Installing {reg} (optional)
+
+include::SAP-Edge-Registry.adoc[tags=intro]
+
+NOTE: The installation of {reg} is not a mandatory requirement for the deployment of {eic} and is thereby optional. If you want to continue without using a {reg}, please continue with the next chapter <<preparingStorage>>.
+
+include::SAP-Edge-Registry.adoc[tags=!intro;!use-elm]
+
+
+[#preparingStorage]
+== Preparing storage
+
+To make storage available for Kubernetes workloads, prepare the storage solution you want to use.
+In this chapter, we describe how to set this up and how to prepare it for consumption by {eic}.
+
+The storage solutions tested by SAP and SUSE are presented below, along with links to chapters detailing how to set them up and configure them.
+
+* {lh} <<Longhorn>>
+
+include::SAPDI3-Longhorn.adoc[leveloffset=1]
+
+++++
+<?pdfpagebreak?>
+++++
+
+== Installing mandatory infrastructure components for {dme}
+
+In the following chapter, we present an example for setting up {metallb} and {pg}.
+
+NOTE: Keep in mind that the descriptions and instructions below might differ from the deployment you need for your specific infrastructure and use cases.
+
+=== Logging in to {rac}
+
+To access the {rac}, you need to log in. You can do this using the console and Helm client.
+The easiest way to do so is to use the built-in shell in {rancher}. To access it, navigate to your cluster and click *Kubectl Shell* as shown below:
+
+image::EIC-Rancher-Kubectl-Button.png[title=Rancher Shell Access,scaledwidth=99%]
+
+A shell will open as shown in the image below:
+
+image::EIC-Rancher-Kubectl-Shell.png[title=Rancher Shell Overview,scaledwidth=99%]
+
+
+You must log in to {rac}. This can be done as follows:
+
+[source, bash]
+----
+helm registry login dp.apps.rancher.io/charts -u <yourUser> -p <your-token>
+----
+
+=== Installing {metallb} on Kubernetes cluster
+
+The following chapter should guide you through the installation and configuration of {metallb} on your Kubernetes cluster used for {dme}.
+
+include::SAP-EIC-Metallb.adoc[Metallb, leveloffset=2]
+
+++++
+<?pdfpagebreak?>
+++++
+
+=== Gateways
+
+==== Istio
+
+//TODO
+
+==== Nginx
+
+//TODO
+
+++++
+<?pdfpagebreak?>
+++++
+
+=== Database
+
+==== Installing {pg}
+
+//TODO
+
+include::SAP-EIC-PostgreSQL.adoc[leveloffset=2]
+
+==== MSSQL
+
+//TODO
+
+=== Installing dex
+
+//TODO
+
+=== Installing Kafka
+
+//TODO
+
+++++
+<?pdfpagebreak?>
+++++
+
+[#Appendix]
+== Appendix
+
+include::SAP-EIC-ImagePullSecrets.adoc[tags=!eic-harvester-links;!eic-links,leveloffset=+2]
+++++
+<?pdfpagebreak?>
+++++
+include::SAP-EIC-LoginRegistryApplicationCollection.adoc[tags=general-login;!eic-reference,leveloffset=+2]
+
+=== Using self-signed certificates
+
+In this chapter, we explain how to create self-signed certificates and make them available within Kubernetes. 
+We describe two methods: generating them manually on the operating system layer or using `cert-manager` in your downstream cluster.
+
+include::SAP-EIC-General.adoc[tags=self-signed-certificates]
+
+You should now have the files _server.pem_, _server.key_ and _chained.pem_, which can be used for applications such as Redis or PostgresSQL.
+
+
+==== Uploading certificates to Kubernetes
+
+include::SAP-EIC-General.adoc[tags=k8s-upload-certificates]
+
+==== Using cert-manager
+
+include::SAP-EIC-General.adoc[tags=use-cert-manager]
+
+
+=== Fully removing {rancher}
+
+include::SAP-EIC-General.adoc[tags=rancher-cleanup]
+
+=== Adding a registry
+
+include::SAP-EIC-General.adoc[tags=rancher-registries]
