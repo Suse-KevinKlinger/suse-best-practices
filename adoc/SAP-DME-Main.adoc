@@ -5,6 +5,7 @@ include::SAP-EIC-Variables.adoc[]
 :idseparator: -
 
 :dme: Digital Manufacturing Edge
+:env-rancherRegistries:
 
 = SAP {dme} on SUSE
 
@@ -37,9 +38,6 @@ The support matrix below shows which versions of the given software we will use 
 |{metallb} | {metallb_version} 
 |{pg} | {pg_version}
 |{istio} | {istio_version}
-|{kiali} | {kiali_version}
-|{prometheus} | {prometheus_version}
-|{grafana} | {grafana_version}
 |===
 
 [IMPORTANT]
@@ -110,8 +108,8 @@ include::SAPDI3-Rancher.adoc[tags=**]
 
 == Installing RKE2 using {rancher}
 
-After having installed the {rancher} cluster, you can use it to create {rke} clusters for {eic}.
-SAP recommends setting separate QA/Dev systems for {eic} in addition to a production landscape. 
+After having installed the {rancher} cluster, you can use it to create {rke} clusters for {dme}.
+SAP recommends setting separate QA/Dev systems for {dme} in addition to a production landscape. 
 Both can be configured similarly using {rancher}, as described in this chapter.
 Referring to the landscape overview, we now focus on the lower section of the graphic below:
 
@@ -124,20 +122,11 @@ include::SAP-Rancher-RKE2-Installation.adoc[tags=!install-rke2-harvester]
 <?pdfpagebreak?>
 ++++
 
-== Installing {reg} (optional)
-
-include::SAP-Edge-Registry.adoc[tags=intro]
-
-NOTE: The installation of {reg} is not a mandatory requirement for the deployment of {eic} and is thereby optional. If you want to continue without using a {reg}, please continue with the next chapter <<preparingStorage>>.
-
-include::SAP-Edge-Registry.adoc[tags=!intro;!use-elm]
-
-
 [#preparingStorage]
 == Preparing storage
 
 To make storage available for Kubernetes workloads, prepare the storage solution you want to use.
-In this chapter, we describe how to set this up and how to prepare it for consumption by {eic}.
+In this chapter, we describe how to set this up and how to prepare it for consumption by {dme}.
 
 The storage solutions tested by SAP and SUSE are presented below, along with links to chapters detailing how to set them up and configure them.
 
@@ -151,7 +140,8 @@ include::SAPDI3-Longhorn.adoc[leveloffset=1]
 
 == Installing mandatory infrastructure components for {dme}
 
-In the following chapter, we present an example for setting up {metallb} and {pg}.
+// TODO: add more details on what components are mandatory and which are optional, e.g. kafka, gateways, etc.
+In the following chapter, we present an example for setting up {metallb} and {reg}.
 
 NOTE: Keep in mind that the descriptions and instructions below might differ from the deployment you need for your specific infrastructure and use cases.
 
@@ -174,11 +164,49 @@ You must log in to {rac}. This can be done as follows:
 helm registry login dp.apps.rancher.io/charts -u <yourUser> -p <your-token>
 ----
 
+++++
+<?pdfpagebreak?>
+++++
+
 === Installing {metallb} on Kubernetes cluster
 
 The following chapter should guide you through the installation and configuration of {metallb} on your Kubernetes cluster used for {dme}.
 
 include::SAP-EIC-Metallb.adoc[Metallb, leveloffset=2]
+
+++++
+<?pdfpagebreak?>
+++++
+
+=== Installing {reg}
+
+include::SAP-Edge-Registry.adoc[tags=intro]
+
+NOTE: The installation of {reg} is not a mandatory requirement for the deployment of {dme} and is thereby optional.
+If you want to continue without using a {reg}, please continue with the next chapter <<Gateways>>.
+
+include::SAP-Edge-Registry.adoc[leveloffset=1, tags=prerequisites;deploy;prepare-registry;proxy-cache-project]
+
+==== Updating Helm values for the Proxy Cache
+
+To route image requests through your newly created {reg} Proxy Cache (configured in <<prepareRegistryProject>>), you must update the SAP {dme} Helm `values.yaml` file.
+
+Locate the `global.dockerRegistry` parameter in your custom `values.yaml` file and update it to point to your {reg} FQDN and the specific proxy cache project name.
+
+Modify your `values.yaml` file as follows:
+
+[source, yaml]
+----
+global:
+  dockerRegistry: "<PRIVATE_REGISTRY_FQDN>/<PROXY_PROJECT_NAME>"
+  # Example: "suse-registry.example.com/proxy-cache-project"
+  security:
+    imageCredentials:
+      username: "<SPR_USERNAME>"
+      password: "<SPR_PASSWORD>"
+----
+
+NOTE: Ensure that the username and password provided in the `imageCredentials` block correspond to a registry account that has at least read permissions (`Pull` role) assigned within the specified proxy project.
 
 ++++
 <?pdfpagebreak?>

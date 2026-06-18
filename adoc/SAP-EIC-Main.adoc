@@ -164,7 +164,7 @@ include::SAP-Edge-Registry.adoc[tags=intro]
 
 NOTE: The installation of {reg} is not a mandatory requirement for the deployment of {eic} and is thereby optional. If you want to continue without using a {reg}, please continue with the next chapter <<preparingStorage>>.
 
-include::SAP-Edge-Registry.adoc[tags=!intro]
+include::SAP-Edge-Registry.adoc[tags=prerequisites;deploy;prepare-registry;elm-registry-project;use-elm]
 
 ++++
 <?pdfpagebreak?>
