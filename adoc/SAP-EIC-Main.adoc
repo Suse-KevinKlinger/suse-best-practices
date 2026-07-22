@@ -1,5 +1,7 @@
 :docinfo:
 :env-rancherRegistries:
+:is-sap-eic:
+
 //test
 // defining article ID
 [#art-sap-eic-slemicro]

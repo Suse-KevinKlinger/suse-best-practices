@@ -1,6 +1,7 @@
 :docinfo:
 // :doctype: article
 :env-rancherRegistries:
+:is-sap-eic:
 
 
 // defining article ID
