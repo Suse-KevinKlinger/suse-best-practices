@@ -246,6 +246,14 @@ include::SAP-EIC-PostgreSQL.adoc[leveloffset=2]
 
 //TODO
 
+=== External Secrets Operator (ESO)
+
+include::SAP-DME-ExternalSecretsOperator.adoc[tags=intro]
+
+NOTE: The installation of {eso} is not a mandatory requirement for the deployment of {dme} and is thereby optional. If you choose not to use ESO, you will need to manage passwords and credentials manually in your Helm values file. If you want to continue without using ESO, please proceed to the next chapter <<Appendix>>.
+
+include::SAP-DME-ExternalSecretsOperator.adoc[tags=main, leveloffset=+1]
+
 ++++
 <?pdfpagebreak?>
 ++++
