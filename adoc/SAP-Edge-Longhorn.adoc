@@ -36,3 +36,18 @@ helm install longhorn oci://dp.apps.rancher.io/charts/suse-storage \
 ----
 
 For more details, visit https://documentation.suse.com/en-us/cloudnative/storage/.
+
+=== Configuring SAP {dme} to use {lh}
+
+After successfully installing {lh}, you must configure the SAP {dme} Helm chart to use it as the storage provider.
+
+Add the following storage configuration to your `values.yaml` file for the SAP {dme} deployment:
+
+[source, yaml, subs="attributes"]
+----
+global:
+  storageClass: "longhorn"
+----
+
+// TODO: In the future, we will include add instructions for configuring the DME modules.
+// NOTE: If you are deploying modules that require `ReadWriteMany` (RWX) access mode (such as the `edge-object-store` or `production-connector`), {lh} natively supports RWX volumes. You must explicitly set their respective `storageClass` parameters to `"longhorn"` and enable RWX support in your Helm values (e.g., `edge-object-store.hasRWXSupport: true`).
