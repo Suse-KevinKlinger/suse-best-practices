@@ -119,7 +119,7 @@ spec:
       cnpg.io/reload: "" 
   usages:
     - server auth
-  commonName: postgres-rw
+    - digital signature
   dnsNames:
     - postgres-rw
     - postgres-rw.{cnpg_pg_db_name}
