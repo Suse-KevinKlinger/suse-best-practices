@@ -207,10 +207,10 @@ In this section, we will cover the configuration of the registry after deploymen
 
 As a best practice we recommend to create a new registry user whose credentials will be shared with the deployment tools or Kubernetes clusters.
 
-ifeval::["{docname}" == "SAP-DME-Main"]
+ifdef::is-sap-dme[]
 If you already have an existing user or want to continue the deployment as admin, please proceed to the project creation section below (see <<proxyRegistryProject>>).
 endif::[]
-ifeval::["{docname}" == "SAP-EIC-Main" or "{docname}" == "SAP-EIC-Harvester-main"]
+ifdef::is-sap-eic[]
 If you already have an existing user or want to continue the deployment as admin, please proceed to the project creation section below (see <<elmRegistryProject>>).
 endif::[]
 
