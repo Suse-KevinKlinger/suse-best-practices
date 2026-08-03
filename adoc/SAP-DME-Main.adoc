@@ -7,7 +7,6 @@ include::SAP-DME-Variables.adoc[]
 
 :eic: Edge Integration Cell
 
-:dme: Digital Manufacturing Edge
 :env-rancherRegistries:
 
 = SAP {dme} on SUSE
@@ -181,6 +180,19 @@ helm registry login dp.apps.rancher.io/charts -u <yourUser> -p <your-token>
 <?pdfpagebreak?>
 ++++
 
+=== Preparing the {dme} namespace
+
+Many of the subsequent components (like Istio, Dex, ESO, and {dme} itself) require the target namespace to exist beforehand. 
+
+Create the `dm-edge` namespace:
+
+[source,bash]
+----
+kubectl create namespace dm-edge
+----
+
+Follow the instructions in <<imagePullSecret>> to ensure the `application-collection` secret is available in the `dm-edge` namespace.
+
 === Installing {metallb} on Kubernetes cluster
 
 The following chapter should guide you through the installation and configuration of {metallb} on your Kubernetes cluster used for {dme}.
@@ -349,7 +361,7 @@ global:
         clientSecret: super-secret-password-shared-with-sap-dm
     idpLogoutUrl: https://<your-Rancher-URL>/oidc/logout
     database:
-        useEmbedded: true
+        useEmbedded: false
         type: postgresql
         auth:
             host: "postgres-rw.edgedb.svc.cluster.local"
