@@ -43,6 +43,7 @@ The support matrix below shows which versions of the given software we will use 
 |{istio} | {istio_version}
 |{dex} | {dex_version}
 |{eso} | {eso_version}
+|{strimzi} | {strimzi_version}
 
 |===
 
