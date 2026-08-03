@@ -45,6 +45,10 @@
 :dex_chart_version: 0.24.1
 
 :dme_namespace: dm-edge
+:eso: External Secrets Operator
+:eso_chart_version: 2.8.0
+:eso_namespace: external-secrets
+:eso_version: 2.8.0
 
 :cnpg: CloudNativePG
 :cnpg_url: https://apps.rancher.io/applications/cloudnative-pg
@@ -59,8 +63,9 @@
 :istio_version: 1.30.3
 
 :strimzi: Strimzi Kafka Operator
-:strimzi_chart_version: 1.0.0
+:strimzi_version: 1.1.0
+:strimzi_chart_version: 1.1.0
 :strimzi_namespace: kafka
-:strimzi_kafka_version: 4.2.0
-:strimzi_kafka_metadata_version: 4.2
+:strimzi_kafka_version: 4.3.0
+:strimzi_kafka_metadata_version: 4.3
 
