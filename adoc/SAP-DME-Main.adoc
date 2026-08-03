@@ -198,6 +198,7 @@ Follow the instructions in <<imagePullSecret>> to ensure the `application-collec
 The following chapter should guide you through the installation and configuration of {metallb} on your Kubernetes cluster used for {dme}.
 
 Before proceeding, ensure you have the following networking resources available for configuration:
+
 * A static IP address allocated for the {metallb} _IPAddressPool_. This address must be outside your DHCP pool range but routable within your network cluster.
 * A configured DNS record (A or AAAA) matching your desired domain name that points directly to that allocated IP address.
 
@@ -260,6 +261,7 @@ include::SAP-Edge-Cert-Manager.adoc[leveloffset=1, tags=!intro]
 
 {dme} requires a Kubernetes Ingress Controller to be installed in the cluster, which handles the traffic routing to {dme} components.
 As of today, there are two supported Gateways:
+
 * Istio
 * Nginx
 
