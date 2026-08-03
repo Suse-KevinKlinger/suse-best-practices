@@ -38,12 +38,28 @@
 :cm_version: 1.20.3
 
 :dex: Dex
-:dex_version: 0.24.1
+:dex_version: 2.45.1
+:dex_namespace: auth
+:dex_chart_version: 0.24.1
+
+:cnpg: CloudNativePG
+:cnpg_url: https://apps.rancher.io/applications/cloudnative-pg
+:cnpg_app_name: cloudnative-pg
+:cnpg_namespace: cnpg-system
+:cnpg_pg_db_name: edgedb
+:cnpg_version: 0.28.3
 
 :istio: Istio
 :istio_chart_version: 1.0.2
 :istio_namespace: istio-system
 :istio_version: 1.27.1
+
+:strimzi: Strimzi Kafka Operator
+:strimzi_chart_version: 1.0.0
+:strimzi_namespace: kafka
+:strimzi_kafka_version: 4.2.0
+:strimzi_kafka_metadata_version: 4.2
+
 
 :kiali: Kiali
 :kiali_chart_version: 2.15.0
