@@ -11,8 +11,6 @@ include::SAP-DME-Variables.adoc[]
 :idseparator: -
 :is-sap-dme:
 
-:eic: Edge Integration Cell
-
 :env-rancherRegistries:
 
 = SAP {dme} on SUSE
@@ -43,7 +41,7 @@ The following support matrix lists the software versions used in this guide.
 |{rancher} | {rancher_version}
 |{lh} | {lh_version}
 |{cm} | {cm_version}
-|{metallb} | {metallb_version} 
+|{metallb} | {metallb_version}
 |{pg} | {pg_version}
 |{istio} | {istio_version}
 |{dex} | {dex_version}
@@ -192,14 +190,14 @@ helm registry login dp.apps.rancher.io/charts -u <yourUser> -p <your-token>
 
 Several subsequent components, such as Istio, Dex, ESO, and {dme}, require the target name space to exist first.
 
-Create the `dm-edge` name space:
+Create the `{dme_namespace}` name space:
 
-[source,bash]
+[source,bash, subs="attributes"]
 ----
-kubectl create namespace dm-edge
+kubectl create namespace {dme_namespace}
 ----
 
-Follow the instructions in <<imagePullSecret>> to ensure the `application-collection` secret is available in the `dm-edge` name space.
+Follow the instructions in <<imagePullSecret>> to ensure the `application-collection` secret is available in the `{dme_namespace}` name space.
 
 === Installing {metallb} on Kubernetes cluster
 
@@ -215,14 +213,14 @@ The DNS name is used later in this guide and is called *<LB-address>*.
 TIP: If you do not control the DNS and are running a proof-of-concept setup, append _.sslip.io_ to your IP address. 
 *Do not use this approach in production environments.*
 
-include::SAP-EIC-Metallb.adoc[Metallb, leveloffset=2]
+include::SAP-EIC-Metallb.adoc[leveloffset=2]
 
 
 === Installing {reg} (optional)
 
 include::SAP-Edge-Registry.adoc[tags=intro]
 
-NOTE: Installing {reg} is optional when deploying {dme}. To proceed without a {reg}, skip to <<Gateways>>.
+NOTE: Installing {reg} is optional when deploying {dme}. To proceed without a {reg}, skip to <<Installing Cert-Manager>>.
 
 include::SAP-Edge-Registry.adoc[leveloffset=1, tags=prerequisites;deploy;prepare-registry;proxy-cache-project]
 
@@ -268,7 +266,7 @@ This chapter describes how to deploy both of them and how to prepare them for {d
 
 ==== Istio
 
-include::SAP-DME-Istio.adoc[leveloffset=2, tags=**]
+include::SAP-DME-Istio.adoc[leveloffset=3, tags=**]
 
 ==== NGINX
 
@@ -333,7 +331,11 @@ include::SAP-DME-ExternalSecretsOperator.adoc[tags=main, leveloffset=+1]
 <?pdfpagebreak?>
 ++++
 
-==  Deploying {dme}
+++++
+<?pdfpagebreak?>
+++++
+
+== Deploying {dme}
 
 At this point, all mandatory components are installed and you are ready to deploy {dme}.
 First, create an edge device as described in https://help.sap.com/docs/sap-digital-manufacturing/setup-and-operations-guide-for-sap-digital-manufacturing-for-edge-computing/create-edge-device.
