@@ -1,13 +1,13 @@
+:docinfo:
+:env-rancherRegistries:
+:is-sap-dme:
 
 include::SAP-DME-Variables.adoc[]
 
 :idprefix: sec-
 :idseparator: -
-:is-sap-dme:
 
-:eic: Edge Integration Cell
 
-:env-rancherRegistries:
 
 = SAP {dme} on SUSE
 
@@ -33,11 +33,11 @@ The support matrix below shows which versions of the given software we will use 
 |Product | Version
 
 |{slem} | {slem_version}
-|{rke} | 1.34     
+|{rke} | 1.34
 |{rancher} | {rancher_version}
 |{lh} | {lh_version}
 |{cm} | {cm_version}
-|{metallb} | {metallb_version} 
+|{metallb} | {metallb_version}
 |{pg} | {pg_version}
 |{istio} | {istio_version}
 |{dex} | {dex_version}
@@ -48,7 +48,7 @@ The support matrix below shows which versions of the given software we will use 
 
 [IMPORTANT]
 ====
-Other versions can be used, but they may not have been tested. 
+Other versions can be used, but they may not have been tested.
 ====
 
 ++++
@@ -75,7 +75,7 @@ Additionally,
 
 ** https://help.sap.com/docs/sap-digital-manufacturing/setup-and-operations-guide-for-sap-digital-manufacturing-for-edge-computing/
 
-** https://me.sap.com/notes/3513927
+** https://me.sap.com/notes/2852243
 
 [IMPORTANT]
 ====
@@ -99,8 +99,8 @@ Make sure to meet the requirements of SAP before installing your clusters.
 //TODO
 
 == Installing {slem} {slem_version}
-There are several ways to install {slem} {slem_version}. For this best practice guide, we use the installation method via graphical installer. 
-But in cloud native deployments, it is highly recommended to use Infrastructure-as-Code technologies to fully automate the deployment and lifecycle processes. 
+There are several ways to install {slem} {slem_version}. For this best practice guide, we use the installation method via graphical installer.
+But in cloud native deployments, it is highly recommended to use Infrastructure-as-Code technologies to fully automate the deployment and lifecycle processes.
 
 include::SAP-Edge-SLEMicro.adoc[tags=**]
 
@@ -127,7 +127,7 @@ include::SAPDI3-Rancher.adoc[tags=**]
 == Installing RKE2 using {rancher}
 
 After having installed the {rancher} cluster, you can use it to create {rke} clusters for {dme}.
-SAP recommends setting separate QA/Dev systems for {dme} in addition to a production landscape. 
+SAP recommends setting separate QA/Dev systems for {dme} in addition to a production landscape.
 // Both can be configured similarly using {rancher}, as described in this chapter.
 // Referring to the landscape overview, we now focus on the lower section of the graphic below:
 
@@ -186,14 +186,14 @@ helm registry login dp.apps.rancher.io/charts -u <yourUser> -p <your-token>
 
 Many of the subsequent components (like Istio, Dex, ESO, and {dme} itself) require the target namespace to exist beforehand. 
 
-Create the `dm-edge` namespace:
+Create the `{dme_namespace}` namespace:
 
-[source,bash]
+[source,bash, subs="attributes"]
 ----
-kubectl create namespace dm-edge
+kubectl create namespace {dme_namespace}
 ----
 
-Follow the instructions in <<imagePullSecret>> to ensure the `application-collection` secret is available in the `dm-edge` namespace.
+Follow the instructions in <<imagePullSecret>> to ensure the `application-collection` secret is available in the `{dme_namespace}` namespace.
 
 === Installing {metallb} on Kubernetes cluster
 
@@ -206,9 +206,9 @@ Before proceeding, ensure you have the following networking resources available 
 
 The DNS name will be used later in this guide and will be referred to as *<LB-address>*.
 
-TIP: If you have no control over your DNS and are running an proof of concept like setup, you can just add _.sslip.io_ to your IP address. *This is not considered a best practice and is strongly discouraged for production environments.*
+TIP: If you have no control over your DNS and are running a proof of concept like setup, you can just add _.sslip.io_ to your IP address. *This is not considered a best practice and is strongly discouraged for production environments.*
 
-include::SAP-EIC-Metallb.adoc[Metallb, leveloffset=2]
+include::SAP-EIC-Metallb.adoc[leveloffset=2]
 
 ++++
 <?pdfpagebreak?>
@@ -219,7 +219,7 @@ include::SAP-EIC-Metallb.adoc[Metallb, leveloffset=2]
 include::SAP-Edge-Registry.adoc[tags=intro]
 
 NOTE: The installation of {reg} is not a mandatory requirement for the deployment of {dme} and is thereby optional.
-If you want to continue without using a {reg}, please continue with the next chapter <<Gateways>>.
+If you want to continue without using a {reg}, please continue with the next chapter <<Cert-Manager>>.
 
 include::SAP-Edge-Registry.adoc[leveloffset=1, tags=prerequisites;deploy;prepare-registry;proxy-cache-project]
 
@@ -267,11 +267,11 @@ As of today, there are two supported Gateways:
 * Istio
 * Nginx
 
-In this chapter we'll describe how to deploy both of them and how to prepare them for {dme}
+In this chapter we will describe how to deploy both of them and how to prepare them for {dme}.
 
 ==== Istio
 
-include::SAP-DME-Istio.adoc[leveloffset=2, tags=**]
+include::SAP-DME-Istio.adoc[leveloffset=3, tags=**]
 
 ==== Nginx
 
@@ -306,14 +306,14 @@ include::SAP-DME-PostgreSQL.adoc[leveloffset=3]
 
 === Installing dex
 
-In this chapter we'll cover how to deploy {dex} for the usage with {dme}.
+In this chapter we will cover how to deploy {dex} for the usage with {dme}.
 
 [IMPORTANT]
 ====
 Please refer to https://help.sap.com/docs/sap-digital-manufacturing/setup-and-operations-guide-for-sap-digital-manufacturing-for-edge-computing/use-external-dex?locale=en-US to get latest information about the configuration of {dex}.
 ====
 
-For this guide we'll describe the installation of {dex} within a Kubernetes cluster and how to expose it through {istio} or Nginx.
+For this guide we will describe the installation of {dex} within a Kubernetes cluster and how to expose it through {istio} or Nginx.
 For your setup of {dme}, this might be the same cluster as for the {dme} workload.
 
 include::SAP-DME-Dex.adoc[leveloffset=2, tags=!intro]
@@ -331,7 +331,7 @@ NOTE: The installation of {eso} is not a mandatory requirement for the deploymen
 
 include::SAP-DME-ExternalSecretsOperator.adoc[tags=main, leveloffset=+1]
 
-==  Deploying {dme}
+== Deploying {dme}
 
 At this point you should have installed all mandatory components and you are ready to deploy {dme}.
 The next step is to create an edge device as described in https://help.sap.com/docs/sap-digital-manufacturing/setup-and-operations-guide-for-sap-digital-manufacturing-for-edge-computing/create-edge-device?locale=en-US
