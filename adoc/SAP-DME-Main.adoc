@@ -415,8 +415,6 @@ For subsequent steps, follow the official SAP documentation at https://help.sap.
 [#Appendix]
 == Appendix
 
-//TODO add links back to all mandatory components
-
 include::SAP-EIC-ImagePullSecrets.adoc[tags=!eic-harvester-links;!eic-links,leveloffset=+2]
 
 ++++
