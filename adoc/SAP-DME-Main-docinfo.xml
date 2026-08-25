@@ -77,33 +77,9 @@
     </mediaobject>
 </cover>
 
-<revhistory xml:id="rh-art-sap-eic-slemicro">
+<revhistory xml:id="rh-art-sap-dme-main">
     <revision>
-        <date>2026-02-03</date>
-        <revdescription>
-            <para>Added apiVersion: cert-manager.io/v1 in the Certificate yaml.</para>
-        </revdescription>
-    </revision>     
-    <revision>
-        <date>2025-12-15</date>
-        <revdescription>
-            <para>Minor additional enhancements and fixes. Added upgrade information</para>
-        </revdescription>
-    </revision>        
-    <revision>
-        <date>2025-07-22</date>
-        <revdescription>
-            <para>Updated product versions</para>
-        </revdescription>
-    </revision>
-    <revision>
-        <date>2025-04-28</date>
-        <revdescription>
-            <para>Format issues fixed</para>
-        </revdescription>
-    </revision>
-    <revision>
-        <date>2024-07-15</date>
+        <date>2026-08-12</date>
         <revdescription>
             <para>First published version</para>
         </revdescription>
@@ -113,8 +89,9 @@
 
 <abstract>
     <para>
-        SUSE® offers a full stack for your container workloads. This best practice document describes how you can make use of this offerings
-        for your installation of Digital Manufacturing Edge included with SAP Digital Manufacturing Cloud. The operations of SAP Digital Manufacturing Edge and/or SAP Digital Manufacturing Cloud are not covered in this document.
+        SUSE® offers a complete stack for container workloads. 
+        This best practice document describeshow to use these offerings for installations of Digital Manufacturing Edge included with SAP Digital Manufacturing Cloud.
+        This document does not cover operating SAP Digital Manufacturing Edge or SAP Digital Manufacturing Cloud.
     </para>
 
     <para>
