@@ -1,5 +1,4 @@
 # tag::intro[]
-# tag::intro[]
 
 This chapter describes how to set up a {reg}.
 Find more details about the {reg} at
