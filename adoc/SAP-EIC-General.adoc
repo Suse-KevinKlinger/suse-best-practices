@@ -2,10 +2,8 @@
 
 # tag::disclaimer-EIC-sizing[]
 NOTE: This guide does not contain information about sizing your landscapes. Visit 
-https://help.sap.com/docs/integration-suite?locale=en-US and search for the "Edge Integration Cell Sizing Guide".
-
+https://help.sap.com/docs/integration-suite?locale=en-US and search for the "{eic} Sizing Guide".
 # end::disclaimer-EIC-sizing[]
-
 
 # tag::disclaimer-production-versions[]
 To use different versions of {slem} or {slm}, {rancher}, {rke}, or {lh}, make sure to check the support matrix for the related solutions you want to use:
@@ -15,10 +13,8 @@ For {redis} and {pg}, make sure to pick versions compatible to {eic}, which can 
 # end::disclaimer-production-versions[]
 
 # tag::self-signed-certificates[]
-
 [#selfSignedCertificates]
 ==== Creating self-signed certificates
-
 WARNING: We strongly advise against using self-signed certificates in production environments.
 
 The first step is to create a certificate authority (hereinafter called CA) with a key and certificate.
@@ -75,9 +71,7 @@ To get a full certificate chain, link the generated file _server.pem_ with the f
 ----
 cat server.pem rootCA.crt > chained.pem
 ----
-
 # end::self-signed-certificates[]
-
 
 # tag::k8s-upload-certificates[]
 
@@ -90,9 +84,7 @@ kubectl -n <namespace> create secret generic <certName> --from-file=./root.pem -
 ----
 
 NOTE: All applications are expecting to have the secret to be used in the same namespace as the application.
-
 # end::k8s-upload-certificates[]
-
 
 # tag::use-cert-manager[]
 
@@ -128,8 +120,8 @@ spec:
   dnsNames:
   - "<cluster-name>.cluster.local"
   - "*.<cluster-name>.cluster.local"
-
 ----
+
 For creating a _ClusterIssuer_ using the Generated CA,  create the _my-ca-issuer.yaml_ file:
 [source,yaml]
 ----
@@ -141,7 +133,9 @@ spec:
   ca:
     secretName: my-ca-secret
 ----
+
 The last ressource you need to create is the certificate itself. This certificate is signed by your created CA. You can name the yaml file _application-name-certificate.yaml_.
+
 [source,yaml]
 ----
 apiVersion: cert-manager.io/v1
@@ -163,6 +157,7 @@ spec:
 ----
 
 Apply the yaml file to your Kubernetes cluster.
+
 [source, bash]
 ----
 kubectl apply -f selfsigned-issuer.yaml
@@ -189,26 +184,21 @@ kubectl create -f https://raw.githubusercontent.com/rancher/rancher-cleanup/refs
 ----
 
 To keep track of the deletion process, you can run:
-
 [source, bash]
 ----
 kubectl  -n kube-system logs -l job-name=cleanup-job  -f
 ----
 
 To verify the deletion was successful, run the following commands. You should receive an empty output:
-
 [source, bash]
 ----
 kubectl create -f https://raw.githubusercontent.com/rancher/rancher-cleanup/refs/heads/main/deploy/verify.yaml
 kubectl  -n kube-system logs -l job-name=verify-job  -f | grep -v "is deprecated"
 ----
-
 # end::rancher-cleanup[]
 
 # tag::rancher-registries[]
-
 [#rancherRegistries]
-
 To avoid creating identical imagePullSecrets in multiple namespaces, you can also introduce a registry in your cluster configuration.
 This can be configured in the Cluster Configuration at the tab _Registries_ as shown below:
 
@@ -228,14 +218,74 @@ image::SAP-Edge-Registry-Add.png[title=Configure Registry at cluster config,scal
 
 There's no need to start with http:// or https:// prefix, neither with the /project as a suffix.
 If you are using certificates from an unknown CA, make sure to enable *Skip TLS Verifications*.
-
 # end::rancher-registries[]
 
 # tag::legacyRestrictedAccess[]
+[#legacyRestrictedAccess847]
+=== Legacy Restricted Access Configuration (EIC 8.41 to 8.47)
 
-[#legacyRestrictedAccess]
+If your {eic} version is between 8.41 and 8.47, or your downloaded restricted resources archive does not include the `apply-restricted-resources.sh` script, you must apply the manifests manually and use the legacy RBAC binding scripts.
 
-For Edge Integration Cell versions older than 8.41, you must manually prepare the cluster using the resources attached to **SAP Note 3618713**: https://me.sap.com/notes/3618713.
+==== Applying the resources manually
+
+Extract the downloaded file and apply the resources directly:
+
+[source, bash]
+----
+kubectl apply -f <extracted_directory>/
+----
+
+==== Legacy ELM RBAC Binding Script
+
+If your ELM zip archive does not contain the apply script, use this legacy binding script to assign permissions to the `edgelm` namespace:
+
+[source, bash]
+----
+#!/bin/bash
+USER_ID="$1"
+PAYLOAD=$(printf '[{"op":"add","path":"/subjects/-","value":{"apiGroup":"rbac.authorization.k8s.io","kind":"User","name":"%s"}}]' "$USER_ID")
+
+echo "Binding ELM RoleBindings and ClusterRoleBindings for user: $USER_ID"
+kubectl patch rolebindings rb-edgelm-manage -n edgelm --type=json -p "$PAYLOAD"
+kubectl patch rolebindings rb-edgelm-admin -n edgelm --type=json -p "$PAYLOAD"
+kubectl patch clusterrolebindings crb-edgelm-cluster-admin --type=json -p "$PAYLOAD"
+----
+
+==== Legacy EIC RBAC Binding Script
+
+If your EIC zip archive does not contain the apply script, use this legacy binding script to assign permissions across the default EIC namespaces:
+
+[source, bash]
+----
+#!/bin/bash
+USER_ID="$1"
+PAYLOAD=$(printf '[{"op":"add","path":"/subjects/-","value":{"apiGroup":"rbac.authorization.k8s.io","kind":"User","name":"%s"}}]' "$USER_ID")
+
+for RB in \
+  "istio-gateways:rb-edgelm-manage" \
+  "istio-gateways:rb-istio-gateways-admin" \
+  "edge-icell-services:rb-edgelm-manage" \
+  "edge-icell-services:rb-admin" \
+  "edge-icell-services:rb-app-admin" \
+  "edge-icell:rb-edgelm-manage" \
+  "edge-icell:rb-admin" \
+  "edge-icell:rb-app-admin" \
+  "edge-icell-secrets:rb-edgelm-manage" \
+  "edge-icell-secrets:rb-admin" \
+  "edge-icell-ela:rb-edgelm-manage" \
+  "edge-icell-ela:rb-admin" \
+  "edge-icell-ela:rb-app-admin"
+do
+  NAMESPACE="${RB%%:*}"
+  NAME="${RB##*:}"
+  echo "Binding $NAME in namespace$NAMESPACE..."
+  kubectl patch rolebindings "$NAME" -n "$NAMESPACE" --type=json -p "$PAYLOAD"
+done
+----
+
+[#legacyRestrictedAccess841]
+=== Legacy Restricted Access Configuration (EIC < 8.41)
+For {eic} versions older than 8.41, you must manually prepare the cluster using the resources attached to **SAP Note 3618713**: https://me.sap.com/notes/3618713.
 
 ==== Applying the resources from SAP Note
 
@@ -274,6 +324,7 @@ Ensure you have created the restricted user in Rancher as described in <<createR
 ----
 #!/bin/bash
 # configuring_permissions.sh
+
 USER_ID="$1"
 
 # rolebindings for edgelm namespace

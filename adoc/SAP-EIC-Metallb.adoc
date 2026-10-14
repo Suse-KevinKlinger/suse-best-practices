@@ -72,6 +72,8 @@ spec:
 EOF
 ----
 
+NOTE: {metallb} allows to allocate multiple IP addresses. For more details, refer to https://metallb.universe.tf/faq/#can-i-have-several-address-pools .
+
 Create the layer 2 network advertisement:
 [source,bash]
 ----
