@@ -1,23 +1,19 @@
 // tag::istio-installation[]
-
 [#istioInstall]
 == Installing {istio}
 
-Even though {istio} is available for deployment using the {rancher} Apps, we recommend to use the {rac}.
 The {istio} chart can be found at https://apps.rancher.io/applications/istio.
 
 // IMPORTANT::
 // SUSE does not offer application support for {istio}.
 // For support requests, contact link:https://istio.io/[Istio].
-
 // TODO: when available, add information from SAP regarding to shared cluster.
-
 // TODO: when available, double-check that link includes istio as a requirement and
 //       add additional links if necessary
+
 Before deploying {istio}, ensure that the requirements described at https://me.sap.com/notes/3247839 are met.
 
 To deploy the chart, create the related namespace and *imagePullSecret* first.
-
 To create the namespace, run:
 
 [source, bash, subs="attributes"]
@@ -48,6 +44,7 @@ global:
 ----
 
 To install the application, run:
+
 [source, bash, subs="attributes"]
 ----
 helm install istiod oci://dp.apps.rancher.io/charts/istio \
@@ -57,11 +54,9 @@ helm install istiod oci://dp.apps.rancher.io/charts/istio \
 ----
 
 For more information on installing and configuring {istio}, check the reference guide at https://docs.apps.rancher.io/reference-guides/istio/.
-
 // end::istio-installation[]
 
 // tag::monitoring-prometheus-installation[]
-
 [#prometheusInstall]
 == Installing {prometheus}
 
@@ -70,7 +65,6 @@ The {prometheus} chart can be found at https://apps.rancher.io/applications/prom
 // IMPORTANT::
 // SUSE does not offer application support for {prometheus}.
 // For support requests, contact link:https://prometheus.io/[Prometheus].
-
 // TODO: when available, add information from SAP regarding to shared cluster.
 
 === Deploying the chart
@@ -109,6 +103,7 @@ For more details on configuring storage, refer to <<preparingStorage>>.
 endif::[]
 
 To install the application, run:
+
 [source, bash, subs="attributes"]
 ----
 helm install prometheus oci://dp.apps.rancher.io/charts/prometheus \
@@ -116,11 +111,9 @@ helm install prometheus oci://dp.apps.rancher.io/charts/prometheus \
 --namespace={prometheus_namespace} \
 --version {prometheus_chart_version}
 ----
-
 // end::monitoring-prometheus-installation[]
 
 // tag::monitoring-grafana-installation[]
-
 [#grafanaInstall]
 == Installing {grafana}
 
@@ -129,7 +122,6 @@ The {grafana} chart can be found at https://apps.rancher.io/applications/grafana
 // IMPORTANT::
 // SUSE does not offer application support for {grafana}.
 // For support requests, contact link:https://grafana.com/[Grafana].
-
 // TODO: when available, add information from SAP regarding to shared cluster.
 
 === Deploying the chart
@@ -170,6 +162,7 @@ global:
 ----
 
 To install the application, run:
+
 [source, bash, subs="attributes"]
 ----
 helm install grafana oci://dp.apps.rancher.io/charts/grafana \
@@ -177,11 +170,9 @@ helm install grafana oci://dp.apps.rancher.io/charts/grafana \
 --namespace={grafana_namespace} \
 --version {grafana_chart_version}
 ----
-
 // end::monitoring-grafana-installation[]
 
 // tag::monitoring-kiali-installation[]
-
 [#kialiInstall]
 == Installing {kiali}
 
@@ -189,8 +180,8 @@ The {kiali} chart can be found at https://apps.rancher.io/applications/kiali.
 
 // IMPORTANT::
 // SUSE does not offer application support for {kiali}.
-// // For support requests, contact link:https://kiali.io/[Istio].
-
+//
+// For support requests, contact link:https://kiali.io/[Istio].
 // TODO: when available, add information from SAP regarding to shared cluster.
 
 === Deploying the chart
@@ -241,6 +232,7 @@ EOF
 ----
 
 To install the application, run:
+
 [source, bash, subs="attributes"]
 ----
 helm install kiali oci://dp.apps.rancher.io/charts/kiali \
@@ -250,28 +242,27 @@ helm install kiali oci://dp.apps.rancher.io/charts/kiali \
 ----
 
 NOTE: For more information on installing and configuring {kiali}, check the reference guide at https://docs.apps.rancher.io/reference-guides/kiali/.
-
 // end::monitoring-kiali-installation[]
 
 // tag::shared-cluster-configuration[]
-
 [#raNamespaceConfig]
 == Configuring Restricted Access for Kubernetes Clusters
 
-This section describes how to set up **Restricted Access for Kubernetes Clusters**, an operating model where {elm} and {eic} are granted only the minimum necessary permissions required for their operation.
+This section describes how to set up Restricted Access for Kubernetes Clusters, an operating model where {elm} and {eic} are granted only the minimum necessary permissions required for their operation. For more details on Restricted Access for Kubernetes Cluster option, refer to https://help.sap.com/docs/edge-lifecycle-management/documentation/key-concepts#kubernetes-cluster-access-options.
+
+NOTE: {elm} supports namespace customization, which is especially useful when deploying multiple {eic} instances on the same Edge Node. The names used in this section (`edgelm`, `istio-gateways`, and the `edge-icell` namespace along with its prefixed variants) reflect the default values provided in the {elm} UI. If you customize them during deployment, ensure you use your custom names in the subsequent commands.
 
 The configuration is divided into two stages to align with the deployment flow:
 
 1. **Phase 1: Access Provisioning for Edge Node Initialization:** Applying initial security policies and setting up a restricted user in Rancher to initialize the Edge Node.
 2. **Phase 2: Access Provisioning for {eic} Deployment:** Applying solution-specific policies and granting permissions for {eic} when the deployment is "Prepared".
 
-To fulfill the infrastructure requirements, refer to the official **SAP Note 3618713** (https://me.sap.com/notes/3618713).
+To fulfill the infrastructure requirements, refer to https://me.sap.com/notes/3247839.
 
 [NOTE]
 ====
-**For Edge Integration Cell versions older than 8.41:**
-You must manually apply the resources provided in the SAP Note mentioned above. 
-Refer to <<legacyRestrictedAccess>> in the Appendix for the specific manual provisioning steps.
+**For Edge Integration Cell versions older than 8.48:**
+You must manually apply the resources or use legacy RBAC binding methods. Refer to <<legacyRestrictedAccess>> in the Appendix for specific legacy provisioning steps.
 ====
 
 [#raPhase1]
@@ -279,19 +270,19 @@ Refer to <<legacyRestrictedAccess>> in the Appendix for the specific manual prov
 
 When the **Restricted Access to Kubernetes Cluster** option is enabled during Edge Node creation, the {elm} UI will prompt you to download the required Kubernetes resources. Refer to the official SAP documentation for more details: https://help.sap.com/docs/edge-lifecycle-management/documentation/initializing-edge-node.
 
-Extract the downloaded file and apply the resources to the Kubernetes cluster:
+Extract the downloaded file to a dedicated directory, for example, `restricted-elm`. The archive includes a script named `apply-restricted-resources.sh`. Make the script executable and run it to apply the foundational security policies required by {elm}:
 
 [source, bash]
 ----
-kubectl apply -f <extracted_directory>/
+cd restricted-elm
+chmod +x apply-restricted-resources.sh
+./apply-restricted-resources.sh
 ----
-
-This action creates the `edgelm` namespace and applies the foundational security policies required by {elm}.
 
 [#raIPSPhase1]
 ==== Configuring ImagePullSecrets for {elm}
 
-Since the `edgelm` namespace is targeted for Istio sidecar injection, it requires an *imagePullSecret* from the SUSE Application Collection. For detailed instructions, refer to <<imagePullSecret>>.
+Since the target ELM namespace is enabled for Istio sidecar injection, it requires an *imagePullSecret* from the SUSE Application Collection. For detailed instructions, refer to <<imagePullSecret>>.
 
 [source, bash]
 ----
@@ -318,7 +309,7 @@ image::SAP-Rancher-Main-Users-Add-ClusterMembership.png[title=Rancher assign use
 [#raUserConfigPhase1]
 ==== Granting restricted user permissions for {elm}
 
-In this section, we associate the restricted user created in the previous section with the security policies. This binds the Rancher user to the exact rights required by {elm}, following the principle of least privilege.
+In this section, we associate the restricted user created in the previous step with the security policies. This binds the Rancher user to the exact rights required by {elm}, following the principle of least privilege. 
 
 Create a file named `bind-elm-rbac.sh` and add the following script:
 
@@ -327,28 +318,65 @@ Create a file named `bind-elm-rbac.sh` and add the following script:
 #!/bin/bash
 set -eu
 
-if [ "$#" -ne 1 ]; then
-  echo "Usage: $0 <USER_ID>"
+if [ "$#" -ne 2 ]; then
+  echo "Usage: $0 <USER_ID> <ELM_NAMESPACE>"
+  echo "Example: $0 u-abcde123 custom-edgelm"
   exit 1
 fi
+
 USER_ID="$1"
+ELM_NAMESPACE="$2"
+
 PAYLOAD=$(printf '[{"op":"add","path":"/subjects/-","value":{"apiGroup":"rbac.authorization.k8s.io","kind":"User","name":"%s"}}]' "$USER_ID")
 
-echo "Binding ELM RoleBindings and ClusterRoleBindings for user: $USER_ID"
+echo "Binding ELM RoleBindings and ClusterRoleBindings for user: $USER_ID in namespace: $ELM_NAMESPACE"
 
-kubectl patch rolebindings rb-edgelm-manage -n edgelm --type=json -p "$PAYLOAD"
-kubectl patch rolebindings rb-edgelm-admin -n edgelm --type=json -p "$PAYLOAD"
-kubectl patch clusterrolebindings crb-edgelm-cluster-admin --type=json -p "$PAYLOAD"
+# 1. RoleBindings
+TARGET_ROLES=("rb-edgelm-manage" "rb-edgelm-admin")
+
+for RB_NAME in "${TARGET_ROLES[@]}"; do
+  if kubectl get rolebinding "$RB_NAME" -n "$ELM_NAMESPACE" >/dev/null 2>&1; then
+    EXISTING=$(kubectl get rolebinding "$RB_NAME" -n "$ELM_NAMESPACE" -o jsonpath="{.subjects[?(@.name=='$USER_ID')].name}" 2>/dev/null || true)
+    
+    if [ "$EXISTING" == "$USER_ID" ]; then
+      echo "  Skipping $RB_NAME in namespace $ELM_NAMESPACE (User already bound)"
+    else
+      echo "  Patching $RB_NAME in namespace $ELM_NAMESPACE..."
+      kubectl patch rolebinding "$RB_NAME" -n "$ELM_NAMESPACE" --type=json -p "$PAYLOAD"
+    fi
+  else
+    echo "  Skipping $RB_NAME (Not found in namespace $ELM_NAMESPACE)"
+  fi
+done
+
+# 2. ClusterRoleBindings
+CRB_LABEL_FILTER="-l edgelm.sap.com/product=edgelm,edgelm.sap.com/cleanup=edgelm"
+TARGET_CLUSTER_ROLE_PREFIX="crb-edgelm-cluster-admin"
+
+FOUND_CRBS=$(kubectl get clusterrolebindings $CRB_LABEL_FILTER -o name 2>/dev/null | grep "$TARGET_CLUSTER_ROLE_PREFIX" || true)
+
+for CRB in $FOUND_CRBS; do
+  CRB_NAME=$(basename "$CRB")
+  EXISTING=$(kubectl get clusterrolebinding "$CRB_NAME" -o jsonpath="{.subjects[?(@.name=='$USER_ID')].name}" 2>/dev/null || true)
+  
+  if [ "$EXISTING" == "$USER_ID" ]; then
+    echo "  Skipping $CRB_NAME (User already bound)"
+  else
+    echo "  Patching $CRB_NAME..."
+    kubectl patch clusterrolebinding "$CRB_NAME" --type=json -p "$PAYLOAD"
+  fi
+done
 
 echo "User permission binding for ELM complete."
 ----
 
-Make the script executable and run it with your `<USER_ID>`:
+Make the script executable and run it with your `<USER_ID>` (configured in the section <<createRestrictedUser>>) and your ELM namespace. 
 
+Example:
 [source, bash]
 ----
 chmod +x bind-elm-rbac.sh
-./bind-elm-rbac.sh <USER_ID>
+./bind-elm-rbac.sh u-qsj27 edgelm
 ----
 
 [#raDownloadKubeconfig]
@@ -366,13 +394,23 @@ Continue with the steps referenced in the official SAP documentation: https://he
 
 === Phase 2: Access Provisioning for {eic} Deployment
 
-When the Edge Node is "Available", initiate the {eic} solution deployment in the {elm} UI. When the solution reaches the **Prepared** state, return here to apply the specific solution resources.
+When the Edge Node is "Available", initiate the {eic} deployment in the {elm} UI. When the solution reaches the **Prepared** state, return here to apply the specific solution resources.
 
-Download the second zip (for example, `restricted-resources-Edge_Integration_Cell-<version>.zip`) from the {elm} UI and extract it to a directory (for example, `eic-resources`). Apply it to the cluster:
+ifndef::is-sap-eic-harvester[]
+IMPORTANT: For multi-instance deployments, before deploying a second {eic} instance on the same cluster, ensure you have an available IP address set to the {metallb} `IPAddressPool` so it can be assigned to the Istio ingressgateway deployed by {eic}. For more details, refer to <<metalConfig>>.
+endif::[]
+
+ifdef::is-sap-eic-harvester[]
+IMPORTANT: For multi-instance deployments, before deploying a second {eic} instance on the same cluster, ensure your {harvester} IP Pool has an available IP address so it can be assigned to the Istio ingressgateway deployed by {eic}. For more details, refer to <<ippool>>.
+endif::[]
+
+Download the second zip from the {elm} UI. The filename depends on the solution name configured in the UI. For example, for a solution named "Edge Integration Cell Example", the file will be `restricted-resources-Edge_Integration_Cell_Example-<x.y.z>.zip`. Extract it to a directory, e.g., `restricted-eic`. As in Phase 1, make the included deployment script executable and run it:
 
 [source, bash]
 ----
-kubectl apply -f eic-resources/
+cd restricted-eic
+chmod +x apply-restricted-resources.sh
+./apply-restricted-resources.sh
 ----
 
 This action creates the necessary namespaces for {eic} and applies the required security policies for the solution components.
@@ -380,17 +418,16 @@ This action creates the necessary namespaces for {eic} and applies the required 
 [#raIPSPhase2]
 ==== Configuring ImagePullSecrets for EIC namespaces
 
-The previous step generated the solution-specific namespaces (`istio-gateways`, `edge-icell`, `edge-icell-services`, `edge-icell-secrets`, and `edge-icell-ela`). 
-
-With the exception of `edge-icell-secrets`, all of these namespaces require an **imagePullSecret** to authenticate against the registry. For detailed background instructions, refer to <<imagePullSecret>>.
+The previous step generated the solution-specific namespaces (e.g., `istio-gateways`, `edge-icell`, `edge-icell-services`, `edge-icell-secrets`, and `edge-icell-ela`). With the exception of the secrets namespace, all of these namespaces require an **imagePullSecret** to authenticate against the registry. For detailed background instructions, refer to <<imagePullSecret>>.
 
 You can automate the creation of these secrets by creating a file named `create-eic-ips.sh` with the following content:
 
 [source, bash]
 ----
 #!/bin/bash
-
+# Update the array below with your customized namespaces if applicable
 NAMESPACES=("istio-gateways" "edge-icell" "edge-icell-services" "edge-icell-ela")
+
 for ns in "${NAMESPACES[@]}"; do
   kubectl create secret docker-registry application-collection -n $ns \
     --docker-server=dp.apps.rancher.io --docker-username=<yourUser> --docker-password=<yourPassword>
@@ -416,48 +453,51 @@ Create a file named `bind-eic-rbac.sh` and add the following script:
 #!/bin/bash
 set -eu
 
-if [ "$#" -ne 1 ]; then
-  echo "Usage: $0 <USER_ID>"
+if [ "$#" -lt 2 ]; then
+  echo "Usage: $0 <USER_ID> <NAMESPACE_1> [<NAMESPACE_2> ...]"
+  echo "Example: $0 u-abcde123 edge-icell edge-icell-services edge-icell-secrets edge-icell-ela istio-gateways"
   exit 1
 fi
-USER_ID="$1"
 
-echo "Adding EIC RoleBindings for user: $USER_ID"
+USER_ID="$1"
+shift
+NAMESPACES=("$@")
 
 PAYLOAD=$(printf '[{"op":"add","path":"/subjects/-","value":{"apiGroup":"rbac.authorization.k8s.io","kind":"User","name":"%s"}}]' "$USER_ID")
 
-for RB in \
-  "istio-gateways:rb-edgelm-manage" \
-  "istio-gateways:rb-istio-gateways-admin" \
-  "edge-icell-services:rb-edgelm-manage" \
-  "edge-icell-services:rb-admin" \
-  "edge-icell-services:rb-app-admin" \
-  "edge-icell:rb-edgelm-manage" \
-  "edge-icell:rb-admin" \
-  "edge-icell:rb-app-admin" \
-  "edge-icell-secrets:rb-edgelm-manage" \
-  "edge-icell-secrets:rb-admin" \
-  "edge-icell-ela:rb-edgelm-manage" \
-  "edge-icell-ela:rb-admin" \
-  "edge-icell-ela:rb-app-admin"
-do
-  NAMESPACE="${RB%%:*}"
-  NAME="${RB##*:}"
-  echo "Binding $NAME in namespace $NAMESPACE..."
-  kubectl patch rolebindings "$NAME" -n "$NAMESPACE" --type=json -p "$PAYLOAD"
+echo "Adding EIC RoleBindings for user: $USER_ID in namespaces: ${NAMESPACES[*]}"
+
+TARGET_ROLES=("rb-edgelm-manage" "rb-istio-gateways-admin" "rb-admin" "rb-app-admin")
+
+for NAMESPACE in "${NAMESPACES[@]}"; do
+  echo "Processing namespace: $NAMESPACE"
+  
+  for RB_NAME in "${TARGET_ROLES[@]}"; do
+    if kubectl get rolebinding "$RB_NAME" -n "$NAMESPACE" >/dev/null 2>&1; then
+      
+      EXISTING=$(kubectl get rolebinding "$RB_NAME" -n "$NAMESPACE" -o jsonpath="{.subjects[?(@.name=='$USER_ID')].name}" 2>/dev/null || true)
+      
+      if [ "$EXISTING" == "$USER_ID" ]; then
+        echo "  Skipping $RB_NAME (User already bound)"
+      else
+        echo "  Binding $RB_NAME..."
+        kubectl patch rolebinding "$RB_NAME" -n "$NAMESPACE" --type=json -p "$PAYLOAD"
+      fi
+    fi
+  done
 done
 
 echo "User permission binding for EIC complete."
 ----
 
-Make it executable and run it with your `USER_ID`:
+Make it executable and run it with your `USER_ID` (configured in the section <<createRestrictedUser>>) and your EIC namespaces.
 
+Example:
 [source, bash]
 ----
 chmod +x bind-eic-rbac.sh
-./bind-eic-rbac.sh <USER_ID>
+./bind-eic-rbac.sh u-qsj27 edge-icell edge-icell-services edge-icell-secrets edge-icell-ela istio-gateways
 ----
 
 When the permissions are successfully bound, return to the {elm} UI and click **Resume deployment**.
-
 // end::shared-cluster-configuration[]
