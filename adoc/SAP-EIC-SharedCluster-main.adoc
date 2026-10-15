@@ -2,7 +2,6 @@
 [#istioInstall]
 == Installing {istio}
 
-Even though {istio} is available for deployment using the {rancher} Apps, we recommend to use the {rac}.
 The {istio} chart can be found at https://apps.rancher.io/applications/istio.
 
 // IMPORTANT::
