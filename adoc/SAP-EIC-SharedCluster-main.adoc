@@ -400,6 +400,10 @@ ifndef::is-sap-eic-harvester[]
 IMPORTANT: For multi-instance deployments, before deploying a second {eic} instance on the same cluster, ensure you have an available IP address set to the {metallb} `IPAddressPool` so it can be assigned to the Istio ingressgateway deployed by {eic}. For more details, refer to <<metalConfig>>.
 endif::[]
 
+ifdef::is-sap-eic-harvester[]
+IMPORTANT: For multi-instance deployments, before deploying a second {eic} instance on the same cluster, ensure your {harvester} IP Pool has an available IP address so it can be assigned to the Istio ingressgateway deployed by {eic}. For more details, refer to <<ippool>>.
+endif::[]
+
 Download the second zip from the {elm} UI. The filename depends on the solution name configured in the UI. For example, for a solution named "Edge Integration Cell Example", the file will be `restricted-resources-Edge_Integration_Cell_Example-<x.y.z>.zip`. Extract it to a directory, e.g., `restricted-eic`. As in Phase 1, make the included deployment script executable and run it:
 
 [source, bash]

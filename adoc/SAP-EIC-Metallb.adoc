@@ -72,7 +72,12 @@ spec:
 EOF
 ----
 
-NOTE: {metallb} allows to allocate multiple IP addresses. For more details, refer to https://metallb.universe.tf/faq/#can-i-have-several-address-pools .
+[NOTE]
+====
+If you plan to deploy multiple {eic} instances on the same Kubernetes cluster, keep in mind that each {eic} instance will deploy its own Istio `ingressgateway` which requires a dedicated IP address. Ensure your IP range is large enough to accommodate all planned instances.
+
+{metallb} allows you to allocate multiple IP addresses or even define several address pools. For more details, refer to https://metallb.universe.tf/faq/#can-i-have-several-address-pools .
+====
 
 Create the layer 2 network advertisement:
 [source,bash]
