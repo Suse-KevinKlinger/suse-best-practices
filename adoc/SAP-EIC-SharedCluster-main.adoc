@@ -282,7 +282,7 @@ chmod +x apply-restricted-resources.sh
 [#raIPSPhase1]
 ==== Configuring ImagePullSecrets for {elm}
 
-Since the target ELM namespace is enabled for Istio sidecar injection, it requires an *imagePullSecret* from the SUSE Application Collection. For detailed instructions, refer to <<imagePullSecret>>.
+Since the target {elm} namespace is enabled for Istio sidecar injection, it requires an *imagePullSecret* from the SUSE Application Collection. For detailed instructions, refer to <<imagePullSecret>>.
 
 [source, bash]
 ----
@@ -370,13 +370,13 @@ done
 echo "User permission binding for ELM complete."
 ----
 
-Make the script executable and run it with your `<USER_ID>` (configured in the section <<createRestrictedUser>>) and your ELM namespace. 
+Make the script executable and run it with your `<USER_ID>` (configured in the section <<createRestrictedUser>>) and your {elm} namespace. 
 
 Example:
 [source, bash]
 ----
 chmod +x bind-elm-rbac.sh
-./bind-elm-rbac.sh u-qsj27 edgelm
+./bind-elm-rbac.sh <USER_ID> edgelm
 ----
 
 [#raDownloadKubeconfig]
@@ -496,7 +496,7 @@ Example:
 [source, bash]
 ----
 chmod +x bind-eic-rbac.sh
-./bind-eic-rbac.sh u-qsj27 edge-icell edge-icell-services edge-icell-secrets edge-icell-ela istio-gateways
+./bind-eic-rbac.sh <USER_ID> edge-icell edge-icell-services edge-icell-secrets edge-icell-ela istio-gateways
 ----
 
 When the permissions are successfully bound, return to the {elm} UI and click **Resume deployment**.

@@ -235,9 +235,9 @@ Extract the downloaded file and apply the resources directly:
 kubectl apply -f <extracted_directory>/
 ----
 
-==== Legacy ELM RBAC Binding Script
+==== Legacy {elm} RBAC Binding Script
 
-If your ELM zip archive does not contain the apply script, use this legacy binding script to assign permissions to the `edgelm` namespace:
+If your {elm} zip archive does not contain the apply script, use this legacy binding script to assign permissions to the `edgelm` namespace:
 
 [source, bash]
 ----
@@ -253,7 +253,7 @@ kubectl patch clusterrolebindings crb-edgelm-cluster-admin --type=json -p "$PAYL
 
 ==== Legacy EIC RBAC Binding Script
 
-If your EIC zip archive does not contain the apply script, use this legacy binding script to assign permissions across the default EIC namespaces:
+If your {eic} zip archive does not contain the apply script, use this legacy binding script to assign permissions across the default namespaces:
 
 [source, bash]
 ----
