@@ -1,0 +1,221 @@
+[#dme-observability-second-cluster]
+== Installing SUSE Observability on a dedicated cluster
+
+This chapter describes how to install SUSE Observability on a second Kubernetes cluster and use it to observe the SAP {dme} environment running on a separate cluster.
+
+This topology is recommended for production and proof-of-concept deployments because it keeps the monitoring backend independent from the application workload, simplifies troubleshooting, and makes it easier to preserve the visibility stack during {dme} maintenance or upgrades.
+
+The installation procedure below follows the official SUSE Observability installation flow documented at https://documentation.suse.com/cloudnative/suse-observability/latest/en/installing-suse-obs.html.
+
+=== Prerequisites
+
+Before installing SUSE Observability on the monitoring cluster, ensure the following requirements are met:
+
+* A supported Kubernetes cluster is available for the observability stack.
+* You have `kubectl` access to the monitoring cluster.
+* The cluster has a working storage class for the Observability backend.
+* A valid SUSE Observability license is available.
+* Helm 3 is installed on the workstation or cluster shell that is used for installation.
+* You have a hostname or FQDN that is reachable from your users, such as `https://observability.example.com`.
+* The DME cluster can reach the monitoring cluster if you use the agent-based flow.
+* MetalLB makes SUSE Observability available outside the cluster.
+* Cert-manager manages the certificates.
+
+=== Prepare the monitoring cluster
+
+Open a shell on the second cluster and add the SUSE Observability Helm repository:
+
+[source, bash]
+----
+helm repo add suse-observability https://charts.rancher.com/server-charts/prime/suse-observability
+helm repo update
+----
+
+You can inspect the chart before installation if needed:
+
+[source, bash]
+----
+helm show values suse-observability/suse-observability
+----
+
+=== Get your license
+
+SUSE Observability needs a license key for the installation. You can get your license in the SUSE Customer Center.
+
+* Open https://scc.suse.com/ in a browser.
+* Log in with your credentials.
+* Select your organization.
+* Select the "Subscriptions" tab.
++
+image::SAP-Edge-SCC-tabbar.png[title=SCC Tabbar,scaledwidth=99%]
+* If you only have a few subscriptions, you can directly select "SUSE Observability." If the list is too long, use the search bar.
++
+image::SAP-Edge-SCC-subscriptions.png[alt="SUSE Customer Center Subscriptions page",title=Subscriptions,scaledwidth=99%]
+* Find your SUSE Observability license key. Use the license key, not the registration code.
+
+
+
+=== Create a values file
+
+Create a `values.yaml` file that defines several parameters.
+The following example is based on the official installation guidance and is a starting point for your deployment:
+
+[source, yaml]
+----
+global:
+  suseObservability:
+    # Required: Your {stackstate-product-name} license key
+    license: "YOUR_LICENSE_KEY"
+
+    # Required: Base URL for {stackstate-product-name}
+    # Use http://localhost:8080 if ingress is not configured yet
+    baseUrl: "https://observability.example.com"
+
+    # Required: Sizing profile
+    # Available: trial, 10-nonha, 20-nonha, 50-nonha, 100-nonha,
+    #            150-ha, 250-ha, 500-ha, 4000-ha
+    sizing:
+      profile: "50-nonha"
+
+    # Required: Plain text admin password
+    adminPassword: "CHANGE_ME_TO_A_STRONG_PASSWORD"
+ingress:
+  enabled: true
+  ingressClassName: traefik
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    cert-manager.io/cluster-issuer: selfsigned-issuer
+  hosts:
+    - host: observability.example.com
+  tls:
+    - hosts:
+        - observability.example.com
+      secretName: suse-observability-tls
+----
+
+The `profile` value depends on the expected cluster size and telemetry load. Choose the value that matches your environment; the product documentation provides the sizing guidance for HA and non-HA deployments.
+
+For smaller or lab environments, use a lower profile and reduce the size of the installation accordingly.
+
+=== Install SUSE Observability
+
+Deploy the chart into a dedicated namespace:
+
+[source, bash]
+----
+helm upgrade --install \
+  --namespace suse-observability \
+  --create-namespace \
+  --values values.yaml \
+  suse-observability \
+  suse-observability/suse-observability
+----
+
+This installs the SUSE Observability stack in the `suse-observability` namespace and creates the required Kubernetes resources for the backend and UI.
+
+[IMPORTANT]
+====
+The product documentation notes that upgrading or downgrading from HA to non-HA or vice versa is not yet supported. Use a single sizing profile that fits your expected workload before deploying the stack.
+====
+
+=== Verify the deployment
+
+After installation, verify that the pods, services, and ingress resources are available:
+
+[source, bash]
+----
+kubectl get pods -n suse-observability
+kubectl get svc -n suse-observability
+kubectl get ingress -A | grep observability
+----
+
+If the cluster uses a load balancer or wildcard DNS, confirm that the configured `baseUrl` resolves correctly and that the browser can reach the SUSE Observability UI.
+
+After installation, log in as the admin user with the password you selected.
+
+=== Exposing the UI
+
+For a real deployment, expose the Observability UI through a supported Ingress or load balancer. The `baseUrl` value must match the external URL that users use to access the product.
+
+The recommended configuration is:
+
+* a DNS record or trusted FQDN
+* a valid TLS certificate
+* a reachable ingress or load balancer
+* correct hostname resolution from the users' browsers
+
+For a secure setup, use a certificate managed by your platform or a certificate issuer trusted by your users.
+
+image::SAP-Edge_Observability_login.png[title=SUSE Observability Login Screen,scaledwidth=99%]
+
+=== Observing the SAP {dme} cluster
+
+Once the second cluster runs SUSE Observability successfully, the next step is to connect the {dme} cluster to it.
+This is typically done through the cluster registration or agent flow described in the SUSE Observability product documentation, depending on your installation model.
+
+For the agent-based flow, the key requirements are:
+
+* The DME cluster can reach the SUSE Observability ingest URL.
+* A valid service token is configured for the agent.
+* The required firewall rules and TLS settings allow the agent's traffic.
+
+This lets the DME cluster send telemetry to the monitoring cluster without exposing the workload cluster unnecessarily.
+
+For a practical architecture, keep the following in mind:
+
+* the DME cluster remains the workload cluster
+* the monitoring cluster remains the observability cluster
+* the DME cluster is connected to the observability platform by the supported registration or telemetry mechanism
+* dashboards and alerts are defined centrally in the SUSE Observability stack
+
+This separation helps ensure that the monitoring stack is resilient, easier to back up, and easier to maintain independently from the DME workloads.
+
+=== Adding the DME cluster into SUSE Observability
+* After logging in to SUSE Observability, add a cluster.
+* Enter the cluster name (in this example, `dme`) and click **Install**.
++
+image::SAP-Edge_Observability_new_Instance.png[title=SUSE Observability New Instance,scaledwidth=99%]
+* SUSE Observability now waits for the observability agent to connect. Select the `dme` cluster to find the StackState ingest URL and create a service token.
+* There are multiple ways to install the agent into the cluster. This example uses Helm. The SUSE Observability UI provides the available methods and commands for your environment.
+* Open a shell on the DME cluster.
+
+[source, bash]
+----
+ helm repo add suse-observability https://charts.rancher.com/server-charts/prime/suse-observability
+ helm repo update
+----
+
+[source, bash]
+----
+export SERVICE_TOKEN=YOUR_SERVICE_TOKEN_FROM_THE_UI
+helm upgrade --install \
+--namespace suse-observability-agent \
+--create-namespace \
+--set-string "stackstate.apiKey=$SERVICE_TOKEN" \
+--set-string 'stackstate.cluster.name'='dme' \
+--set-string 'stackstate.url'='https://observability.example.com' \
+--set 'nodeAgent.skipKubeletTLSVerify'=true \
+--set 'otel.integrations.rancherAgent'=false \
+suse-observability-agent suse-observability/suse-observability-agent
+----
+
+For the next steps and information about using SUSE Observability, see the link:https://documentation.suse.com/cloudnative/suse-observability/latest/en/k8s-getting-started.html[getting started documentation].
+
+=== Recommended baseline for {dme} observability
+
+For a typical SAP {dme} environment, use the SUSE Observability cluster to collect:
+
+* Kubernetes pod and node health
+* {istio} traffic and service topology
+* application errors, latency, and throughput
+* infrastructure resource usage
+* cluster-level events and alert conditions
+
+This gives you a centralized operational view of the DME environment while keeping the actual DME workload cluster focused on the application itself.
+
+This chapter covers the installation of the second-cluster monitoring platform. For the final DME registration and telemetry integration steps, follow the current SUSE Observability documentation for registering external Kubernetes clusters and configuring the observed application sources.
+
+
+++++
+<?pdfpagebreak?>
+++++

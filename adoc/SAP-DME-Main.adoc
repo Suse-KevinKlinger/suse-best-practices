@@ -331,6 +331,8 @@ include::SAP-DME-ExternalSecretsOperator.adoc[tags=main, leveloffset=+1]
 <?pdfpagebreak?>
 ++++
 
+include::SAP-DME-Observability.adoc[]
+
 ++++
 <?pdfpagebreak?>
 ++++
