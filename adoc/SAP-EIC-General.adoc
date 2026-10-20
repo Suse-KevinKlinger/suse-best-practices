@@ -222,7 +222,7 @@ If you are using certificates from an unknown CA, make sure to enable *Skip TLS 
 
 # tag::legacyRestrictedAccess[]
 [#legacyRestrictedAccess847]
-=== Legacy Restricted Access Configuration (EIC 8.41 to 8.47)
+=== Legacy Restricted Access Configuration ({eic} 8.41 to 8.47)
 
 If your {eic} version is between 8.41 and 8.47, or your downloaded restricted resources archive does not include the `apply-restricted-resources.sh` script, you must apply the manifests manually and use the legacy RBAC binding scripts.
 
@@ -251,7 +251,7 @@ kubectl patch rolebindings rb-edgelm-admin -n edgelm --type=json -p "$PAYLOAD"
 kubectl patch clusterrolebindings crb-edgelm-cluster-admin --type=json -p "$PAYLOAD"
 ----
 
-==== Legacy EIC RBAC Binding Script
+==== Legacy {eic} RBAC Binding Script
 
 If your {eic} zip archive does not contain the apply script, use this legacy binding script to assign permissions across the default namespaces:
 
@@ -284,7 +284,7 @@ done
 ----
 
 [#legacyRestrictedAccess841]
-=== Legacy Restricted Access Configuration (EIC < 8.41)
+=== Legacy Restricted Access Configuration ({eic} < 8.41)
 For {eic} versions older than 8.41, you must manually prepare the cluster using the resources attached to **SAP Note 3618713**: https://me.sap.com/notes/3618713.
 
 ==== Applying the resources from SAP Note

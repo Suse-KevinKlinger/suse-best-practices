@@ -416,7 +416,7 @@ chmod +x apply-restricted-resources.sh
 This action creates the necessary namespaces for {eic} and applies the required security policies for the solution components.
 
 [#raIPSPhase2]
-==== Configuring ImagePullSecrets for EIC namespaces
+==== Configuring ImagePullSecrets for {eic} namespaces
 
 The previous step generated the solution-specific namespaces (e.g., `istio-gateways`, `edge-icell`, `edge-icell-services`, `edge-icell-secrets`, and `edge-icell-ela`). With the exception of the secrets namespace, all of these namespaces require an **imagePullSecret** to authenticate against the registry. For detailed background instructions, refer to <<imagePullSecret>>.
 
@@ -490,7 +490,7 @@ done
 echo "User permission binding for EIC complete."
 ----
 
-Make it executable and run it with your `USER_ID` (configured in the section <<createRestrictedUser>>) and your EIC namespaces.
+Make it executable and run it with your `USER_ID` (configured in the section <<createRestrictedUser>>) and your {eic} namespaces.
 
 Example:
 [source, bash]
