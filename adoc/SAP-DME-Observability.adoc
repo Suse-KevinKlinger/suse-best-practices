@@ -177,7 +177,7 @@ This separation helps ensure that the monitoring stack is resilient, easier to b
 image::SAP-Edge_Observability_new_Instance.png[title=SUSE Observability New Instance,scaledwidth=99%]
 * SUSE Observability now waits for the observability agent to connect. Select the `dme` cluster to find the StackState ingest URL and create a service token.
 * There are multiple ways to install the agent into the cluster. This example uses Helm. The SUSE Observability UI provides the available methods and commands for your environment.
-* Open a shell on the DME cluster.
+* Open a shell on the {dme} cluster.
 
 [source, bash]
 ----
