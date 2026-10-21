@@ -207,7 +207,7 @@ For a typical SAP {dme} environment, use the SUSE Observability cluster to colle
 
 * Kubernetes pod and node health
 * {istio} traffic and service topology
-* application errors, latency, and throughput
+* Application errors, latency, and throughput.
 * Infrastructure resource usage.
 * Cluster-level events and alert conditions.
 
