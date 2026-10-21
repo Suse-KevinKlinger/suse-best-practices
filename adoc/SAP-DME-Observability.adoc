@@ -17,7 +17,7 @@ Before installing SUSE Observability on the monitoring cluster, ensure the follo
 * A valid SUSE Observability license is available.
 * Helm 3 is installed on the workstation or cluster shell that is used for installation.
 * You have a hostname or FQDN that is reachable from your users, such as `https://observability.example.com`.
-* The DME cluster can reach the monitoring cluster if you use the agent-based flow.
+* The {dme} cluster can reach the monitoring cluster if you use the agent-based flow.
 * MetalLB makes SUSE Observability available outside the cluster.
 * Cert-manager manages the certificates.
 
