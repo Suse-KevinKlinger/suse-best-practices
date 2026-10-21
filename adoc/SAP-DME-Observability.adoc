@@ -170,7 +170,7 @@ For a practical architecture, keep the following in mind:
 
 This separation helps ensure that the monitoring stack is resilient, easier to back up, and easier to maintain independently from the DME workloads.
 
-=== Adding the DME cluster into SUSE Observability
+=== Adding the {dme} cluster into SUSE Observability
 * After logging in to SUSE Observability, add a cluster.
 * Enter the cluster name (in this example, `dme`) and click **Install**.
 +
