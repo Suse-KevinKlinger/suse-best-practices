@@ -211,7 +211,7 @@ For a typical SAP {dme} environment, use the SUSE Observability cluster to colle
 * Infrastructure resource usage.
 * Cluster-level events and alert conditions.
 
-This gives you a centralized operational view of the DME environment while keeping the actual DME workload cluster focused on the application itself.
+This gives you a centralized operational view of the {dme} environment while keeping the actual {dme} workload cluster focused on the application itself.
 
 This chapter covers the installation of the second-cluster monitoring platform. For the final DME registration and telemetry integration steps, follow the current SUSE Observability documentation for registering external Kubernetes clusters and configuring the observed application sources.
 
