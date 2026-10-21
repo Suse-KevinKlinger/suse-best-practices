@@ -159,7 +159,7 @@ For the agent-based flow, the key requirements are:
 * A valid service token is configured for the agent.
 * The required firewall rules and TLS settings allow the agent's traffic.
 
-This lets the DME cluster send telemetry to the monitoring cluster without exposing the workload cluster unnecessarily.
+This lets the {dme} cluster send telemetry to the monitoring cluster without exposing the workload cluster unnecessarily.
 
 For a practical architecture, keep the following in mind:
 
