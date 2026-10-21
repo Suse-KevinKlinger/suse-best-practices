@@ -166,7 +166,7 @@ For a practical architecture, keep the following in mind:
 * The {dme} cluster remains the workload cluster.
 * The monitoring cluster remains the observability cluster.
 * The {dme} cluster is connected to the observability platform by the supported registration or telemetry mechanism.
-* dashboards and alerts are defined centrally in the SUSE Observability stack
+* Dashboards and alerts are defined centrally in the SUSE Observability stack.
 
 This separation helps ensure that the monitoring stack is resilient, easier to back up, and easier to maintain independently from the DME workloads.
 
