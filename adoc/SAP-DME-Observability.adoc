@@ -209,7 +209,7 @@ For a typical SAP {dme} environment, use the SUSE Observability cluster to colle
 * {istio} traffic and service topology
 * application errors, latency, and throughput
 * Infrastructure resource usage.
-* cluster-level events and alert conditions
+* Cluster-level events and alert conditions.
 
 This gives you a centralized operational view of the DME environment while keeping the actual DME workload cluster focused on the application itself.
 
