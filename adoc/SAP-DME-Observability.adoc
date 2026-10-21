@@ -164,7 +164,7 @@ This lets the DME cluster send telemetry to the monitoring cluster without expos
 For a practical architecture, keep the following in mind:
 
 * the DME cluster remains the workload cluster
-* the monitoring cluster remains the observability cluster
+* The monitoring cluster remains the observability cluster.
 * the DME cluster is connected to the observability platform by the supported registration or telemetry mechanism
 * dashboards and alerts are defined centrally in the SUSE Observability stack
 
