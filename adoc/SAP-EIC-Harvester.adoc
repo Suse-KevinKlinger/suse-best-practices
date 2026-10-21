@@ -99,6 +99,11 @@ image::SAP-EIC-Harvester-IPPool-Create.png[title=Create IP Pool Menu,scaledwidth
 
 Click *Edit as YAML* and adjust the IP Pool to your needs.
 
+[NOTE]
+====
+If you plan to deploy multiple {eic} instances on the same Kubernetes cluster, keep in mind that each {eic} instance will deploy its own Istio `ingressgateway` which requires a dedicated IP address. Ensure your IP range (`rangeStart` to `rangeEnd`) is large enough to accommodate all planned instances.
+====
+
 Find an example for an IP Pool below:
 
 [source, yaml]

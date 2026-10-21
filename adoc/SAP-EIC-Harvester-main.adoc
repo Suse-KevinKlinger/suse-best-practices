@@ -2,6 +2,7 @@
 // :doctype: article
 :env-rancherRegistries:
 :is-sap-eic:
+:is-sap-eic-harvester:
 
 
 // defining article ID
@@ -398,7 +399,8 @@ include::SAP-EIC-General.adoc[tags=rancher-cleanup]
 
 include::SAP-EIC-General.adoc[tags=rancher-registries]
 
-=== Legacy Restricted Access Configuration (EIC < 8.41)
+[#legacyRestrictedAccess]
+=== Legacy Restricted Access Configuration ({eic} < 8.41)
 
 include::SAP-EIC-General.adoc[tags=legacyRestrictedAccess]
 

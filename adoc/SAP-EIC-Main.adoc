@@ -378,9 +378,10 @@ include::SAP-EIC-General.adoc[tags=rancher-cleanup]
 
 include::SAP-EIC-General.adoc[tags=rancher-registries]
 
-=== Legacy Restricted Access Configuration (EIC < 8.41)
+[#legacyRestrictedAccess]
+=== Legacy Restricted Access Configuration
 
-include::SAP-EIC-General.adoc[tags=legacyRestrictedAccess]
+include::SAP-EIC-General.adoc[tags=legacyRestrictedAccess, leveloffset=+1]
 
 ++++
 <?pdfpagebreak?>
