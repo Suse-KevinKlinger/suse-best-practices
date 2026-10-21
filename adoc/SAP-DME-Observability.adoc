@@ -155,7 +155,7 @@ This is typically done through the cluster registration or agent flow described 
 
 For the agent-based flow, the key requirements are:
 
-* The DME cluster can reach the SUSE Observability ingest URL.
+* The {dme} cluster can reach the SUSE Observability ingest URL.
 * A valid service token is configured for the agent.
 * The required firewall rules and TLS settings allow the agent's traffic.
 
