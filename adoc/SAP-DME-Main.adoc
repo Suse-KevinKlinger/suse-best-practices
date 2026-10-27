@@ -52,7 +52,8 @@ The following support matrix lists the software versions used in this guide.
 
 [IMPORTANT]
 ====
-You can use other versions, but they are not tested.
+The table above lists the component versions that were most recently tested at the time of publication of this guide.
+You can use other versions, but they might not been tested.
 ====
 
 ++++
@@ -80,6 +81,8 @@ Additionally,
 ** https://help.sap.com/docs/sap-digital-manufacturing/setup-and-operations-guide-for-sap-digital-manufacturing-for-edge-computing/
 
 ** https://me.sap.com/notes/2852243
+
+** https://me.sap.com/notes/3785276
 
 [IMPORTANT]
 ====
@@ -138,6 +141,9 @@ SAP recommends setting up separate development and QA systems for {dme} in addit
 // Referring to the landscape overview, we now focus on the lower section of the graphic below:
 
 // image::SAP-EIC-Architecture-RKE2.svg[title=Architecture Overview RKE2,scaledwidth=99%,opts=inline,Embedded]
+
+Before deploying {rke}, ensure that the desired version is supported for {dme}. The supported versions can be found at: +
+https://help.sap.com/docs/sap-digital-manufacturing/setup-and-operations-guide-for-sap-digital-manufacturing-for-edge-computing/release-process-and-strategy?locale=en-US
 
 
 include::SAP-Rancher-RKE2-Installation.adoc[tags=!install-rke2-harvester]
