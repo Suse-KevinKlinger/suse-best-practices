@@ -337,7 +337,7 @@ TARGET_ROLES=("rb-edgelm-manage" "rb-edgelm-admin")
 for RB_NAME in "${TARGET_ROLES[@]}"; do
   if kubectl get rolebinding "$RB_NAME" -n "$ELM_NAMESPACE" >/dev/null 2>&1; then
     EXISTING=$(kubectl get rolebinding "$RB_NAME" -n "$ELM_NAMESPACE" -o jsonpath="{.subjects[?(@.name=='$USER_ID')].name}" 2>/dev/null || true)
-    
+
     if [ "$EXISTING" == "$USER_ID" ]; then
       echo "  Skipping $RB_NAME in namespace $ELM_NAMESPACE (User already bound)"
     else
@@ -357,13 +357,19 @@ FOUND_CRBS=$(kubectl get clusterrolebindings $CRB_LABEL_FILTER -o name 2>/dev/nu
 
 for CRB in $FOUND_CRBS; do
   CRB_NAME=$(basename "$CRB")
-  EXISTING=$(kubectl get clusterrolebinding "$CRB_NAME" -o jsonpath="{.subjects[?(@.name=='$USER_ID')].name}" 2>/dev/null || true)
-  
-  if [ "$EXISTING" == "$USER_ID" ]; then
-    echo "  Skipping $CRB_NAME (User already bound)"
+  EXISTING_USER=$(kubectl get clusterrolebinding "$CRB_NAME" -o jsonpath="{.subjects[?(@.kind=='User')].name}" 2>/dev/null || true)
+
+  if [ -n "$EXISTING_USER" ]; then
+    if [ "$EXISTING_USER" == "$USER_ID" ]; then
+      echo "  Skipping $CRB_NAME (User already bound)"
+      break
+    else
+      echo "  Skipping $CRB_NAME (already bound to a different User subject: $EXISTING_USER)"
+    fi
   else
     echo "  Patching $CRB_NAME..."
     kubectl patch clusterrolebinding "$CRB_NAME" --type=json -p "$PAYLOAD"
+    break
   fi
 done
 
@@ -471,12 +477,12 @@ TARGET_ROLES=("rb-edgelm-manage" "rb-istio-gateways-admin" "rb-admin" "rb-app-ad
 
 for NAMESPACE in "${NAMESPACES[@]}"; do
   echo "Processing namespace: $NAMESPACE"
-  
+
   for RB_NAME in "${TARGET_ROLES[@]}"; do
     if kubectl get rolebinding "$RB_NAME" -n "$NAMESPACE" >/dev/null 2>&1; then
-      
+
       EXISTING=$(kubectl get rolebinding "$RB_NAME" -n "$NAMESPACE" -o jsonpath="{.subjects[?(@.name=='$USER_ID')].name}" 2>/dev/null || true)
-      
+
       if [ "$EXISTING" == "$USER_ID" ]; then
         echo "  Skipping $RB_NAME (User already bound)"
       else
