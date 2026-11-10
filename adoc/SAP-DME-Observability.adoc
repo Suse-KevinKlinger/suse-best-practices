@@ -1,15 +1,14 @@
-:so: SUSE Observability 
-:shyb: SAP hybrid
 
-[#dme-observability-cluster]
-== Installing {so} on a dedicated cluster
-
-This chapter describes how to install {so} on a Kubernetes cluster and use it to observe the {shyb} environment running on a separate cluster.
+# tag::intro[]
+This chapter describes how to install {so} on a Kubernetes cluster and use it to observe a {shyb} environment running on a separate cluster.
 
 This topology is recommended for production and proof-of-concept deployments because it keeps the monitoring backend independent from the application workload, simplifies troubleshooting, and makes it easier to preserve the visibility stack during maintenance or upgrades.
 
 The installation procedure below follows the official {so} installation flow documented at https://documentation.suse.com/cloudnative/suse-observability/latest/en/installing-suse-obs.html.
 
+# end::intro[]
+
+# tag::prerequisites[]
 === Prerequisites
 
 Before installing {so} on the monitoring cluster, ensure the following requirements are met:
@@ -24,6 +23,9 @@ Before installing {so} on the monitoring cluster, ensure the following requireme
 * MetalLB makes {so} available outside the cluster.
 * {cm} manages the certificates.
 
+# end::prerequisites[]
+
+# tag::pre-mon[]
 === Prepare the monitoring cluster
 
 Open a shell on the cluster and add the {so} Helm repository:
@@ -41,6 +43,10 @@ You can inspect the chart before installation if needed:
 helm show values suse-observability/suse-observability
 ----
 
+# end::prep-mon[]
+
+
+# tag::license[]
 === Get your license
 
 {so} needs a license key for the installation. You can get your license in the SUSE Customer Center.
@@ -59,8 +65,10 @@ image::SAP-Edge-SCC-subscriptions.png[alt="SUSE Customer Center Subscriptions pa
 // TODO first picture should be full screen and highlight Subscription button
 
 //TODO picture where to get the license key
+# end::license[]
 
 
+# tag::values[]
 === Create a values file
 
 Create a `values.yaml` file that defines several parameters.
@@ -103,6 +111,9 @@ The `profile` value depends on the expected cluster size and telemetry load. Cho
 
 For smaller or lab environments, use a lower profile and reduce the size of the installation accordingly.
 
+# end::values[]
+
+# tag::install[]
 === Install {so}
 
 Deploy the chart into a dedicated namespace:
@@ -123,7 +134,9 @@ This installs the {so} stack in the `suse-observability` namespace and creates t
 ====
 The product documentation notes that upgrading or downgrading from HA to non-HA or vice versa is not yet supported. Use a single sizing profile that fits your expected workload before deploying the stack.
 ====
+# tag::install[]
 
+# tag::verify[]
 === Verify the deployment
 
 After installation, verify that the pods, services, and ingress resources are available:
@@ -139,6 +152,9 @@ If the cluster uses a load balancer or wildcard DNS, confirm that the configured
 
 After installation, log in as the admin user with the password you selected.
 
+# end::verify[]
+
+# tag::ui[]
 === Exposing the UI
 
 For a real deployment, expose the Observability UI through a supported Ingress or load balancer. The `baseUrl` value must match the external URL that users use to access the product.
@@ -153,7 +169,9 @@ The recommended configuration is:
 For a secure setup, use a certificate managed by your platform or a certificate issuer trusted by your users.
 
 image::SAP-Edge_Observability_login.png[title=SUSE Observability Login Screen,scaledwidth=99%]
+# end::ui[]
 
+# tag::agent[]
 === Observing a {shyb} cluster
 
 Once the cluster runs {so} successfully, the next step is to connect the cluster to be monitored to {so}.
@@ -175,7 +193,9 @@ For a practical architecture, keep the following in mind:
 * Dashboards and alerts are defined centrally in the {so} stack.
 
 This separation helps ensure that the monitoring stack is resilient, easier to back up, and easier to maintain independently from the {shyb} workloads.
+# end::agent[]
 
+# tag::add[]
 === Adding the {shyb} cluster into {so}
 * After logging in to {so}, add a cluster.
 * Enter the cluster name (in this example, `dme`) and click **Install**.
@@ -207,6 +227,9 @@ suse-observability-agent suse-observability/suse-observability-agent
 
 For the next steps and information about using {so}, see the link:https://documentation.suse.com/cloudnative/suse-observability/latest/en/k8s-getting-started.html[getting started documentation].
 
+# end::add[]
+
+# tag::baseline[]
 === Recommended baseline for {shyb} observability
 
 For a typical {shyb} environment, use the {so} cluster to collect:
@@ -220,6 +243,8 @@ For a typical {shyb} environment, use the {so} cluster to collect:
 This gives you a centralized operational view of the {shyb} environment while keeping the actual {shyb} workload cluster focused on the application itself.
 
 This chapter covers the installation of the cluster monitoring platform. For the final {shyb} registration and telemetry integration steps, follow the current {so} documentation for registering external Kubernetes clusters and configuring the observed application sources.
+
+# end::baseline[]
 
 ++++
 <?pdfpagebreak?>
