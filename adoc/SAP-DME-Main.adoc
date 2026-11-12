@@ -345,11 +345,11 @@ The following graphic visualizes a setup, where you will use {so} to observe clu
 
 image::SAP-DME-Observability-Architecture.svg[title=SUSE Observability Architecture,scaledwidth=99%]
 
-include::SAP-DME-Observability.adoc[tags=intro]
+include::SAP-Edge-Observability.adoc[tags=intro]
 
 HINT:: Setting up your {so} cluster in a manner so SAP can access it, can help debugging issues within your {dme} clusters.
 
-include::SAP-DME-Observability.adoc[tags=!intro]
+include::SAP-Edge-Observability.adoc[tags=!intro]
 
 ++++
 <?pdfpagebreak?>
